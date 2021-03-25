@@ -29,7 +29,7 @@ rem runas /user:Administator "powershell Get-Service ssh-agent | Set-Service -St
 mklink /j C:\tools\msys64\home\user\.ssh %USERPROFILE%\.ssh
 
 
-rem git for windows uses wrong ssh binary which leads to errors like `Permission Denied (publickey)`
+rem git for windows uses wrong ssh binary which leads to errors like `Permission Denied (publickey)` because it don't use windows ssh-agent
 rem https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-Windows-using-Git-for-Windows-and-Win32_OpenSSH#on-client
 rem https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
 setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
