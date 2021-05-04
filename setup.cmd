@@ -29,6 +29,5 @@ rem https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-
 rem https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
 setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
 
-
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
 yarn version set berry
