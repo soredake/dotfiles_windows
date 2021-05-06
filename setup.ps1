@@ -10,7 +10,7 @@ else {
 # https://docs.chocolatey.org/en-us/choco/setup#install-with-powershell.exe
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-choco install -y firefox steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows origin qbittorrent discord.install goggalaxy autoruns dxwnd pcsx2.install choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser
+choco install -y firefox steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows origin qbittorrent discord.install goggalaxy autoruns dxwnd pcsx2.install choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat
 choco install -y retroarch --params "'/DesktopShortcut'"
 choco install -y rpcs3 --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
