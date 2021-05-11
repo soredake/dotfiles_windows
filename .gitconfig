@@ -53,14 +53,14 @@
 [credential]
   # https://git-scm.com/docs/gitcredentials
   #helper = cache --timeout=3600 --socket=$XDG_RUNTIME_DIR/git-credential-cache.socket
+  #helper = manager-core
 [cola]
   spellcheck = false
 [feature]
   manyFiles = true
   experimental = true
 [core]
-	editor = code -w
-	sshCommand = 'C:\\Windows\\System32\\OpenSSH\\ssh.exe'
+  editor = \"C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe\" --wait
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com

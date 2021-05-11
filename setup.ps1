@@ -29,6 +29,16 @@ schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /
 # https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-Windows-using-Git-for-Windows-and-Win32_OpenSSH#on-client
 # https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
 setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
+# https://microsoft.github.io/Git-Credential-Manager-for-Windows/Docs/Askpass.html
+# https://github.com/git-for-windows/git/issues/1613
+# https://github.com/git-lfs/git-lfs/issues/1843
+# https://github.com/git-for-windows/git/issues/1683
+# https://github.com/PowerShell/Win32-OpenSSH/issues/1234#issuecomment-824709477
+# https://github.com/desktop/desktop/issues/11918
+# https://github.com/desktop/desktop/issues/5641
+#setx GIT_ASKPASS "C:\\Program Files\\Git\\mingw64\\libexec\\git-core\\git-gui--askpass"
+#setx SSH_ASKPASS "C:\\Program Files\\Git\\mingw64\\libexec\\git-core\\git-gui--askpass"
+#setx DISPLAY "required"
 
 # setup msys2
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
@@ -50,11 +60,11 @@ New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\input.conf" -Target ".\i
 Remove-Item -Path "C:\tools\msys64\home\user\.zshrc"
 mkdir "C:\tools\msys64\home\user"
 New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.zshrc" -Target ".\.zshrc"
-
 # microsoft windows terminal
 Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 mkdir "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target ".\mswinterminal.json"
+
 # yarn
 cd ~
 yarn set version berry
