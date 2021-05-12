@@ -6,7 +6,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #choco feature enable -n=useRememberedArgumentsForUpgrades
 # install my packages
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord.install goggalaxy autoruns dxwnd choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat ubisoft-connect physx.legacy
+choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord.install goggalaxy autoruns dxwnd choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat ubisoft-connect physx.legacy zeal.install caffeine
 choco install -y retroarch --params '/DesktopShortcut'
 choco install -y pcsx2.install --params '/Desktop'
 choco install -y origin --params '/DesktopIcon /NoAutoUpdate'
@@ -51,9 +51,9 @@ New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.gitconfig" -Ta
 # ssh
 New-Item -ItemType Junction -Path "C:\tools\msys64\home\user\.ssh" -Target "$env:USERPROFILE\.ssh"
 # mpv
-Remove-Item -Path "$env:APPDATA\mpv\mpv.conf"
-Remove-Item -Path "$env:APPDATA\mpv\input.conf"
-mkdir "$env:APPDATA\mpv"
+Remove-Item -Path "$env:APPDATA\mpv\*.conf"
+mkdir "$env:APPDATA\mpv\scripts"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/pause-when-minimize.lua" -OutFile "$env:APPDATA\mpv\scripts\pause-when-minimize.lua"
 New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\mpv.conf" -Target ".\mpv.conf"
 New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\input.conf" -Target ".\input.conf"
 # zsh

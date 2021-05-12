@@ -22,8 +22,8 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
-if [[ ! -f $HOME/.npm-completion ]]; then
-  npm completion > $HOME/.npm-completion
+if [[ -f /usr/share/zsh/functions/Completion/Unix/_npm ]]; then
+  [[ ! -f $HOME/.npm-completion ]] && npm completion > $HOME/.npm-completion
   rm /usr/share/zsh/functions/Completion/Unix/_npm
 fi
 source $HOME/.npm-completion
