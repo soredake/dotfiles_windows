@@ -6,7 +6,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #choco feature enable -n=useRememberedArgumentsForUpgrades
 # install my packages
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord.install goggalaxy autoruns dxwnd choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat ubisoft-connect physx.legacy zeal.install caffeine
+choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord.install goggalaxy autoruns dxwnd choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat ubisoft-connect zeal.install caffeine rclone parsec protonvpn youtube-dl ppsspp
 choco install -y retroarch --params '/DesktopShortcut'
 choco install -y pcsx2.install --params '/Desktop'
 choco install -y origin --params '/DesktopIcon /NoAutoUpdate'
@@ -14,6 +14,7 @@ choco install -y firefox --params '/NoAutoUpdate'
 choco install -y rpcs3 --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 winget install LogMeIn.Hamachi
+pip install --user -U internetarchive
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
 # wsl --install -d Ubuntu
@@ -22,7 +23,7 @@ winget install LogMeIn.Hamachi
 Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service
 
 # https://haali.su/winutils/
-Invoke-WebRequest -Uri https://haali.su/winutils/lswitch.exe -OutFile "$env:USERPROFILE/lswitch.exe"
+Invoke-WebRequest -Uri "https://haali.su/winutils/lswitch.exe" -OutFile "$env:USERPROFILE/lswitch.exe"
 schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /tr "$env:USERPROFILE\lswitch.exe 163"
 
 # git for windows uses wrong ssh binary which leads to errors like `Permission Denied (publickey)` because it don't use windows ssh-agent
@@ -68,3 +69,6 @@ New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.Wind
 # yarn
 cd ~
 yarn set version berry
+
+# add python to path
+setx PATH "$env:PATH;$env:APPDATA\Python\Python39\Scripts"

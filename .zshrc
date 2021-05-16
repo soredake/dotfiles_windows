@@ -6,8 +6,8 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
         print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
-#declare -A ZINIT
-#ZINIT[COMPINIT_OPTS]=-C
+declare -A ZINIT
+ZINIT[COMPINIT_OPTS]=-C
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -34,7 +34,7 @@ zinit light chrisands/zsh-yarn-completions
 #zinit light BuonOmo/yarn-completion
 zinit snippet OMZ::lib/clipboard.zsh
 #zinit snippet OMZP::yarn
-zinit snippet OMZP::bower
+#zinit snippet OMZP::bower
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/directories.zsh
 zinit snippet OMZ::lib/grep.zsh
@@ -44,7 +44,6 @@ zinit snippet OMZ::lib/theme-and-appearance.zsh
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
 
-
 # https://github.com/zdharma/zinit#calling-compinit-without-turbo-mode
 # https://unix.stackexchange.com/a/178054
 #unsetopt complete_aliases
@@ -53,4 +52,14 @@ compinit
 zinit cdreplay -q
 
 # https://github.com/msys2/MSYS2-packages/issues/38#issuecomment-148653609
-zstyle ':completion:*' fake-files /: '/:c'
+zstyle ':completion:*' fake-files /: '/:c f e'
+# https://blog.vghaisas.com/zsh-beep-sound/
+unsetopt LIST_BEEP
+# https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557
+[[ -v WT_SESSION ]] && echo -en "\e[2 q"
+
+alias e='code'
+#alias exip='curl -s https://ipecho.net/plain'
+#alias g='git'
+alias iaupload='ia upload --checksum --verify --retries 10 --no-backup'
+#alias vts='vitetris -listen 27015'
