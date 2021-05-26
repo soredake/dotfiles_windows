@@ -6,13 +6,13 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #choco feature enable -n=useRememberedArgumentsForUpgrades
 # install my packages
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord.install goggalaxy autoruns dxwnd choco-cleaner epicgameslauncher viber adoptopenjdk edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv.install tor-browser windirstat ubisoft-connect zeal.install caffeine rclone parsec protonvpn youtube-dl ppsspp
+choco install -y steam-cleaner steam-client 7zip chocolateygui keepassxc powertoys telegram ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv tor-browser wiztree ubisoft-connect zeal caffeine rclone parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo
 choco install -y retroarch --params '/DesktopShortcut'
-choco install -y pcsx2.install --params '/Desktop'
-choco install -y origin --params '/DesktopIcon /NoAutoUpdate'
-choco install -y firefox --params '/NoAutoUpdate'
+#choco install -y pcsx2.install --params '/Desktop'
+choco install -y origin --params '/DesktopIcon' # ea desktop?
 choco install -y rpcs3 --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
+ForEach ($app in 'viber','steam-client','firefox','origin','telegram','discord','rpcs3') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 winget install LogMeIn.Hamachi
 pip install --user -U internetarchive
 
@@ -30,16 +30,6 @@ schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /
 # https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-Windows-using-Git-for-Windows-and-Win32_OpenSSH#on-client
 # https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
 setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
-# https://microsoft.github.io/Git-Credential-Manager-for-Windows/Docs/Askpass.html
-# https://github.com/git-for-windows/git/issues/1613
-# https://github.com/git-lfs/git-lfs/issues/1843
-# https://github.com/git-for-windows/git/issues/1683
-# https://github.com/PowerShell/Win32-OpenSSH/issues/1234#issuecomment-824709477
-# https://github.com/desktop/desktop/issues/11918
-# https://github.com/desktop/desktop/issues/5641
-#setx GIT_ASKPASS "C:\\Program Files\\Git\\mingw64\\libexec\\git-core\\git-gui--askpass"
-#setx SSH_ASKPASS "C:\\Program Files\\Git\\mingw64\\libexec\\git-core\\git-gui--askpass"
-#setx DISPLAY "required"
 
 # setup msys2
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
@@ -72,3 +62,18 @@ yarn set version berry
 
 # add python to path
 setx PATH "$env:PATH;$env:APPDATA\Python\Python39\Scripts"
+
+# fix https://github.com/microsoft/WSL/issues/4103
+# replace with compact? `compact /?`
+#Install-Module -Force -Name Carbon
+#Import-Module 'Carbon'
+#mkdir "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
+#Disable-CNtfsCompression -Path "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
+compact /U "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
+
+# fix https://github.com/microsoft/WSL/issues/5336#issuecomment-770494713
+#Disable-CNtfsCompression -Path "$env:TEMP"
+#compact /C "$env:TEMP"
+#New-Item -Path "$env:TEMP/swap.vhdx" -ItemType File
+#compact /U "$env:TEMP/swap.vhdx"
+Set-Content -Path "$env:USERPROFILE/.wslconfig" -Value "[wsl2]`nswap=0"

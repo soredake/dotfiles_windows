@@ -93,6 +93,12 @@
                 "hidden": false,
                 "icon": "%UserProfile%/scoop/apps/cygwin/current/root/Cygwin-Terminal.ico",
                 "name": "Cygwin"
+            },
+            {
+                "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl"
             }
         ]
     },

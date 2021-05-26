@@ -8,6 +8,7 @@ if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
 fi
 declare -A ZINIT
 ZINIT[COMPINIT_OPTS]=-C
+grep -q 'OMZ::plugins' $HOME/.zinit/bin/zinit.zsh && sed -i 's/OMZ::plugins/OMZplugins/g' $HOME/.zinit/bin/zinit.zsh
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
