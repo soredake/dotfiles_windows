@@ -6,14 +6,15 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #choco feature enable -n=useRememberedArgumentsForUpgrades
 # install my packages
-choco install -y steam-cleaner steam-client 7zip chocolateygui keepassxc powertoys telegram ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv tor-browser wiztree ubisoft-connect zeal caffeine rclone parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo
+choco install -y steam-cleaner steam-client 7zip chocolateygui keepassxc powertoys telegram ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv tor-browser wiztree ubisoft-connect zeal caffeine rclone parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo spotify
 choco install -y retroarch --params '/DesktopShortcut'
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y origin --params '/DesktopIcon' # ea desktop?
 choco install -y rpcs3 --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'viber','steam-client','firefox','origin','telegram','discord','rpcs3') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+ForEach ($app in 'viber','steam-client','firefox','origin','telegram','discord','rpcs3','ds4windows','ubisoft-connect','tor-browser','vscode') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 winget install LogMeIn.Hamachi
+winget install handywinget
 pip install --user -U internetarchive
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
@@ -34,8 +35,7 @@ setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
 # setup msys2
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
 
-# config files
-# git
+# config files, git
 Remove-Item -Path "$env:USERPROFILE\.gitconfig"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target ".\.gitconfig"
 New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.gitconfig" -Target ".\.itconfig"
@@ -61,19 +61,11 @@ cd ~
 yarn set version berry
 
 # add python to path
+# better to install python with winget once https://github.com/microsoft/winget-cli/issues/219 and https://github.com/microsoft/winget-cli/issues/212 is resolved
 setx PATH "$env:PATH;$env:APPDATA\Python\Python39\Scripts"
 
 # fix https://github.com/microsoft/WSL/issues/4103
-# replace with compact? `compact /?`
-#Install-Module -Force -Name Carbon
-#Import-Module 'Carbon'
-#mkdir "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
-#Disable-CNtfsCompression -Path "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
 compact /U "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
 
 # fix https://github.com/microsoft/WSL/issues/5336#issuecomment-770494713
-#Disable-CNtfsCompression -Path "$env:TEMP"
-#compact /C "$env:TEMP"
-#New-Item -Path "$env:TEMP/swap.vhdx" -ItemType File
-#compact /U "$env:TEMP/swap.vhdx"
 Set-Content -Path "$env:USERPROFILE/.wslconfig" -Value "[wsl2]`nswap=0"
