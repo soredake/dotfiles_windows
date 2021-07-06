@@ -6,7 +6,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #choco feature enable -n=useRememberedArgumentsForUpgrades
 # install my packages
-choco install -y steam-cleaner steam-client 7zip chocolateygui keepassxc powertoys telegram ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv tor-browser wiztree ubisoft-connect zeal caffeine rclone parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo spotify
+choco install -y steam-cleaner steam-client 7zip chocolateygui keepassxc powertoys telegram ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode python nodejs yarn git hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools google-backup-and-sync nomacs mpv tor-browser wiztree ubisoft-connect zeal caffeine rclone parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming
 choco install -y retroarch --params '/DesktopShortcut'
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y origin --params '/DesktopIcon' # ea desktop?
@@ -14,7 +14,8 @@ choco install -y rpcs3 --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 ForEach ($app in 'viber','steam-client','firefox','origin','telegram','discord','rpcs3','ds4windows','ubisoft-connect','tor-browser','vscode') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 winget install LogMeIn.Hamachi
-winget install handywinget
+winget install HandyOrg.HandyWinget-GUI
+winget install BlueStack.BlueStacks
 pip install --user -U internetarchive
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
@@ -33,7 +34,7 @@ schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /
 setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
 
 # setup msys2
-C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
+C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils stow
 
 # config files, git
 Remove-Item -Path "$env:USERPROFILE\.gitconfig"
@@ -68,4 +69,10 @@ setx PATH "$env:PATH;$env:APPDATA\Python\Python39\Scripts"
 compact /U "$env:USERPROFILE\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState"
 
 # fix https://github.com/microsoft/WSL/issues/5336#issuecomment-770494713
-Set-Content -Path "$env:USERPROFILE/.wslconfig" -Value "[wsl2]`nswap=0"
+Set-Content -Path "$env:USERPROFILE\.wslconfig" -Value "[wsl2]`nswap=0"
+
+# https://stackoverflow.com/questions/30496116/how-to-disable-hyper-v-in-command-line
+bcdedit /set hypervisorlaunchtype off
+
+# mpv.net config # keepaspect-window
+Add-Content -Path "$env:APPDATA\mpv.net\mpv.conf" -Value "`nno-keepaspect-window`nslang = 'eng,en'"
