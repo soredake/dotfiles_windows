@@ -53,7 +53,7 @@
 [credential]
   # https://git-scm.com/docs/gitcredentials
   #helper = cache --timeout=3600 --socket=$XDG_RUNTIME_DIR/git-credential-cache.socket
-  #helper = manager-core
+  helper = manager-core
 [cola]
   spellcheck = false
 [feature]
@@ -61,6 +61,9 @@
   experimental = true
 [core]
   editor = \"C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe\" --wait
+  autocrlf = true
+  fscache = true
+  symlinks = false
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
