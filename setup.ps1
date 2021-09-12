@@ -5,15 +5,16 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # install my packages
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader vscode.install python nodejs.install yarn git.install hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree ubisoft-connect zeal.install rclone.portable parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp eartrumpet megasync obs-studio stretchly victoria msiafterburner dxwnd wincdemu streamlink ffmpeg adb
+choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader python nodejs.install yarn git.install hackfont microsoft-windows-terminal msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree ubisoft-connect zeal.install rclone.portable parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp eartrumpet megasync obs-studio stretchly victoria msiafterburner dxwnd wincdemu streamlink ffmpeg winaero-tweaker.install adb wsl-ubuntu-2004 wsl2
 choco install -y retroarch --params '/DesktopShortcut'; choco install -y origin --params '/DesktopIcon'; choco install -y rpcs3 --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord','rpcs3','ds4windows','ubisoft-connect','tor-browser','vscode.install','goggalaxy') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install LogMeIn.Hamachi; winget install HandyOrg.HandyWinget-GUI; winget install BlueStack.BlueStacks; winget install ElectronicArts.EADesktop; winget install BiSS.WSLDiskShrinker
-pip install --user -U internetarchive
+ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','ubisoft-connect','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+winget install LogMeIn.Hamachi; winget install HandyOrg.HandyWinget-GUI; winget install BlueStack.BlueStacks; winget install ElectronicArts.EADesktop; winget install BiSS.WSLDiskShrinker; winget install Microsoft.VisualStudioCode
+pip install --user -U internetarchive yt-dlp
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
+# for now i use `choco install wsl-ubuntu-2004 wsl2` as i don't have new anough windows
 # wsl --install -d Ubuntu
 
 # https://richardballard.co.uk/ssh-keys-on-windows-10/
