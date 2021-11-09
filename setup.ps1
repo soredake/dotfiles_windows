@@ -5,9 +5,8 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # install my packages
-# delete youtube-dl when new mpv.net version is comes
 # wsl-ubuntu-2004 wsl2 microsoft-windows-terminal
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader python nodejs.install yarn git.install hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree ubisoft-connect zeal.install rclone.portable parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp eartrumpet megasync obs-studio stretchly victoria msiafterburner dxwnd wincdemu minecraft-launcher ffmpeg winaero-tweaker.install adb yt-dlp gsudo
+choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader python nodejs.install yarn git.install hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree ubisoft-connect zeal.install rclone.portable parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp megasync obs-studio victoria msiafterburner dxwnd wincdemu minecraft-launcher ffmpeg winaero-tweaker.install adb yt-dlp gsudo vortex
 choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
@@ -86,3 +85,9 @@ trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
 
 # configure WSL2
 bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y python3-pip && pip install --user -U internetarchive'
+
+# https://remontka.pro/compact-os-windows-10/
+#compact /compactos:never
+
+# https://habr.com/ru/news/t/586786/comments/#comment_23656428
+schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
