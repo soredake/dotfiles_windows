@@ -5,22 +5,22 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # install my packages
-# wsl-ubuntu-2004 wsl2 microsoft-windows-terminal
-choco install -y steam-cleaner steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner epicgameslauncher viber edgedeflector jdownloader python nodejs.install yarn git.install hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree ubisoft-connect zeal.install rclone.portable parsec protonvpn youtube-dl ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp megasync obs-studio victoria msiafterburner dxwnd wincdemu minecraft-launcher ffmpeg winaero-tweaker.install adb yt-dlp gsudo vortex
-choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
+# TODO: do i need dxwnd?
+choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python nodejs.install yarn hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch ventoy victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
+# TODO: reverse logic of retroarch/origin
+# TODO: replace origin with eadesktop
+choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','ubisoft-connect','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h HandyOrg.HandyWinget-GUI; winget install -h BlueStack.BlueStacks; winget install -h ElectronicArts.EADesktop; winget install -h BiSS.WSLDiskShrinker; winget install -eh Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer
-pip install --user -U internetarchive
+ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+winget install -h KDE.Dolphin; winget install -h ElectronicArts.EADesktop; winget install -h LogMeIn.Hamachi; winget install -h HandyOrg.HandyWinget-GUI; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer
+pip install --user -U internetarchive "git+https://github.com/arecarn/dploy.git"
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
-# for now i use `choco install wsl-ubuntu-2004 wsl2` as i don't have new anough windows
 wsl --install -d Ubuntu
 
 # https://richardballard.co.uk/ssh-keys-on-windows-10/
 #Add-WindowsCapability -Online -Name OpenSSH.Client
-#Add-WindowsCapability -Online -Name OpenSSH.Server
 #Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service
 
 # https://haali.su/winutils/
@@ -31,41 +31,30 @@ schtasks /run /tn "switch language with right ctrl"
 # git for windows uses wrong ssh binary which leads to errors like `Permission Denied (publickey)` because it don't use windows ssh-agent
 # https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-Windows-using-Git-for-Windows-and-Win32_OpenSSH#on-client
 # https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
-setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
+#setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
 
 # setup msys2
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils stow
+C:\tools\msys64\mingw64.exe bash.exe -c 'ln -Pfv /c/Users/User/git/dotfiles_windows/dotfiles/.gitconfig $HOME'
 
-# config files, git
-Remove-Item -Path "$env:USERPROFILE\.gitconfig"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target ".\.gitconfig"
-New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.gitconfig" -Target ".\.gitconfig"
-# ssh
-New-Item -ItemType Junction -Path "C:\tools\msys64\home\user\.ssh" -Target "$env:USERPROFILE\.ssh"
-# mpv
+# setup dotfiles
 Remove-Item -Path "$env:APPDATA\mpv\*.conf"
-mkdir "$env:APPDATA\mpv\scripts"
-#Invoke-WebRequest -Uri "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/pause-when-minimize.lua" -OutFile "$env:APPDATA\mpv\scripts\pause-when-minimize.lua"
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\mpv.conf" -Target ".\mpv.conf"
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\input.conf" -Target ".\input.conf"
-# zsh
 Remove-Item -Path "C:\tools\msys64\home\user\.zshrc"
+Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+# TODO: is mkdir needed with dploy?
+mkdir "$env:APPDATA\mpv"
+mkdir "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 mkdir "C:\tools\msys64\home\user"
 New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.zshrc" -Target ".\.zshrc"
-# microsoft windows terminal
-Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-mkdir "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
-New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target ".\mswinterminal.json"
+New-Item -ItemType Junction -Path "C:\tools\msys64\home\user\.ssh" -Target "$env:USERPROFILE\.ssh"
+dploy stow dotfiles "$env:USERPROFILE"
 
 # yarn
 cd ~; yarn set version berry
 
-# add python to path, better to install python with winget once https://github.com/microsoft/winget-cli/issues/219 and https://github.com/microsoft/winget-cli/issues/212 is resolved
+# add python to path
+# TODO: better to install python with winget once https://github.com/microsoft/winget-cli/issues/219 and https://github.com/microsoft/winget-cli/issues/212 is resolved
 setx PATH "$env:PATH;$env:APPDATA\Python\Python310\Scripts"
-
-# https://mspscripts.com/disable-windows-10-fast-boot-via-powershell/
-# leave disabled if you use dualboot or wifi adapters
-#reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HiberbootEnabled /t REG_DWORD /d "0" /f
 
 # trakt tv sync
 # TODO: use full path
@@ -91,3 +80,32 @@ bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y pytho
 
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428
 schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
+
+# https://www.reddit.com/r/Windows11/comments/qs96dp/comment/hkbp794/ or https://www.ghacks.net/2021/10/08/how-to-uninstall-widgets-in-windows-11/
+Get-AppxPackage MicrosoftWindows.Client.WebExperience* | Remove-AppxPackage
+
+# unneeded
+Set-Service -Name "ClickToRunSvc" -Status stopped -StartupType disabled
+
+# cleanup
+winget uninstall Microsoft.WindowsMaps_8wekyb3d8bbwe
+winget uninstall Microsoft.Windows.Photos_8wekyb3d8bbwe
+winget uninstall Microsoft.549981C3F5F10_8wekyb3d8bbwe
+winget uninstall Microsoft.GetHelp_8wekyb3d8bbwe
+winget uninstall Microsoft.WindowsCamera_8wekyb3d8bbwe
+
+# hide user folders in "this pc"
+#Invoke-WebRequest -Uri "https://git.io/JMGtW" -OutFile "$env:TEMP/temp.reg"
+#reg import "$env:TEMP/temp.reg"
+
+# https://answers.microsoft.com/en-us/windows/forum/all/opening-a-folder-adds-shortcut-under-this-pc-in/8c0de37a-e517-457d-8ce6-b39ce9e5c04e
+# https://www.tenforums.com/customization/96893-updating-reg-file-removing-folder-pc.html
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Desktop
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{f42ee2d3-909f-4907-8871-4c22fc0bf756}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Documents
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{7d83ee9b-2244-4e70-b1f5-5393042af1e4}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Downloads
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{35286a68-3c57-41a1-bbb1-0eae73d76c95}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Movies
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{a0c69a99-21c8-4671-8703-7934162fcf1d}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Music
+Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{0ddd015d-b06c-45d5-8c4c-f59713854639}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Pictures
+
+# https://winaero.com/hide-removable-drives-navigation-pane-windows-10/
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" /f

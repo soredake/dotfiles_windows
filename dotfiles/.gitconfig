@@ -1,0 +1,67 @@
+# https://git-scm.com/docs/git-config
+[help]
+  autocorrect = 1
+[diff]
+  algorithm = histogram
+  renames = copies
+[merge]
+  log = true
+[alias]
+  # Verbose branches info.
+  b = branch -a
+  # Clone a repository including all submodules.
+  c = clone --recursive
+  # Commit all changes.
+  ca = !git add -A && git commit -av
+  # Commit.
+  ci = commit
+  # Checkout.
+  co = checkout
+  # Delete a branch both locally and remotely.
+  del = "!f() { git branch -d \"$1\"; git push origin :\"$1\"; }; f"
+  # Remove branches that have already been merged with master (delete merged).
+  dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+  # Show the staged changes.
+  dc = diff --cached
+  # Create a feature branch and push it back up. Assumes origin/master is used.
+  f = "!f() { git checkout master; git pull origin master; git checkout -B \"$1\"; git push -u origin \"$1\"; }; f"
+  # View abbreviated SHA, description, and graph of the latest 20 commits.
+  l = log --graph -n 20 --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+  # View alternative, more detailed log, description and graph of latest commits.
+  ld = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+  # Shortcut to pull master from origin.
+  pom = pull origin master
+  # Verbose remotes info.
+  remotes = remote -v
+  # Add removed files to the staging area.
+  rmd = "!f() { git rm $(git ls-files --deleted); }; f"
+  # Show a concise status of the working directory, along with the branch and
+  # the number of commits behind and/or ahead.
+  s = status --short --branch
+  # Like "git show myfile", but uses the last commit that changed "myfile".
+  showlast = log -n 1 -p
+  # Show branches that have already been merged with current branch.
+  sm = show-merges
+  # Status.
+  st = status
+  # Verbose tags info.
+  tags = tag -l
+  # Undo last commit.
+  undo = reset --soft HEAD~1
+  # Undo push.
+  udp = push -f origin HEAD^:master
+[credential]
+  helper = manager-core
+[cola]
+  spellcheck = false
+[feature]
+  manyFiles = true
+  experimental = true
+[core]
+  editor = \"C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe\" --wait
+  autocrlf = true
+  fscache = true
+  useBuiltinFSMonitor = true
+[user]
+  name = soredake
+  email = 5204968+soredake@users.noreply.github.com
