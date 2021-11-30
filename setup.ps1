@@ -6,21 +6,21 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # install my packages
 # TODO: do i need dxwnd?
-choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python nodejs.install yarn hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch ventoy victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
+choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python3 nodejs.install yarn hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
 # TODO: reverse logic of retroarch/origin
 # TODO: replace origin with eadesktop
+# TODO: make /noopenssh default on windows >=10?
 choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install -h KDE.Dolphin; winget install -h ElectronicArts.EADesktop; winget install -h LogMeIn.Hamachi; winget install -h HandyOrg.HandyWinget-GUI; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer
-pip install --user -U internetarchive "git+https://github.com/arecarn/dploy.git"
+winget install -h KDE.Dolphin; winget install -h ElectronicArts.EADesktop; winget install -h LogMeIn.Hamachi; winget install -h HandyOrg.HandyWinget-GUI; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install Python.Python.3
+pip install -U internetarchive "git+https://github.com/arecarn/dploy.git"
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
 wsl --install -d Ubuntu
 
 # https://richardballard.co.uk/ssh-keys-on-windows-10/
-#Add-WindowsCapability -Online -Name OpenSSH.Client
 #Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service
 
 # https://haali.su/winutils/
@@ -35,26 +35,17 @@ schtasks /run /tn "switch language with right ctrl"
 
 # setup msys2
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils stow
-C:\tools\msys64\mingw64.exe bash.exe -c 'ln -Pfv /c/Users/User/git/dotfiles_windows/dotfiles/.gitconfig $HOME'
 
 # setup dotfiles
-Remove-Item -Path "$env:APPDATA\mpv\*.conf"
-Remove-Item -Path "C:\tools\msys64\home\user\.zshrc"
 Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-# TODO: is mkdir needed with dploy?
-mkdir "$env:APPDATA\mpv"
-mkdir "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 mkdir "C:\tools\msys64\home\user"
 New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.zshrc" -Target ".\.zshrc"
+New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.gitconfig" -Target ".\dotfiles\.gitconfig"
 New-Item -ItemType Junction -Path "C:\tools\msys64\home\user\.ssh" -Target "$env:USERPROFILE\.ssh"
 dploy stow dotfiles "$env:USERPROFILE"
 
 # yarn
-cd ~; yarn set version berry
-
-# add python to path
-# TODO: better to install python with winget once https://github.com/microsoft/winget-cli/issues/219 and https://github.com/microsoft/winget-cli/issues/212 is resolved
-setx PATH "$env:PATH;$env:APPDATA\Python\Python310\Scripts"
+cd ~; yarn set version stable
 
 # trakt tv sync
 # TODO: use full path
@@ -72,11 +63,8 @@ trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
 # fix https://github.com/msys2/MSYS2-packages/issues/138#issuecomment-775316680
 #C:\tools\msys64\mingw64.exe bash.exe -c 'mkpasswd > /etc/passwd; mkgroup > /etc/group; sed -i "s/db//g" /etc/nsswitch.conf'
 
-# configure WSL2
+# setup WSL2
 bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y python3-pip && pip install --user -U internetarchive'
-
-# https://remontka.pro/compact-os-windows-10/
-#compact /compactos:never
 
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428
 schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
@@ -93,10 +81,6 @@ winget uninstall Microsoft.Windows.Photos_8wekyb3d8bbwe
 winget uninstall Microsoft.549981C3F5F10_8wekyb3d8bbwe
 winget uninstall Microsoft.GetHelp_8wekyb3d8bbwe
 winget uninstall Microsoft.WindowsCamera_8wekyb3d8bbwe
-
-# hide user folders in "this pc"
-#Invoke-WebRequest -Uri "https://git.io/JMGtW" -OutFile "$env:TEMP/temp.reg"
-#reg import "$env:TEMP/temp.reg"
 
 # https://answers.microsoft.com/en-us/windows/forum/all/opening-a-folder-adds-shortcut-under-this-pc-in/8c0de37a-e517-457d-8ce6-b39ce9e5c04e
 # https://www.tenforums.com/customization/96893-updating-reg-file-removing-folder-pc.html
