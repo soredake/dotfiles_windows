@@ -6,18 +6,25 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # install my packages
 # TODO: do i need dxwnd?
-choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python3 nodejs.install yarn hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox crystaldiskinfo.install spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
-# TODO: reverse logic of retroarch/origin
+choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python3 nodejs.install hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
+# TODO: reverse logic of retroarch or wait for retroarch to appear in winget
 # TODO: replace origin with eadesktop
 # TODO: make /noopenssh default on windows >=10?
 choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install -h KDE.Dolphin; winget install -h ElectronicArts.EADesktop; winget install -h LogMeIn.Hamachi; winget install -h HandyOrg.HandyWinget-GUI; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install Python.Python.3
+winget install -h microsoft.powershell; winget install -h KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install -h Python.Python.3
 pip install -U internetarchive "git+https://github.com/arecarn/dploy.git"
+# powershell
+Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
+#Install-Module PowerShellGet
+#Update-Module PowerShellGet -Force
+Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+Install-Module -Name posh-git,npm-completion,yarn-completion -Scope CurrentUser
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
+# TODO: -–no-launch? https://blogs.windows.com/windows-insider/2021/12/08/announcing-windows-11-insider-preview-build-22518/
 wsl --install -d Ubuntu
 
 # https://richardballard.co.uk/ssh-keys-on-windows-10/
@@ -28,13 +35,9 @@ Invoke-WebRequest -Uri "https://haali.su/winutils/lswitch.exe" -OutFile "$env:US
 schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /tr "$env:USERPROFILE\lswitch.exe 163"
 schtasks /run /tn "switch language with right ctrl"
 
-# git for windows uses wrong ssh binary which leads to errors like `Permission Denied (publickey)` because it don't use windows ssh-agent
-# https://github.com/PowerShell/Win32-OpenSSH/wiki/Setting-up-a-Git-server-on-Windows-using-Git-for-Windows-and-Win32_OpenSSH#on-client
-# https://github.com/PowerShell/Win32-OpenSSH/issues/1136#issuecomment-382074202
-#setx GIT_SSH_COMMAND "C:\\Windows\\System32\\OpenSSH\\ssh.exe -T"
-
 # setup msys2
-C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils stow
+# python is neeed for npm/yarn completion in fish
+C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
 
 # setup dotfiles
 Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
@@ -44,8 +47,8 @@ New-Item -ItemType SymbolicLink -Path "C:\tools\msys64\home\user\.gitconfig" -Ta
 New-Item -ItemType Junction -Path "C:\tools\msys64\home\user\.ssh" -Target "$env:USERPROFILE\.ssh"
 dploy stow dotfiles "$env:USERPROFILE"
 
-# yarn
-cd ~; yarn set version stable
+# https://yarnpkg.com/getting-started/install
+cd ~; corepack enable; yarn set version stable
 
 # trakt tv sync
 # TODO: use full path
@@ -55,13 +58,10 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 pipx install trakt-scrobbler
 trakts auth
 trakts config set players.monitored mpv
-trakts config set fileinfo.whitelist F:\
+trakts config set fileinfo.whitelist F:\ # TODO: add dynamic disk letter detection
 trakts config set general.enable_notifs False
 "input-ipc-server=\\.\pipe\mpvsocket`n" + (Get-Content "$env:APPDATA\mpv.net\mpv.conf" -Raw) | Set-Content "$env:APPDATA\mpv.net\mpv.conf"
 trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
-
-# fix https://github.com/msys2/MSYS2-packages/issues/138#issuecomment-775316680
-#C:\tools\msys64\mingw64.exe bash.exe -c 'mkpasswd > /etc/passwd; mkgroup > /etc/group; sed -i "s/db//g" /etc/nsswitch.conf'
 
 # setup WSL2
 bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y python3-pip && pip install --user -U internetarchive'
@@ -82,14 +82,5 @@ winget uninstall Microsoft.549981C3F5F10_8wekyb3d8bbwe
 winget uninstall Microsoft.GetHelp_8wekyb3d8bbwe
 winget uninstall Microsoft.WindowsCamera_8wekyb3d8bbwe
 
-# https://answers.microsoft.com/en-us/windows/forum/all/opening-a-folder-adds-shortcut-under-this-pc-in/8c0de37a-e517-457d-8ce6-b39ce9e5c04e
-# https://www.tenforums.com/customization/96893-updating-reg-file-removing-folder-pc.html
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Desktop
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{f42ee2d3-909f-4907-8871-4c22fc0bf756}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Documents
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{7d83ee9b-2244-4e70-b1f5-5393042af1e4}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Downloads
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{35286a68-3c57-41a1-bbb1-0eae73d76c95}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Movies
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{a0c69a99-21c8-4671-8703-7934162fcf1d}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Music
-Set-ItemProperty -Path HKLM:\"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{0ddd015d-b06c-45d5-8c4c-f59713854639}\PropertyBag" -Name "ThisPCPolicy" -Value Hide # Pictures
-
-# https://winaero.com/hide-removable-drives-navigation-pane-windows-10/
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" /f
+# gsudo
+sudo config CacheMode Auto
