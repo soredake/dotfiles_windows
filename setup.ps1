@@ -6,7 +6,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # install my packages
 # TODO: do i need dxwnd?
-choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader python3 nodejs.install hackfont msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo
+choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox spotify mpvnet.install borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack
 # TODO: reverse logic of retroarch or wait for retroarch to appear in winget
 # TODO: replace origin with eadesktop
 # TODO: make /noopenssh default on windows >=10?
@@ -21,7 +21,7 @@ Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
 #Install-Module PowerShellGet
 #Update-Module PowerShellGet -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-Install-Module -Name posh-git,npm-completion,yarn-completion -Scope CurrentUser
+Install-Module -Name posh-git,npm-completion,yarn-completion,oh-my-posh -Scope CurrentUser
 
 # https://docs.microsoft.com/en-us/windows/wsl/install-win10
 # TODO: -–no-launch? https://blogs.windows.com/windows-insider/2021/12/08/announcing-windows-11-insider-preview-build-22518/
@@ -35,8 +35,7 @@ Invoke-WebRequest -Uri "https://haali.su/winutils/lswitch.exe" -OutFile "$env:US
 schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /tr "$env:USERPROFILE\lswitch.exe 163"
 schtasks /run /tn "switch language with right ctrl"
 
-# setup msys2
-# python is neeed for npm/yarn completion in fish
+# setup msys2, python is neeed for npm/yarn completion in fish
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils
 
 # setup dotfiles
@@ -64,7 +63,7 @@ trakts config set general.enable_notifs False
 trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
 
 # setup WSL2
-bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y python3-pip && pip install --user -U internetarchive'
+bash.exe -c 'sudo apt update && sudo apt upgrade -y && sudo apt install -y python3-pip && pip install --user internetarchive'
 
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428
 schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
