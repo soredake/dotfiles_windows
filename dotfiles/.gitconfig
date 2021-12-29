@@ -58,7 +58,7 @@
   manyFiles = true
   experimental = true
 [core]
-  editor = \"C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe\" --wait
+  editor = code.exe --wait
   autocrlf = true
   fscache = true
   useBuiltinFSMonitor = true

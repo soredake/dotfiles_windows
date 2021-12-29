@@ -40,15 +40,39 @@
         "list": 
         [
             {
-                "colorScheme": "Firewatch",
-                "commandline": "powershell.exe",
-                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "hidden": false,
+                "colorScheme": "Tango+Solarized dark",
                 "font": 
                 {
                     "face": "Hack Nerd Font",
                     "size": 12
                 },
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "colorScheme": "Tango+Solarized dark",
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl",
+                "font":
+                {
+                    "face": "Hack Nerd Font",
+                    "size": 12
+                }
+            },
+            {
+                "colorScheme": "Firewatch",
+                "commandline": "powershell.exe",
+                "font": 
+                {
+                    "face": "Hack Nerd Font",
+                    "size": 12
+                },
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
                 "name": "Windows PowerShell"
             },
             {
@@ -86,24 +110,6 @@
                 "icon": "%PROGRAMFILES%\\git\\mingw64\\share\\git\\git-for-windows.ico",
                 "name": "Git Bash",
                 "snapOnInput": true
-            },
-            {
-                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-                "hidden": false,
-                "name": "Ubuntu",
-                "source": "Windows.Terminal.Wsl"
-            },
-            {
-                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-                "hidden": false,
-                "font": 
-                {
-                    "face": "Hack Nerd Font",
-                    "size": 12
-                },
-                "colorScheme": "Firewatch",
-                "name": "PowerShell",
-                "source": "Windows.Terminal.PowershellCore"
             }
         ]
     },
@@ -179,7 +185,7 @@
             "yellow": "#B9AC4A"
         },
         {
-            "background": "#1E2027",
+            "background": "#000000",
             "black": "#585F6D",
             "blue": "#4D89C4",
             "brightBlack": "#585F6D",
