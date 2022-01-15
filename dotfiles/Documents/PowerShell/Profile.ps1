@@ -17,3 +17,9 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm; sudo wsl --update }
 function iaupload { ia upload --checksum --verify --retries 10 -H x-archive-keep-old-version:0 $args }
 oh-my-posh --init --shell pwsh --config $env:POSH_THEMES_PATH/pure.omp.json | Invoke-Expression
+
+function backup {
+  rclone sync -P C:\Users\User\Мой` диск F:\backups\main
+  rclone dedupe -P --dedupe-mode newest mega:/backups
+  rclone sync -P F:\backups mega:backups
+}

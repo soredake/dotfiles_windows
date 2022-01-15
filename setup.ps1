@@ -6,15 +6,15 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # install my packages
 # TODO: do i need dxwnd?
-choco install -y steam-client 7zip.install chocolateygui keepassxc powertoys telegram.install ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack
+choco install -y steam-client chocolateygui keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack hashcheck
 # TODO: reverse logic of retroarch or wait for retroarch to appear in winget
 # TODO: replace origin with eadesktop
 # TODO: make /noopenssh default on windows >=10?
 choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'viber','steam-client','firefox','origin','telegram.install','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install -h microsoft.powershell; winget install -h KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install -h Python.Python.3; winget install -h 9n64sqztb3lm; winget install -h Spotify.Spotify
+ForEach ($app in 'viber','steam-client','firefox','origin','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+winget install -h microsoft.powershell; winget install -h KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install -h Python.Python.3; winget install -h 9n64sqztb3lm; winget install -h Spotify.Spotify; winget install -h rammichael.7+TaskbarTweaker.Beta; winget install -h 64Gram.64Gram; winget install -h mcmilk.7zip-zstd
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
 # msys2, python is neeed for npm/yarn completion in fish
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils winpty
@@ -57,7 +57,7 @@ trakts config set general.enable_notifs False
 trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
 
 # setup WSL2
-bash.exe -c 'sudo apt update && sudo add-apt-repository -y ppa:fish-shell/release-3 && sudo apt upgrade -y && sudo apt install -y python3-pip fish && pip install --user internetarchive yt-dlp tubeup && fish -c \"curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher pure-fish/pure\" && chsh -s /usr/bin/fish && wget -O $HOME/.config/fish/config.fish https://github.com/soredake/dotfiles_home/raw/kubuntu/home/fish/.config/fish/config.fish && echo \"fish_add_path \$HOME/.local/bin\" >> ~/.config/fish/config.fish'
+bash wsl.sh
 
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428
 schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
@@ -81,7 +81,7 @@ sudo config CacheMode Auto
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428
 net localgroup "Пользователи журналов производительности" User /add
 
-# enable cloudflare with DOH
+# enable cloudflare dns with DOH
 # https://superuser.com/questions/1626047/powershell-how-to-figure-out-adapterindex-for-interface-to-public/1626051#1626051
 # https://winitpro.ru/index.php/2020/07/10/nastroyka-dns-over-https-doh-v-windows/
 Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1","1.0.0.1"
@@ -89,3 +89,18 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Paramet
 
 # disable hibernation
 powercfg /hibernate off
+
+# receive microsoft product updates, https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/250#issuecomment-503887779
+(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
+
+
+# shortcuts, https://stackoverflow.com/a/31815367
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\BreakTimer - disable.lnk")
+$Shortcut.TargetPath = "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe"
+$Shortcut.Arguments = "disable"
+$Shortcut.Save()
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\BreakTimer - enable.lnk")
+$Shortcut.TargetPath = "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe"
+$Shortcut.Arguments = "enable"
+$Shortcut.Save()
