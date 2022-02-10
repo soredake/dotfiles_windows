@@ -5,8 +5,8 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # install my packages
-# TODO: do i need dxwnd?
-choco install -y steam-client chocolateygui keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack hashcheck
+# TODO: do i need dxwnd/ffmpeg/hashcheck/msys2?
+choco install -y steam-client chocolateygui keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack hashcheck tor
 # TODO: reverse logic of retroarch or wait for retroarch to appear in winget
 # TODO: replace origin with eadesktop
 # TODO: make /noopenssh default on windows >=10?
@@ -14,7 +14,7 @@ choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choc
 #choco install -y pcsx2.install --params '/Desktop'
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 ForEach ($app in 'viber','steam-client','firefox','origin','discord.install','rpcs3','ds4windows','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-winget install -h microsoft.powershell; winget install -h KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install -h Python.Python.3; winget install -h 9n64sqztb3lm; winget install -h Spotify.Spotify; winget install -h rammichael.7+TaskbarTweaker.Beta; winget install -h 64Gram.64Gram; winget install -h mcmilk.7zip-zstd
+winget install -h microsoft.powershell; winget install -h KDE.Dolphin; winget install -h LogMeIn.Hamachi; winget install -h BlueStack.BlueStacks; winget install -h BiSS.WSLDiskShrinker; winget install -h Microsoft.VisualStudioCode; winget install -h kapitainsky.RcloneBrowser; winget install -h TomWatson.BreakTimer; winget install -h 9nghp3dx8hdx; winget install -h Python.Python.3; winget install -h 9n64sqztb3lm; winget install -h Spotify.Spotify; winget install -h rammichael.7+TaskbarTweaker.Beta; winget install -h 64Gram.64Gram; winget install -h mcmilk.7zip-zstd; winget install -h stromcon.emusak; winget install -h AnthonyBeaumont.AchievementWatcher
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
 # msys2, python is neeed for npm/yarn completion in fish
 C:\tools\msys64\mingw64.exe pacman.exe -S --noconfirm zsh fish python diffutils winpty
@@ -26,10 +26,10 @@ Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git,npm-completion,yarn-completion,oh-my-posh,Terminal-Icons -Scope CurrentUser
 
 # https://docs.microsoft.com/en-us/windows/wsl/install
-wsl --install -–no-launch -d Ubuntu
+wsl --install -–no-launch
 
 # https://haali.su/winutils/
-Invoke-WebRequest -Uri "https://haali.su/winutils/lswitch.exe" -OutFile "$env:USERPROFILE/lswitch.exe"
+Invoke-WebRequest -Uri "https://haali.net/winutils/lswitch.exe" -OutFile "$env:USERPROFILE/lswitch.exe"
 schtasks /create /tn "switch language with right ctrl" /sc onlogon /rl highest /tr "$env:USERPROFILE\lswitch.exe 163"
 schtasks /run /tn "switch language with right ctrl"
 
@@ -44,18 +44,6 @@ dploy stow dotfiles "$env:USERPROFILE"
 # https://yarnpkg.com/getting-started/install
 cd ~; corepack enable; yarn set version stable
 
-# trakt tv sync
-python -m pip install pipx
-pipx ensurepath
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/questions/17794507/powershell-reload-the-path-in-powershell
-pipx install trakt-scrobbler
-trakts auth
-trakts config set players.monitored mpv
-trakts config set fileinfo.whitelist F:\ # TODO: add dynamic disk letter detection
-trakts config set general.enable_notifs False
-"input-ipc-server=\\.\pipe\mpvsocket`n" + (Get-Content "$env:APPDATA\mpv.net\mpv.conf" -Raw) | Set-Content "$env:APPDATA\mpv.net\mpv.conf"
-trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
-
 # setup WSL2
 bash wsl.sh
 
@@ -68,12 +56,14 @@ Get-AppxPackage MicrosoftWindows.Client.WebExperience* | Remove-AppxPackage
 # unneeded
 Set-Service -Name "ClickToRunSvc" -Status stopped -StartupType disabled
 
-# cleanup
+# cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os
 winget uninstall Microsoft.WindowsMaps_8wekyb3d8bbwe
 winget uninstall Microsoft.Windows.Photos_8wekyb3d8bbwe
 winget uninstall Microsoft.549981C3F5F10_8wekyb3d8bbwe
 winget uninstall Microsoft.GetHelp_8wekyb3d8bbwe
 winget uninstall Microsoft.WindowsCamera_8wekyb3d8bbwe
+winget uninstall Microsoft.PowerAutomateDesktop
+winget uninstall Microsoft.Getstarted
 
 # gsudo
 sudo config CacheMode Auto
@@ -93,7 +83,6 @@ powercfg /hibernate off
 # receive microsoft product updates, https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/250#issuecomment-503887779
 (New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
 
-
 # shortcuts, https://stackoverflow.com/a/31815367
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\BreakTimer - disable.lnk")
@@ -104,3 +93,21 @@ $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\BreakTimer - enab
 $Shortcut.TargetPath = "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe"
 $Shortcut.Arguments = "enable"
 $Shortcut.Save()
+
+# enable tor
+tor.exe --service install
+
+# https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
+Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name DisableStartupSound -Value 1 -Force
+
+# setup mpv.net
+"ytdl-raw-options=mark-watched=,cookies-from-browser=firefox,write-auto-subs=,`nytdl-format=bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4`n" + (Get-Content "$env:APPDATA\mpv.net\mpv.conf" -Raw) | Set-Content "$env:APPDATA\mpv.net\mpv.conf"
+
+# https://github.com/microsoft/WSL/issues/4901#issuecomment-1027762021
+Disable-NetAdapterLso -Name "vEthernet (WSL)"
+
+# https://github.com/po5/mpv_sponsorblock
+git clone --depth=1 "https://github.com/po5/mpv_sponsorblock.git" $env:APPDATA\mpv.net\scripts
+Remove-Item -LiteralPath "$env:APPDATA\mpv.net\scripts\.git" -Force -Recurse
+# https://www.kittell.net/code/powershell-unix-sed-equivalent-change-text-file/
+(Get-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua).replace('local_database = true', 'local_database = false') | Set-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua
