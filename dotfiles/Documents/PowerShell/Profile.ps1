@@ -15,11 +15,10 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/
 # TODO: wsl --update will not be needed in future https://devblogs.microsoft.com/commandline/a-preview-of-wsl-in-the-microsoft-store-is-now-available/
 # TODO: topgrade
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm; sudo wsl --update }
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm; sudo wsl --update; winget upgrade --all}
 function iaupload { ia upload --checksum --verify --retries 10 --no-backup $args }
 function iauploadf { ia upload --verify --retries 10 --no-backup $args }
 oh-my-posh --init --shell pwsh --config $env:POSH_THEMES_PATH/pure.omp.json | Invoke-Expression
-#function setupcookies { yt-dlp --cookies-from-browser firefox }
 
 function backup {
   rclone sync -P C:\Users\User\Мой` диск F:\backups\main

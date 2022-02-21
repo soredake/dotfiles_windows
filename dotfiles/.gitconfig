@@ -65,5 +65,3 @@
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
-[credential "https://src.fedoraproject.org"]
-	provider = generic

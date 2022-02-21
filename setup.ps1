@@ -53,9 +53,6 @@ schtasks /change /disable /tn "\Microsoft\Windows\Management\Provisioning\Logon"
 # https://www.reddit.com/r/Windows11/comments/qs96dp/comment/hkbp794/ or https://www.ghacks.net/2021/10/08/how-to-uninstall-widgets-in-windows-11/
 Get-AppxPackage MicrosoftWindows.Client.WebExperience* | Remove-AppxPackage
 
-# unneeded
-Set-Service -Name "ClickToRunSvc" -Status stopped -StartupType disabled
-
 # cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os
 winget uninstall Microsoft.WindowsMaps_8wekyb3d8bbwe
 winget uninstall Microsoft.Windows.Photos_8wekyb3d8bbwe
@@ -98,10 +95,7 @@ $Shortcut.Save()
 tor.exe --service install
 
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
-Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name DisableStartupSound -Value 1 -Force
-
-# setup mpv.net
-"ytdl-raw-options=mark-watched=,cookies-from-browser=firefox,write-auto-subs=,`nytdl-format=bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4`n" + (Get-Content "$env:APPDATA\mpv.net\mpv.conf" -Raw) | Set-Content "$env:APPDATA\mpv.net\mpv.conf"
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 
 # https://github.com/microsoft/WSL/issues/4901#issuecomment-1027762021
 Disable-NetAdapterLso -Name "vEthernet (WSL)"
@@ -111,3 +105,24 @@ git clone --depth=1 "https://github.com/po5/mpv_sponsorblock.git" $env:APPDATA\m
 Remove-Item -LiteralPath "$env:APPDATA\mpv.net\scripts\.git" -Force -Recurse
 # https://www.kittell.net/code/powershell-unix-sed-equivalent-change-text-file/
 (Get-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua).replace('local_database = true', 'local_database = false') | Set-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua
+
+# disable lock screen, https://superuser.com/a/1659652/1506333
+$Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
+If  ( -Not ( Test-Path "Registry::$Key")){New-Item -Path "Registry::$Key" -ItemType RegistryKey -Force}
+Set-ItemProperty -path "Registry::$Key" -Name "NoLockScreen" -Type "DWORD" -Value 1
+
+# letyshops firefox profile
+#cd "C:\Program Files\Mozilla Firefox"
+#.\firefox.exe -CreateProfile letyshops
+C:\Program` Files\Mozilla` Firefox\firefox.exe -CreateProfile letyshops
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Firefox - LetyShops profile.lnk")
+$Shortcut.TargetPath = "C:\Program Files\Mozilla Firefox\firefox.exe"
+$Shortcut.Arguments = "-P letyshops"
+$Shortcut.Save()
+
+# rtss shortcut
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\RTSS.lnk")
+$Shortcut.TargetPath = "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe"
+$Shortcut.Save()
