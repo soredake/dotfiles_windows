@@ -103,8 +103,13 @@ Disable-NetAdapterLso -Name "vEthernet (WSL)"
 # https://github.com/po5/mpv_sponsorblock
 git clone --depth=1 "https://github.com/po5/mpv_sponsorblock.git" $env:APPDATA\mpv.net\scripts
 Remove-Item -LiteralPath "$env:APPDATA\mpv.net\scripts\.git" -Force -Recurse
+Remove-Item "$env:APPDATA\mpv.net\scripts\*" -include README.md, LICENSE
 # https://www.kittell.net/code/powershell-unix-sed-equivalent-change-text-file/
 (Get-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua).replace('local_database = true', 'local_database = false') | Set-Content $env:APPDATA\mpv.net\scripts\sponsorblock.lua
+
+# https://github.com/fbriere/mpv-scripts/tree/master/scripts
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" -OutFile $env:APPDATA\mpv.net\scripts\tree-profiles.lua
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" -OutFile $env:APPDATA\mpv.net\scripts\brace-expand.lua
 
 # disable lock screen, https://superuser.com/a/1659652/1506333
 $Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
