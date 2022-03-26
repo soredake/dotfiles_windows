@@ -1,0 +1,12 @@
+# vim: ft=properties
+DataDirectory C:\Users\User\AppData\Local\tor
+SocksPort 9050
+SocksPolicy accept 127.0.0.1
+SocksPolicy reject *
+ExcludeExitNodes {RU},{UA}
+ExcludeNodes {RU},{UA}
+HardwareAccel 1
+GeoIPFile C:\ProgramData\chocolatey\lib\tor\tools\Data\Tor\geoip
+GeoIPv6File C:\ProgramData\chocolatey\lib\tor\tools\Data\Tor\geoip6
+#Log notice file C:\Users\User\AppData\Local\tor\notice.log
+#Log warn file C:\Users\User\AppData\Local\tor\notice.log

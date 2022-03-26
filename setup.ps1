@@ -91,8 +91,8 @@ $Shortcut.TargetPath = "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe"
 $Shortcut.Arguments = "enable"
 $Shortcut.Save()
 
-# enable tor
-tor.exe --service install
+# add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
+New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f C:\Users\User\git\dotfiles_windows\torrc"'
 
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
@@ -117,8 +117,6 @@ If  ( -Not ( Test-Path "Registry::$Key")){New-Item -Path "Registry::$Key" -ItemT
 Set-ItemProperty -path "Registry::$Key" -Name "NoLockScreen" -Type "DWORD" -Value 1
 
 # letyshops firefox profile
-#cd "C:\Program Files\Mozilla Firefox"
-#.\firefox.exe -CreateProfile letyshops
 C:\Program` Files\Mozilla` Firefox\firefox.exe -CreateProfile letyshops
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Firefox - LetyShops profile.lnk")
@@ -126,8 +124,19 @@ $Shortcut.TargetPath = "C:\Program Files\Mozilla Firefox\firefox.exe"
 $Shortcut.Arguments = "-P letyshops"
 $Shortcut.Save()
 
-# rtss shortcut
+# Shortcuts
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\RTSS.lnk")
 $Shortcut.TargetPath = "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe"
 $Shortcut.Save()
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\128Bit-Yuzu Maintenance Tool.lnk")
+$Shortcut.TargetPath = "$env:LOCALAPPDATA\128Bit-Yuzu\maintenancetool.exe"
+$Shortcut.Save()
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Core Temp.lnk")
+$Shortcut.TargetPath = "C:\ProgramData\chocolatey\lib\coretemp\tools\Core Temp.exe"
+$Shortcut.Save()
+
+# i don't need this thanks https://github.com/AveYo/MediaCreationTool.bat/blob/main/bypass11/windows_update_refresh.bat#L25
+New-ItemProperty -Path 'HKCU:\Control Panel\UnsupportedHardwareNotificationCache' -Name 'SV2' -Value 0 -PropertyType DWord -Force
