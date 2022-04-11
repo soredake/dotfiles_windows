@@ -94,6 +94,8 @@ $Shortcut.Save()
 # add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f C:\Users\User\git\dotfiles_windows\torrc"'
 
+wt --title Backup pwsh -c backup
+
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 
@@ -140,3 +142,17 @@ $Shortcut.Save()
 
 # i don't need this thanks https://github.com/AveYo/MediaCreationTool.bat/blob/main/bypass11/windows_update_refresh.bat#L25
 New-ItemProperty -Path 'HKCU:\Control Panel\UnsupportedHardwareNotificationCache' -Name 'SV2' -Value 0 -PropertyType DWord -Force
+
+# explorer tweaks https://stackoverflow.com/a/8110982/4207635
+$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+Set-ItemProperty $key Hidden 1
+Set-ItemProperty $key HideFileExt 0
+
+# https://pureinfotech.com/enable-hardware-accelerated-gpu-scheduling-windows-11/
+#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
+
+# https://github.com/farag2/Sophia-Script-for-Windows/blob/d1e5ce4c20ee30e2d8fbefc63807289ac7cbd1be/Sophia%20Script/Sophia%20Script%20for%20Windows%2011%20PowerShell%207/Module/Sophia.psm1#L11466
+#New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo -Name "(default)" -PropertyType String -Value "-{7BA4C740-9E81-11CF-99D3-00AA004AE837}" -Force
+# https://github.com/farag2/Sophia-Script-for-Windows/blob/d1e5ce4c20ee30e2d8fbefc63807289ac7cbd1be/Sophia%20Script/Sophia%20Script%20for%20Windows%2011%20PowerShell%207/Module/Sophia.psm1#L11142
+New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Force
+New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" -PropertyType String -Value "Play to menu" -Force

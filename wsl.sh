@@ -8,6 +8,7 @@ fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/
 chsh -s /usr/bin/fish
 wget -O "$HOME/.config/fish/config.fish" https://github.com/soredake/dotfiles_home/raw/kubuntu/home/fish/.config/fish/config.fish
 echo "fish_add_path $HOME/.local/bin" >> ~/.config/fish/config.fish
+echo "alias upall 'sudo apt update; sudo apt upgrade -y; pipx upgrade-all'" >> ~/.config/fish/config.fish
 # https://github.com/bibanon/tubeup/issues/172
 mkdir "$HOME/.ia"
 ln -sfv "$HOME/.config/internetarchive/ia.ini" "$HOME/.config/ia.ini"
