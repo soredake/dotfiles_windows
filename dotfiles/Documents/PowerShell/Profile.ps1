@@ -21,6 +21,7 @@ function iauploadf { ia upload --verify --retries 10 --no-backup $args }
 oh-my-posh --init --shell pwsh --config $env:POSH_THEMES_PATH/pure.omp.json | Invoke-Expression
 
 function backup {
+  #rclone move -n -P gphotos:/media/album/ C:\Users\User\Мой` диск
   rclone sync -P C:\Users\User\Мой` диск F:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
   rclone sync -P F:\backups mega:backups

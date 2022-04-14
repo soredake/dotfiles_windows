@@ -100,7 +100,7 @@ wt --title Backup pwsh -c backup
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 
 # https://github.com/microsoft/WSL/issues/4901#issuecomment-1027762021
-Disable-NetAdapterLso -Name "vEthernet (WSL)"
+#Disable-NetAdapterLso -Name "vEthernet (WSL)"
 
 # https://github.com/po5/mpv_sponsorblock
 git clone --depth=1 "https://github.com/po5/mpv_sponsorblock.git" $env:APPDATA\mpv.net\scripts
