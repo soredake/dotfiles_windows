@@ -22,6 +22,8 @@ oh-my-posh --init --shell pwsh --config $env:POSH_THEMES_PATH/pure.omp.json | In
 
 function backup {
   #rclone move -n -P gphotos:/media/album/ C:\Users\User\Мой` диск
+  C:\Program` Files\7-Zip-Zstandard\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
+  Start-Sleep -Seconds 20
   rclone sync -P C:\Users\User\Мой` диск F:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
   rclone sync -P F:\backups mega:backups
