@@ -15,10 +15,12 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/
 # TODO: wsl --update will not be needed in future https://devblogs.microsoft.com/commandline/a-preview-of-wsl-in-the-microsoft-store-is-now-available/
 # TODO: topgrade
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm; sudo wsl --update; winget upgrade --all}
+# https://github.com/PowerShell/PowerShellGet/issues/521
+# winget upgrade --all, sudo wsl --update
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm}
 function iaupload { ia upload --checksum --verify --retries 10 --no-backup $args }
 function iauploadf { ia upload --verify --retries 10 --no-backup $args }
-oh-my-posh --init --shell pwsh --config $env:POSH_THEMES_PATH/pure.omp.json | Invoke-Expression
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/pure.omp.json" | Invoke-Expression
 
 function backup {
   #rclone move -n -P gphotos:/media/album/ C:\Users\User\Мой` диск
@@ -27,4 +29,5 @@ function backup {
   rclone sync -P C:\Users\User\Мой` диск F:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
   rclone sync -P F:\backups mega:backups
+  rclone sync -P C:\Users\User\dwhelper mega:dwhelper
 }

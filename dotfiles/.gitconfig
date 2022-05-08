@@ -58,10 +58,10 @@
   manyFiles = true
   experimental = true
 [core]
-  editor = code.exe --wait
+  editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
   autocrlf = true
   fscache = true
-  useBuiltinFSMonitor = true
+  fsmonitor = true
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
