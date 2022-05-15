@@ -4,6 +4,14 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # https://docs.chocolatey.org/en-us/choco/setup#install-with-powershell.exe
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+# https://github.com/microsoft/winget-cli/discussions/1738
+Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/v1.2.10271/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "$env:TEMP/winget.msixbundle"
+Add-AppPackage -Path "$env:TEMP/winget.msixbundle"
+
+# https://www.free-codecs.com/download/hevc_video_extension.htm
+Invoke-WebRequest -Uri "https://www.free-codecs.com/download_soft.php?d=0ca6d1645416c69a1655fb4af4e2d6ab&s=1024&r=&f=hevc_video_extension.htm" -OutFile "$env:TEMP/hevc_extension.appx"
+Add-AppPackage -Path "$env:TEMP/hevc_extension.appx"
+
 # install my packages
 # TODO: do i need ffmpeg/hashcheck/msys2?
 choco install -y steam-client chocolateygui keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install msys2 visualstudio2019buildtools nomacs mpv.install tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream coretemp obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack hashcheck tor
@@ -24,7 +32,7 @@ Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
 #Install-Module PowerShellGet
 #Update-Module PowerShellGet -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons -Scope CurrentUser
+Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSWindowsUpdate -Scope CurrentUser
 
 # https://docs.microsoft.com/en-us/windows/wsl/install
 wsl --install -–no-launch
@@ -66,7 +74,7 @@ winget uninstall Microsoft.Getstarted
 # gsudo
 sudo config CacheMode Auto
 
-# https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428
+# https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance
 net localgroup "Пользователи журналов производительности" User /add
 
 # enable cloudflare dns with DOH
@@ -78,11 +86,23 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Paramet
 # disable hibernation
 powercfg /hibernate off
 
-# receive microsoft product updates, https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/250#issuecomment-503887779
-(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
+# "Give me updates for other Microsoft products when I update Windows", https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/250#issuecomment-503887779
+#(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
 
 # shortcuts, https://stackoverflow.com/a/31815367
+# TODO: letyshops user.js proxy
+C:\Program` Files\Mozilla` Firefox\firefox.exe -CreateProfile letyshops
 $WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Firefox - LetyShops profile.lnk")
+$Shortcut.TargetPath = "C:\Program Files\Mozilla Firefox\firefox.exe"
+$Shortcut.Arguments = "-P letyshops"
+$Shortcut.Save()
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\RTSS.lnk")
+$Shortcut.TargetPath = "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe"
+$Shortcut.Save()
+$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Core Temp.lnk")
+$Shortcut.TargetPath = "C:\ProgramData\chocolatey\lib\coretemp\tools\Core Temp.exe"
+$Shortcut.Save()
 $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\BreakTimer - disable.lnk")
 $Shortcut.TargetPath = "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe"
 $Shortcut.Arguments = "disable"
@@ -116,26 +136,6 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fbriere/mpv-scripts/ma
 $Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 If  ( -Not ( Test-Path "Registry::$Key")){New-Item -Path "Registry::$Key" -ItemType RegistryKey -Force}
 Set-ItemProperty -path "Registry::$Key" -Name "NoLockScreen" -Type "DWORD" -Value 1
-
-# Shortcuts
-C:\Program` Files\Mozilla` Firefox\firefox.exe -CreateProfile letyshops
-$WshShell = New-Object -comObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Firefox - LetyShops profile.lnk")
-$Shortcut.TargetPath = "C:\Program Files\Mozilla Firefox\firefox.exe"
-$Shortcut.Arguments = "-P letyshops"
-$Shortcut.Save()
-$WshShell = New-Object -comObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\RTSS.lnk")
-$Shortcut.TargetPath = "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe"
-$Shortcut.Save()
-$WshShell = New-Object -comObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\128Bit-Yuzu Maintenance Tool.lnk")
-$Shortcut.TargetPath = "$env:LOCALAPPDATA\128Bit-Yuzu\maintenancetool.exe"
-$Shortcut.Save()
-$WshShell = New-Object -comObject WScript.Shell
-$Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\Core Temp.lnk")
-$Shortcut.TargetPath = "C:\ProgramData\chocolatey\lib\coretemp\tools\Core Temp.exe"
-$Shortcut.Save()
 
 # i don't need this thanks https://github.com/AveYo/MediaCreationTool.bat/blob/8a54cb4be75be05636c2bc20841f5b2338c14a58/MediaCreationTool.bat#L833-L835
 New-ItemProperty -Path 'HKCU:\Control Panel\UnsupportedHardwareNotificationCache' -Name 'SV2' -Value 0 -PropertyType DWord -Force
