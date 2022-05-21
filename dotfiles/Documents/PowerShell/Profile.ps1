@@ -18,11 +18,10 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # https://github.com/PowerShell/PowerShellGet/issues/521
 # https://github.com/pypa/pip/issues/4551
 # winget upgrade --all, sudo wsl --update
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; C:\tools\msys64\mingw64.exe pacman.exe -Syu --noconfirm}
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_} }
 function iaupload { ia upload --checksum --verify --retries 10 --no-backup $args }
 function iauploadf { ia upload --verify --retries 10 --no-backup $args }
 function backup {
-  #rclone move -n -P gphotos:/media/album/ C:\Users\User\Мой` диск
   C:\Program` Files\7-Zip-Zstandard\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
   Start-Sleep -Seconds 20
   rclone sync -P C:\Users\User\Мой` диск F:\backups\main
