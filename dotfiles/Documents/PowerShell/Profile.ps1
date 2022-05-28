@@ -17,16 +17,18 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # TODO: topgrade
 # https://github.com/PowerShell/PowerShellGet/issues/521
 # https://github.com/pypa/pip/issues/4551
-# winget upgrade --all, sudo wsl --update
+# sudo wsl --update
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_} }
 function iaupload { ia upload --checksum --verify --retries 10 --no-backup $args }
 function iauploadf { ia upload --verify --retries 10 --no-backup $args }
+function iauploadnd { ia upload --checksum --verify --retries 10 --no-backup --no-derive $args }
+function iauploadfnd { ia upload --verify --retries 10 --no-backup --no-derive $args }
 function backup {
   C:\Program` Files\7-Zip-Zstandard\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
   Start-Sleep -Seconds 20
-  rclone sync -P C:\Users\User\Мой` диск F:\backups\main
+  rclone sync -P C:\Users\User\Мой` диск E:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
-  rclone sync -P F:\backups mega:backups
+  rclone sync -P E:\backups mega:backups
   rclone sync -P C:\Users\User\dwhelper mega:dwhelper
 }
 
