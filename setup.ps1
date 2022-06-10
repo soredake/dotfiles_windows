@@ -11,7 +11,7 @@ Add-AppPackage -Path "$env:TEMP/hevc_extension.appx"
 # install my packages
 # TODO: github rate limiting 429
 # nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
-choco install -y hamachi spotify nsudo visualstudio2019buildtools steam-client chocolateygui keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install nomacs tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream obs-studio itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack tor
+choco install -y hamachi spotify nsudo visualstudio2019buildtools steam-client keepassxc powertoys ds4windows qbittorrent discord goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install nomacs tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp steelseries-engine firefox borderlessgaming doublecmd google-drive-file-stream itch victoria msiafterburner dxwnd ffmpeg winaero-tweaker.install adb yt-dlp gsudo nerdfont-hack tor
 choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y retroarch --params '/DesktopShortcut'; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre
 choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
 ForEach ($app in 'viber','steam-client','firefox','origin','discord.install','rpcs3','tor-browser','goggalaxy','steelseries-engine') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
@@ -80,8 +80,10 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fbriere/mpv-scripts/ma
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" -OutFile $env:APPDATA\mpv.net\scripts\brace-expand.lua
 
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
+# https://aka.ms/AAh46ae
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 # disable lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/
+# https://aka.ms/AAh3io0
 reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # explorer tweaks https://stackoverflow.com/a/8110982/4207635
 $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
@@ -90,6 +92,7 @@ Set-ItemProperty $key HideFileExt 0
 # https://www.ghacks.net/2021/10/22/how-to-remove-chat-in-windows-11/
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Chat" /f /v ChatIcon /t REG_DWORD /d 3
 # https://winitpro.ru/index.php/2021/12/16/udalit-chat-microsoft-teams-v-windows/ https://www.outsidethebox.ms/21375/
+# https://aka.ms/AAh4e0l https://aka.ms/AAh4nac
 NSudoLG.exe -U:T reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance
 # https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
@@ -97,12 +100,14 @@ net localgroup "Пользователи журналов производите
 # enable cloudflare dns with DOH
 # https://superuser.com/questions/1626047/powershell-how-to-figure-out-adapterindex-for-interface-to-public/1626051#1626051
 # https://winitpro.ru/index.php/2020/07/10/nastroyka-dns-over-https-doh-v-windows/
+# https://aka.ms/AAh4e0n
 Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1","1.0.0.1"
 New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters' -Name 'EnableAutoDoh' -Value 2 -PropertyType DWord -Force
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428
 # https://aka.ms/AAh177w https://aka.ms/AAcyuhb
 Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon"
 # cleanup scheduled tasks
+# https://aka.ms/AAh3y2n
 ForEach ($task in "Achievement Watcher Upgrade OnLogon","OneDrive*") { Unregister-ScheduledTask "$task" -Confirm:$false }
 
 # winget autoupdate https://github.com/microsoft/winget-cli/issues/212
