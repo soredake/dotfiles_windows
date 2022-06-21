@@ -62,6 +62,7 @@
   autocrlf = true
   fscache = true
   fsmonitor = true
+	#sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
