@@ -1,21 +1,17 @@
-# https://stackoverflow.com/a/31602095
-if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
-
-# install my packages
-# TODO: https://github.com/microsoft/vscode/issues/147408 is caused by installing vscode in user mode with admin rights
-# nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-choco install -y hamachi nsudo steam-client keepassxc powertoys ds4windows goggalaxy autoruns choco-cleaner viber jdownloader nodejs.install nomacs tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp doublecmd google-drive-file-stream itch msiafterburner steascree.install ffmpeg adb yt-dlp nerdfont-hack tor
-choco install pcsx2-dev -y --params "/Desktop /UseQt" --pre; choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'viber','steam-client','origin','rpcs3','tor-browser','goggalaxy','pcsx2-dev') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-$packages='qBittorrent.qBittorrent','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','Libretro.RetroArch','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','rammichael.7+TaskbarTweaker.Beta','64Gram.64Gram','mcmilk.7zip-zstd','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','JanDeDobbeleer.OhMyPosh','SteamGridDB.RomManager'
+# install my packages, nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
+$packages='ViGEm.ViGEmBus','ViGEm.HidHide','XPFM5P5KDWF0JP','qBittorrent.qBittorrent','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','Libretro.RetroArch','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','rammichael.7+TaskbarTweaker.Beta','64Gram.64Gram','mcmilk.7zip-zstd','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','JanDeDobbeleer.OhMyPosh','SteamGridDB.RomManager'
 foreach ($package in $packages) { winget install -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222
+sudo config CacheMode Auto
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install -y hamachi nsudo steam-client keepassxc powertoys ds4windows goggalaxy autoruns choco-cleaner jdownloader nodejs.install nomacs tor-browser wiztree zeal.install rclone.portable parsec protonvpn ppsspp doublecmd google-drive-file-stream itch msiafterburner steascree.install ffmpeg yt-dlp nerdfont-hack tor
+choco install pcsx2-dev -y --params "/Desktop /UseQt" --pre; choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; choco install -y --ignore-checksums origin --params '/DesktopIcon'; choco install -y rpcs3 syncplay --pre; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
+ForEach ($app in 'steam-client','origin','rpcs3','tor-browser','goggalaxy','pcsx2-dev') { choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut
+Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate
 wsl --install --no-launch
-cd ~; corepack enable; yarn set version stable # https://yarnpkg.com/getting-started/install https://nodejs.org/dist/latest/docs/api/corepack.html
+corepack enable; yarn set version stable # https://yarnpkg.com/getting-started/install https://nodejs.org/dist/latest/docs/api/corepack.html
 bash wsl.sh
 curl --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua"
 # https://www.free-codecs.com/download/hevc_video_extension.htm
@@ -42,20 +38,14 @@ sudo dploy stow dotfiles $HOME
 $debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe','Microsoft.Getstarted_8wekyb3d8bbwe','Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe','Microsoft.ZuneMusic_8wekyb3d8bbwe','Microsoft.WindowsCamera_8wekyb3d8bbwe','Microsoft.ZuneVideo_8wekyb3d8bbwe','Microsoft.WindowsMaps_8wekyb3d8bbwe','Microsoft.Windows.Photos_8wekyb3d8bbwe','Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe','Microsoft.People_8wekyb3d8bbwe','Microsoft.OneDriveSync_8wekyb3d8bbwe','Microsoft.BingWeather_8wekyb3d8bbwe','Microsoft.BingNews_8wekyb3d8bbwe','AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m','Microsoft.GetHelp_8wekyb3d8bbwe','Microsoft.549981C3F5F10_8wekyb3d8bbwe',"BlueStacks X",'Microsoft.OneDrive','microsoft.windowscommunicationsapps_8wekyb3d8bbwe',"windows web experience pack"
 foreach ($package in $debloat) { winget uninstall -h $package}
 
-# gsudo
-sudo config CacheMode Auto
-
 # shortcuts
 New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # https://github.com/HunterZ/choco/issues/6
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
-
 # add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 sudo New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f C:\Users\User\AppData\Local\tor\torrc"'
-
 # backup task
 Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "C:\Users\User\AppData\Local\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
-
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAh46ae
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/ https://aka.ms/AAh3io0

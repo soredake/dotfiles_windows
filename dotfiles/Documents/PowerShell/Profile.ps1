@@ -20,12 +20,21 @@ function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function backup {
+  rclone copy C:\Users\User\AppData\Roaming\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
+  code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt"
   C:\Program` Files\7-Zip-Zstandard\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
   Start-Sleep -Seconds 20
   rclone sync -P C:\Users\User\Мой` диск E:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
   rclone sync -P E:\backups mega:backups
   #rclone sync -P C:\Users\User\dwhelper mega:dwhelper
+}
+function hyperv-toggle {
+  if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
+    write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
+  } else {
+    write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
+  }
 }
 
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/pure.omp.json" | Invoke-Expression
