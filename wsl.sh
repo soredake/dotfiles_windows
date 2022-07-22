@@ -12,4 +12,4 @@ wget -O ~/.config/fish/config.fish https://github.com/soredake/dotfiles_home/raw
 echo "fish_add_path $HOME/.local/bin" >> ~/.config/fish/config.fish
 echo "alias upall 'sudo apt update; sudo apt upgrade -y; pipx upgrade-all'" >> ~/.config/fish/config.fish
 # https://github.com/flatpak/flatpak/issues/4484 https://github.com/flatpak/flatpak/issues/2267
-sudo rm -rf /dev/shm; sudo mkdir /dev/shm
+#sudo rm -rf /dev/shm; sudo mkdir /dev/shm
