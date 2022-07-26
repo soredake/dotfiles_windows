@@ -1,20 +1,26 @@
+function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 }
 # install my packages, nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
-$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','OpenJS.NodeJS','Google.Drive','KeePassXCTeam.KeePassXC','Microsoft.PowerToys','AwthWathje.SteaScree','Valve.Steam','ItchIo.Itch','PPSSPPTeam.PPSSPP','ProtonTechnologies.ProtonVPN','OlegShparber.Zeal','nomacs.nomacs','AntibodySoftware.WizTree','Parsec.Parsec','alexx2000.DoubleCommander','GOG.Galaxy','LogMeIn.Hamachi','XPFM5P5KDWF0JP','qBittorrent.qBittorrent','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','Libretro.RetroArch','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','rammichael.7+TaskbarTweaker.Beta','64Gram.64Gram','mcmilk.7zip-zstd','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','JanDeDobbeleer.OhMyPosh','SteamGridDB.RomManager'
+$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','64Gram.64Gram','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','SteamGridDB.RomManager','ItchIo.Itch'
 foreach ($package in $packages) { winget install -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222
+reloadenv
 sudo config CacheMode Auto
+irm script.sophi.app -useb | iex
+sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register
+echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1", "DefaultTerminalApp -WindowsTerminal"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222
-sudo choco install -y tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor
-sudo choco install pcsx2-dev -y --params "/Desktop /UseQt" --pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums origin --params '/DesktopIcon'; sudo choco install -y rpcs3 syncplay --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+reloadenv
+# TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts
+sudo choco install -y oh-my-posh zoom 7tt 7zip-zstd qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs zeal.install googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor --params "/DesktopShortcut"
+sudo choco install pcsx2-dev -y --params "/Desktop /UseQt"--pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums origin --params '/DesktopIcon'; sudo choco install -y rpcs3 syncplay --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
+ForEach ($app in 'zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+reloadenv
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
+Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm
-Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate -Scope CurrentUser
-sudo wsl --install --no-launch
+pwsh -c 'Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate'
+sudo wsl --install #--no-launch
 sudo corepack enable; yarn set version stable # https://yarnpkg.com/getting-started/install https://nodejs.org/dist/latest/docs/api/corepack.html
-bash wsl.sh
 pwsh -c 'curl --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua"'
 # https://haali.su/winutils/
 Invoke-WebRequest -Uri "https://haali.net/winutils/lswitch.exe" -OutFile $HOME/lswitch.exe
@@ -23,7 +29,7 @@ schtasks /run /tn "switch language with right ctrl"
 # winget autoupdate https://github.com/microsoft/winget-cli/issues/212
 Invoke-WebRequest -Uri "https://github.com/Romanitho/Winget-AutoUpdate/archive/refs/heads/main.zip" -OutFile "$env:TEMP/Winget-AutoUpdate.zip"
 Expand-Archive "$env:TEMP/Winget-AutoUpdate.zip" -DestinationPath "$env:TEMP"
-sudo pwsh "$env:TEMP/Winget-AutoUpdate-main\Winget-AutoUpdate-Install.ps1" -NotificationLevel None -UpdatesInterval Weekly
+sudo pwsh "$env:TEMP/Winget-AutoUpdate-main\Winget-AutoUpdate-Install.ps1" -NotificationLevel None -UpdatesInterval Weekly -DoNotUpdate
 sudo pwsh -c 'Set-ScheduledTask -TaskName Winget-AutoUpdate -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 2)'
 sudo pwsh -c 'Invoke-WebRequest -Uri "https://gist.github.com/soredake/f0c63deeaf104e30135a28c3238a6008/raw" -OutFile C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt'
 
@@ -38,6 +44,8 @@ $debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microso
 foreach ($package in $debloat) { winget uninstall -h $package}
 
 # shortcuts
+Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
+New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "C:\Users\user\AppData\Local\yuzu\yuzu-windows-msvc-early-access\yuzu.exe"
 New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # https://github.com/HunterZ/choco/issues/6
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
@@ -52,12 +60,13 @@ sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLo
 # https://winitpro.ru/index.php/2021/12/16/udalit-chat-microsoft-teams-v-windows/ https://www.outsidethebox.ms/21375/ https://aka.ms/AAh4nac
 NSudoLG.exe -U:T reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
-#sudo net localgroup "Пользователи журналов производительности" User /add
+sudo net localgroup "Пользователи журналов производительности" User /add
 # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
-Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon"
+sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon"
 # stop device connect/remove sound
 Remove-Item -Path 'HKCU:\AppEvents\Schemes\Apps\.Default\DeviceConnect\.Current' -Force; Remove-Item -Path 'HKCU:\AppEvents\Schemes\Apps\.Default\DeviceDisconnect\.Current' -Force
-irm script.sophi.app -useb | iex
-sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register
-echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1", "DefaultTerminalApp -WindowsTerminal"' | sudo powershell
+# unneded desktop links
+Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desktop\Google Sheets.lnk"; Remove-Item -Path "$HOME\Desktop\Google Slides.lnk"
+# disable autorun for all devices
+sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer' /v 'NoAutoplayfornonVolume' /t REG_DWORD /d 1 /f
+sudo reg add 'HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer' /v 'NoDriveTypeAutoRun' /t REG_DWORD /d 255 /f

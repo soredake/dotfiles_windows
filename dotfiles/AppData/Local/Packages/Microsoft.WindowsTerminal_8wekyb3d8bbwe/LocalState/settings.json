@@ -12,12 +12,12 @@
             "keys": "ctrl+c"
         },
         {
-            "command": "find",
-            "keys": "ctrl+shift+f"
-        },
-        {
             "command": "paste",
             "keys": "ctrl+v"
+        },
+        {
+            "command": "find",
+            "keys": "ctrl+shift+f"
         },
         {
             "command": 
@@ -88,7 +88,7 @@
                 "colorScheme": "Tango+Solarized dark",
                 "commandline": "\"%PROGRAMFILES%\\git\\bin\\bash.exe\" --login -i -l",
                 "cursorColor": "#FFFFFF",
-                "font":
+                "font": 
                 {
                     "face": "Hack Nerd Font",
                     "size": 12
@@ -101,7 +101,7 @@
             },
             {
                 "colorScheme": "Tango+Solarized dark",
-                "font":
+                "font": 
                 {
                     "face": "Hack Nerd Font",
                     "size": 12

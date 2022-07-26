@@ -37,4 +37,8 @@ function hyperv-toggle {
   }
 }
 
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/pure.omp.json" | Invoke-Expression
+#oh-my-posh has been installed.
+#PROFILE: C:\Users\user\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+#No Powershell profile was found. You may wish to create a profile and append 'Invoke-Expression (oh-my-posh --init --shell pwsh --config "C:\Users\user\AppData\Local/Programs/oh-my-posh/themes/themename.omp.json")' to enable oh-my-posh. 'Get-PoshThemes' will list available themes for you  oh-my-posh can be automatically uninstalled.
+
+oh-my-posh init pwsh --config "C:\Program Files (x86)\oh-my-posh\themes\pure.omp.json" | Invoke-Expression
