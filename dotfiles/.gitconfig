@@ -66,3 +66,11 @@
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
+# https://github.com/microsoft/vscode/issues/5770#issuecomment-1188658476
+[merge]
+  tool = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe'
+[mergetool]
+  writeToTemp = true
+  keepBackup = false
+[mergetool "code-insiders"]
+  cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED

@@ -21,13 +21,13 @@ function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --n
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function backup {
   rclone copy C:\Users\User\AppData\Roaming\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
-  code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt"
-  C:\Program` Files\7-Zip-Zstandard\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
+  code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt" # https://stackoverflow.com/a/49398449/4207635
+  C:\Program` Files\7-Zip\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
   Start-Sleep -Seconds 20
-  rclone sync -P C:\Users\User\Мой` диск E:\backups\main
+  rclone sync -P --progress-terminal-title C:\Users\User\Мой` диск E:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/backups
-  rclone sync -P E:\backups mega:backups
-  #rclone sync -P C:\Users\User\dwhelper mega:dwhelper
+  rclone sync -P --progress-terminal-title E:\backups mega:backups
+  #rclone sync -P --progress-terminal-title E:\dwhelper mega:dwhelper
 }
 function hyperv-toggle {
   if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
@@ -36,9 +36,4 @@ function hyperv-toggle {
     write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
   }
 }
-
-#oh-my-posh has been installed.
-#PROFILE: C:\Users\user\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-#No Powershell profile was found. You may wish to create a profile and append 'Invoke-Expression (oh-my-posh --init --shell pwsh --config "C:\Users\user\AppData\Local/Programs/oh-my-posh/themes/themename.omp.json")' to enable oh-my-posh. 'Get-PoshThemes' will list available themes for you  oh-my-posh can be automatically uninstalled.
-
 oh-my-posh init pwsh --config "C:\Program Files (x86)\oh-my-posh\themes\pure.omp.json" | Invoke-Expression

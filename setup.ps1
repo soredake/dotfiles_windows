@@ -1,6 +1,6 @@
-function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 }
+function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
 # install my packages, nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
-$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','64Gram.64Gram','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','SteamGridDB.RomManager','ItchIo.Itch'
+$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','64Gram.64Gram','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','SteamGridDB.RomManager'
 foreach ($package in $packages) { winget install -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
 reloadenv
 sudo config CacheMode Auto
@@ -11,9 +11,9 @@ echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "HiddenItems 
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
 # TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts
-sudo choco install -y oh-my-posh zoom 7tt 7zip-zstd qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs zeal.install googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor --params "/DesktopShortcut"
+sudo choco install -y itch oh-my-posh zoom 7tt 7zip-zstd qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs zeal.install googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor --params "/DesktopShortcut"
 sudo choco install pcsx2-dev -y --params "/Desktop /UseQt"--pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums origin --params '/DesktopIcon'; sudo choco install -y rpcs3 syncplay --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+ForEach ($app in 'itch','zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 reloadenv
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
@@ -39,20 +39,20 @@ mkdir $HOME\Documents\PowerShell
 # https://github.com/ralish/PSDotFiles/issues/12 https://github.com/arecarn/dploy/issues/8
 sudo dploy stow dotfiles $HOME
 
-# cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/ 'Microsoft.OneDriveSync_8wekyb3d8bbwe' 'Microsoft.OneDrive'
+# cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
 $debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe','Microsoft.Getstarted_8wekyb3d8bbwe','Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe','Microsoft.ZuneMusic_8wekyb3d8bbwe','Microsoft.WindowsCamera_8wekyb3d8bbwe','Microsoft.ZuneVideo_8wekyb3d8bbwe','Microsoft.WindowsMaps_8wekyb3d8bbwe','Microsoft.Windows.Photos_8wekyb3d8bbwe','Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe','Microsoft.People_8wekyb3d8bbwe','Microsoft.BingWeather_8wekyb3d8bbwe','Microsoft.BingNews_8wekyb3d8bbwe','AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m','Microsoft.GetHelp_8wekyb3d8bbwe','Microsoft.549981C3F5F10_8wekyb3d8bbwe',"BlueStacks X",'microsoft.windowscommunicationsapps_8wekyb3d8bbwe',"windows web experience pack"
 foreach ($package in $debloat) { winget uninstall -h $package}
 
 # shortcuts
 Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
-New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "C:\Users\user\AppData\Local\yuzu\yuzu-windows-msvc-early-access\yuzu.exe"
+New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\yuzu\yuzu-windows-msvc-early-access\yuzu.exe"
 New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # https://github.com/HunterZ/choco/issues/6
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 # add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 sudo New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f C:\Users\User\AppData\Local\tor\torrc"'
 # backup task
-Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "C:\Users\User\AppData\Local\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
+Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAh46ae
 sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/ https://aka.ms/AAh3io0
@@ -70,3 +70,5 @@ Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desk
 # disable autorun for all devices
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer' /v 'NoAutoplayfornonVolume' /t REG_DWORD /d 1 /f
 sudo reg add 'HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer' /v 'NoDriveTypeAutoRun' /t REG_DWORD /d 255 /f
+# software is dead for now
+sudo Disable-ScheduledTask "Achievement Watcher Upgrade Daily"
