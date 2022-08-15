@@ -72,5 +72,7 @@
 [mergetool]
   writeToTemp = true
   keepBackup = false
-[mergetool "code-insiders"]
+[mergetool "code"]
   cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED
+[push]
+  autoSetupRemote = true

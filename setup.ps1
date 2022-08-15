@@ -1,19 +1,19 @@
 function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
 # install my packages, nsudo is needed until https://github.com/gerardog/gsudo/issues/136 is done
-$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9pmz94127m4g','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9n64sqztb3lm','64Gram.64Gram','stromcon.emusak','AnthonyBeaumont.AchievementWatcher','SteamGridDB.RomManager'
+$packages='ViGEm.ViGEmBus','ViGEm.HidHide','AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','BiSS.WSLDiskShrinker','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9N64SQZTB3LM','64Gram.64Gram','stromcon.emusak'
 foreach ($package in $packages) { winget install -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
 reloadenv
 sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
 sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register
-echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1", "DefaultTerminalApp -WindowsTerminal"' | sudo powershell
+# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable
+echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Disable", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1", "DefaultTerminalApp -WindowsTerminal"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
-# TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts
-sudo choco install -y itch oh-my-posh zoom 7tt 7zip-zstd qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs zeal.install googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor --params "/DesktopShortcut"
-sudo choco install pcsx2-dev -y --params "/Desktop /UseQt"--pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums origin --params '/DesktopIcon'; sudo choco install -y rpcs3 syncplay --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
-ForEach ($app in 'itch','zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
+# TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts TODO: https://github.com/chocolatey/choco/pull/2463
+sudo choco install -y steam-rom-manager achievement-watcher itch oh-my-posh zoom 7tt 7zip-zstd qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs zeal.install googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser nsudo ds4windows autoruns choco-cleaner rclone.portable msiafterburner ffmpeg yt-dlp nerdfont-hack tor --params "/DesktopShortcut"
+sudo choco install pcsx2-dev -y --params "/Desktop /UseQt"--pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums origin --params '/DesktopIcon'; sudo choco install -y rpcs3; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:15:00'"
+ForEach ($app in 'achievement-watcher','steam-rom-manager','itch','zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','origin','rpcs3','pcsx2-dev','tor-browser') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 reloadenv
 pip install internetarchive "git+https://github.com/arecarn/dploy.git"
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
@@ -39,10 +39,6 @@ mkdir $HOME\Documents\PowerShell
 # https://github.com/ralish/PSDotFiles/issues/12 https://github.com/arecarn/dploy/issues/8
 sudo dploy stow dotfiles $HOME
 
-# cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
-$debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe','Microsoft.Getstarted_8wekyb3d8bbwe','Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe','Microsoft.ZuneMusic_8wekyb3d8bbwe','Microsoft.WindowsCamera_8wekyb3d8bbwe','Microsoft.ZuneVideo_8wekyb3d8bbwe','Microsoft.WindowsMaps_8wekyb3d8bbwe','Microsoft.Windows.Photos_8wekyb3d8bbwe','Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe','Microsoft.People_8wekyb3d8bbwe','Microsoft.BingWeather_8wekyb3d8bbwe','Microsoft.BingNews_8wekyb3d8bbwe','AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m','Microsoft.GetHelp_8wekyb3d8bbwe','Microsoft.549981C3F5F10_8wekyb3d8bbwe',"BlueStacks X",'microsoft.windowscommunicationsapps_8wekyb3d8bbwe',"windows web experience pack"
-foreach ($package in $debloat) { winget uninstall -h $package}
-
 # shortcuts
 Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\yuzu\yuzu-windows-msvc-early-access\yuzu.exe"
@@ -61,14 +57,18 @@ sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLo
 NSudoLG.exe -U:T reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 sudo net localgroup "Пользователи журналов производительности" User /add
-# https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
-sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon"
 # stop device connect/remove sound
 Remove-Item -Path 'HKCU:\AppEvents\Schemes\Apps\.Default\DeviceConnect\.Current' -Force; Remove-Item -Path 'HKCU:\AppEvents\Schemes\Apps\.Default\DeviceDisconnect\.Current' -Force
-# unneded desktop links
-Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desktop\Google Sheets.lnk"; Remove-Item -Path "$HOME\Desktop\Google Slides.lnk"
 # disable autorun for all devices
-sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer' /v 'NoAutoplayfornonVolume' /t REG_DWORD /d 1 /f
-sudo reg add 'HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer' /v 'NoDriveTypeAutoRun' /t REG_DWORD /d 255 /f
-# software is dead for now
+#sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer' /v 'NoAutoplayfornonVolume' /t REG_DWORD /d 1 /f
+#sudo reg add 'HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer' /v 'NoDriveTypeAutoRun' /t REG_DWORD /d 255 /f
+# cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
+$debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe','Microsoft.Getstarted_8wekyb3d8bbwe','Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe','Microsoft.ZuneMusic_8wekyb3d8bbwe','Microsoft.WindowsCamera_8wekyb3d8bbwe','Microsoft.ZuneVideo_8wekyb3d8bbwe','Microsoft.WindowsMaps_8wekyb3d8bbwe','Microsoft.Windows.Photos_8wekyb3d8bbwe','Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe','Microsoft.People_8wekyb3d8bbwe','Microsoft.BingWeather_8wekyb3d8bbwe','Microsoft.BingNews_8wekyb3d8bbwe','AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m','Microsoft.GetHelp_8wekyb3d8bbwe','Microsoft.549981C3F5F10_8wekyb3d8bbwe',"BlueStacks X",'microsoft.windowscommunicationsapps_8wekyb3d8bbwe',"windows web experience pack"
+foreach ($package in $debloat) { winget uninstall -h $package}
 sudo Disable-ScheduledTask "Achievement Watcher Upgrade Daily"
+sudo Disable-ScheduledTask "StartAUEP"
+sudo Set-Service -Name "AUEPLauncher" -Status stopped -StartupType disabled
+Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desktop\Google Sheets.lnk"; Remove-Item -Path "$HOME\Desktop\Google Slides.lnk"
+sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon" # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
+
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
