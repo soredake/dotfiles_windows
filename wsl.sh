@@ -9,7 +9,7 @@ pipx install internetarchive
 fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher pure-fish/pure"
 chsh -s /usr/bin/fish
 wget -O ~/.config/fish/config.fish https://github.com/soredake/dotfiles_home/raw/kubuntu/home/fish/.config/fish/config.fish
-echo "fish_add_path $HOME/.local/bin" >> ~/.config/fish/config.fish
-echo "alias upall 'sudo apt update; sudo apt upgrade -y; pipx upgrade-all'" >> ~/.config/fish/config.fish
+echo "fish_add_path $HOME/.local/bin" >>~/.config/fish/config.fish
+echo "alias upall 'sudo apt update; sudo apt upgrade -y; pipx upgrade-all'" >>~/.config/fish/config.fish
 # https://github.com/flatpak/flatpak/issues/4484 https://github.com/flatpak/flatpak/issues/2267
 #sudo rm -rf /dev/shm; sudo mkdir /dev/shm

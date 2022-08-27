@@ -29,6 +29,11 @@ function backup {
   rclone dedupe -P --dedupe-mode newest mega:/backups
   rclone sync -P --progress-terminal-title E:\backups mega:backups
   #rclone sync -P --progress-terminal-title E:\dwhelper mega:dwhelper
+#  list=(  C:\Users\User\AppData\Roaming\qBittorrent
+#          C:\Users\User\AppData\Local\qBittorrent
+#          C:\Users\User\AppData\Roaming\rclone
+#          https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
+# )
 }
 function hyperv-toggle {
   if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
