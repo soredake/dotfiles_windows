@@ -7,6 +7,8 @@
 [merge]
   log = true
 [alias]
+# https://stackoverflow.com/a/22875612
+  lolc = filter-branch --parent-filter true -- @^!
 # Verbose branches info.
   b = branch -a
 # Clone a repository including all submodules.
@@ -50,8 +52,6 @@
   undo = reset --soft HEAD~1
 # Undo push.
   udp = push -f origin HEAD^:master
-[credential]
-  helper = manager-core
 [cola]
   spellcheck = false
 [feature]
@@ -59,9 +59,8 @@
   experimental = true
 [core]
   editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
-  autocrlf = true
-  fscache = true
   fsmonitor = true
+	# autocrlf = input
 #sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
   name = soredake

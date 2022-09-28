@@ -33,7 +33,9 @@ function backup {
 #          C:\Users\User\AppData\Local\qBittorrent
 #          C:\Users\User\AppData\Roaming\rclone
 #          https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
+#          msi afterburnder
 # )
+# TODO: find backup system
 }
 function hyperv-toggle {
   if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
