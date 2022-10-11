@@ -22,6 +22,7 @@ function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $
 function backup {
   Get-ChildItem -Path "C:\Users\user\Мой диск\tttttttttt" -Recurse -File | Move-Item -Destination "C:\Users\user\Мой диск"
   rclone copy C:\Users\User\AppData\Roaming\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
+  rclone copy C:\Users\User\AppData\Roaming\Code\User\keybindings.json "C:\Users\User\Мой диск\документы\backups\vscode"
   code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt" # https://stackoverflow.com/a/49398449/4207635
   #C:\Program` Files\7-Zip\7z.exe -mx=9 a "C:\Users\User\Мой диск\документы\backups\rpcs3_saves.zip" "C:\tools\RPCS3\dev_hdd0\home\00000001\savedata\*"
   #Start-Sleep -Seconds 20
@@ -33,6 +34,7 @@ function backup {
 #          C:\Users\User\AppData\Local\qBittorrent
 #          C:\Users\User\AppData\Roaming\rclone
 #          https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
+#          taskbar items
 #          msi afterburnder
 # )
 # TODO: find backup system
