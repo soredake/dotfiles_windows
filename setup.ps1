@@ -5,16 +5,17 @@ reloadenv
 sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
 sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+# https://www.phoronix.com/news/Windows-11-22H2-Terminal "DefaultTerminalApp -WindowsTerminal"
 # CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable
-echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Disable", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1", "DefaultTerminalApp -WindowsTerminal"' | sudo powershell
+echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Disable", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
 # TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts TODO: https://github.com/chocolatey/choco/pull/2463
-sudo choco install -y insomnia 64gram ryujinx wsldiskshrinker hidhide steam-rom-manager achievement-watcher itch oh-my-posh zoom 7tt 7zip.install qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y ffmpeg screentogif.install superf4 responsively insomnia 64gram ryujinx wsldiskshrinker hidhide steam-rom-manager achievement-watcher itch oh-my-posh zoom 7tt 7zip.install qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
 sudo choco install pcsx2-dev -y --params "/Desktop /UseQt" --pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums --params '/DesktopIcon'; sudo choco install -y rpcs3; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
 ForEach ($app in '64gram','achievement-watcher','ryujinx','steam-rom-manager','itch','zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','rpcs3','pcsx2-dev','tor-browser','hidhide') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
 reloadenv
-pip install internetarchive "git+https://github.com/arecarn/dploy.git"
+pip install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/gdamdam/iagitup.git"
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 pwsh -c 'Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate,PSScheduledJob'
@@ -64,8 +65,14 @@ $debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microso
 foreach ($package in $debloat) { winget uninstall -h $package}
 sudo Disable-ScheduledTask "Achievement Watcher Upgrade Daily"
 sudo Disable-ScheduledTask "StartAUEP"
-powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0 # https://remontka.pro/wake-timers-windows/
 sudo Set-Service -Name "AUEPLauncher" -Status stopped -StartupType disabled
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0 # https://remontka.pro/wake-timers-windows/
 # Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk"; Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desktop\Google Sheets.lnk"; Remove-Item -Path "$HOME\Desktop\Google Slides.lnk"
 Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk","$HOME\Desktop\Google Docs.lnk","$HOME\Desktop\Google Sheets.lnk","$HOME\Desktop\Google Slides.lnk"
 sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon" # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
+# allow built-in update to work # TODO: install from scoop?
+sudo takeown /a /r /d Y /f C:\ProgramData\chocolatey\lib\ds4windows\tools\DS4Windows
+# test
+sudo reg add "HKLM\SYSTEM\Setup\MoSetup" /v "AllowUpgradesWithUnsupportedTPMOrCPU" /t REG_DWORD /d 1 /f
+# 
+New-Item -ItemType HardLink -Path "$HOME\.config\ia.ini" -Target "$HOME\.config\internetarchive\ia.ini"
