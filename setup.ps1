@@ -11,16 +11,17 @@ echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Di
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
 # TODO: install python/vscode as user C:\Users\user\AppData\Local\Programs\Python\Python310\Scripts TODO: https://github.com/chocolatey/choco/pull/2463
-sudo choco install -y ffmpeg screentogif.install superf4 responsively insomnia 64gram ryujinx wsldiskshrinker hidhide steam-rom-manager achievement-watcher itch oh-my-posh zoom 7tt 7zip.install qbittorrent protonvpn hamachi goggalaxy doublecmd parsec wiztree nomacs googledrive keepassxc nodejs.install ppsspp steam-client retroarch steascree.install powertoys tor-browser ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
-sudo choco install pcsx2-dev -y --params "/Desktop /UseQt" --pre; sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y --ignore-checksums --params '/DesktopIcon'; sudo choco install -y rpcs3; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
-ForEach ($app in '64gram','achievement-watcher','ryujinx','steam-rom-manager','itch','zoom','powertoys','keepassxc','googledrive','parsec','goggalaxy','hamachi','protonvpn','steam-client','rpcs3','pcsx2-dev','tor-browser','hidhide') { sudo choco pin add -n="$app"} # https://github.com/chocolatey/choco/issues/1607
-reloadenv
+sudo choco install -y --pin 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys keepassxc googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
+sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseQt"
+sudo choco install -y ffmpeg screentogif.install superf4 responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install qbittorrent doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
 pip install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/gdamdam/iagitup.git"
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 pwsh -c 'Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate,PSScheduledJob'
 sudo wsl --install #--no-launch https://github.com/microsoft/WSL/releases/tag/0.50.2
 sudo corepack enable; yarn set version stable # https://yarnpkg.com/getting-started/install https://nodejs.org/dist/latest/docs/api/corepack.html
+npm install --global html-validate
 pwsh -c 'curl --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"'
 # https://haali.su/winutils/
 Invoke-WebRequest -Uri "https://haali.net/winutils/lswitch.exe" -OutFile $HOME/lswitch.exe
@@ -69,10 +70,11 @@ sudo Set-Service -Name "AUEPLauncher" -Status stopped -StartupType disabled
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0 # https://remontka.pro/wake-timers-windows/
 # Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk"; Remove-Item -Path "$HOME\Desktop\Google Docs.lnk"; Remove-Item -Path "$HOME\Desktop\Google Sheets.lnk"; Remove-Item -Path "$HOME\Desktop\Google Slides.lnk"
 Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk","$HOME\Desktop\Google Docs.lnk","$HOME\Desktop\Google Sheets.lnk","$HOME\Desktop\Google Slides.lnk"
-sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon" # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
+sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon" # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w # TODO: check this in vm
 # allow built-in update to work # TODO: install from scoop?
 sudo takeown /a /r /d Y /f C:\ProgramData\chocolatey\lib\ds4windows\tools\DS4Windows
-# test
-sudo reg add "HKLM\SYSTEM\Setup\MoSetup" /v "AllowUpgradesWithUnsupportedTPMOrCPU" /t REG_DWORD /d 1 /f
-# 
-New-Item -ItemType HardLink -Path "$HOME\.config\ia.ini" -Target "$HOME\.config\internetarchive\ia.ini"
+# New-Item -ItemType HardLink -Path "$HOME\.config\ia.ini" -Target "$HOME\.config\internetarchive\ia.ini"
+# https://windowsloop.com/how-to-remove-amd-radeon-software-from-context-menu/
+sudo reg delete "HKLM\SOFTWARE\Classes\Directory\background\shellex\ContextMenuHandlers\ACE" /f
+# TODO: amd folder cleanup task
+sudo choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
