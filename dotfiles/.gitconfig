@@ -61,7 +61,8 @@
   editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
   fsmonitor = true
 	# autocrlf = input
-#sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+  # fix for https://github.com/microsoft/vscode/issues/121231#issuecomment-819438763
+  sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
