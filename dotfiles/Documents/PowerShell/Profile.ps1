@@ -15,6 +15,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
 # TODO: topgrade
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g }
+function amdcleanup { sudo Remove-Item C:\AMD\* -Recurse -Force }
 function iaupload { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }

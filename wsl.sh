@@ -5,7 +5,8 @@ sudo apt upgrade -y
 sudo apt install -y python3-pip python3-venv pipx fish
 mkdir ~/.local/bin
 pipx install tubeup
-pipx install internetarchive
+pipx install iagitup
+# pipx install internetarchive
 fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher pure-fish/pure"
 chsh -s /usr/bin/fish
 wget -O ~/.config/fish/config.fish https://github.com/soredake/dotfiles_home/raw/fedora /home/fish/.config/fish/config.fish
