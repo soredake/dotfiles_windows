@@ -16,6 +16,8 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # TODO: topgrade
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g }
 function amdcleanup { sudo Remove-Item C:\AMD\* -Recurse -Force }
+# Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361
+function checkarchive { cd ~\Мой` диск\документы; lychee --max-concurrency 2 --cache archive-org.txt }
 function iaupload { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }

@@ -1,5 +1,5 @@
 function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
-$packages='AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9N64SQZTB3LM','ElectronicArts.EADesktop'
+$packages='AppWork.JDownloader','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9N64SQZTB3LM','ElectronicArts.EADesktop','lycheeverse.lychee'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
 reloadenv
 sudo config CacheMode Auto
@@ -12,8 +12,10 @@ sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Ne
 reloadenv
 # https://github.com/chocolatey-community/chocolatey-packages/issues/2072 https://github.com/chocolatey-community/chocolatey-packages/discussions/2040
 sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
+# TODO: https://community.chocolatey.org/packages/taiga/1.4.0
+# TODO: trakt scrobbler
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseQt"
-sudo choco install -y keepassxc ffmpeg screentogif.install superf4 responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install qbittorrent doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y dupeguru keepassxc ffmpeg screentogif.install superf4 responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install qbittorrent doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
 sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
 pip install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/gdamdam/iagitup.git"
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
@@ -35,14 +37,14 @@ sudo pwsh -c 'Invoke-WebRequest -Uri "https://gist.github.com/soredake/f0c63deea
 
 # setup dotfiles
 Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-mkdir $HOME\Documents\PowerShell
+# mkdir $HOME\Documents\PowerShell
 sudo dploy stow dotfiles $HOME
 
 # shortcuts
 Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
-# New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "C:\Program Files\PPSSPP\PPSSPPWindows64.exe" #  TODO: будут ли при апдейте созданы ярлыки обратно? https://github.com/kzdixon/chocolatey-packages/commit/66e63fe217c4d9d22210a09f3d555ff3da880cf6
+# New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "C:\Program Files\PPSSPP\PPSSPPWindows64.exe" # TODO: будут ли при апдейте созданы ярлыки обратно? https://github.com/kzdixon/chocolatey-packages/commit/66e63fe217c4d9d22210a09f3d555ff3da880cf6
 New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\yuzu\yuzu-windows-msvc-early-access\yuzu.exe" # https://github.com/yuzu-emu/yuzu/issues/9380
-New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # https://github.com/HunterZ/choco/issues/6
+New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # TODO: https://github.com/HunterZ/choco/issues/6
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 # add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
