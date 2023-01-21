@@ -10,12 +10,10 @@ sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Disable", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEIF -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
-# https://github.com/chocolatey-community/chocolatey-packages/issues/2072 https://github.com/chocolatey-community/chocolatey-packages/discussions/2040
 sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
-# TODO: https://community.chocolatey.org/packages/taiga/1.4.0 # TODO: scoop
 # TODO: trakt scrobbler
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseQt /DesktopIcon"
-sudo choco install -y scrcpy dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install qbittorrent doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y taiga scrcpy dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install qbittorrent doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
 sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
 irm get.scoop.sh | iex
 scoop bucket add extras
@@ -45,11 +43,12 @@ sudo dploy stow dotfiles $HOME
 
 # shortcuts
 Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
+New-Shortcut -Name 'Disconnect gamepad' -Path $HOME\Desktop -Target "C:\ProgramData\chocolatey\bin\DS4Windows.exe" -Arguments "-command Disconnect" -IconPath 'C:\ProgramData\chocolatey\lib\ds4windows\tools\DS4Windows\DS4Windows.exe'
 # New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "C:\Program Files\PPSSPP\PPSSPPWindows64.exe" # TODO: будут ли при апдейте созданы ярлыки обратно? https://github.com/kzdixon/chocolatey-packages/commit/66e63fe217c4d9d22210a09f3d555ff3da880cf6
 New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\yuzu\yuzu-windows-msvc-early-access\yuzu.exe" # https://github.com/yuzu-emu/yuzu/issues/9380
 New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # TODO: https://github.com/HunterZ/choco/issues/6
-New-Shortcut -Name "Cheat Engine" -Path $HOME\Desktop -Target $HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe # https://github.com/ScoopInstaller/Scoop/issues/4212
-New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable # TODO: send pr
+New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target $HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe # https://github.com/ScoopInstaller/Scoop/issues/4212
+New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 # add tor service, https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 sudo New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f C:\Users\User\AppData\Local\tor\torrc"'
@@ -76,14 +75,10 @@ sudo Disable-ScheduledTask "Achievement Watcher Upgrade Daily"
 sudo Disable-ScheduledTask "StartAUEP"
 sudo Set-Service -Name "AUEPLauncher" -Status stopped -StartupType disabled
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0 # https://remontka.pro/wake-timers-windows/
-Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk","$HOME\Desktop\Google Docs.lnk","$HOME\Desktop\Google Sheets.lnk","$HOME\Desktop\Google Slides.lnk"
+Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk","$HOME\Desktop\Google Docs.lnk","$HOME\Desktop\Google Sheets.lnk","$HOME\Desktop\Google Slides.lnk","$HOME\Desktop\PPSSPP (32-Bit).lnk"
 sudo Disable-ScheduledTask "Microsoft\Windows\Management\Provisioning\Logon" # https://habr.com/ru/news/t/586786/comments/#comment_23656428 https://aka.ms/AAh177w
-# https://windowsloop.com/how-to-remove-amd-radeon-software-from-context-menu/
-# sudo reg delete "HKLM\SOFTWARE\Classes\Directory\background\shellex\ContextMenuHandlers\ACE" /f
 sudo choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 # amd cleanup task
-Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument '--title "AMD cleanup task" pwsh -c amdcleanup') -TaskName "AMD cleanup task" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At 11:00)
+Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument '--title "AMD cleanup task" pwsh -c amdcleanup') -TaskName "AMD cleanup task" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At 11:00)
 # stop ethernet from waking my pc https://superuser.com/a/1629820/1506333
 sudo powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection"
-# fix lychee selecting wrong adapter https://support.logmeininc.com/central/help/why-does-my-internet-connection-fail-when-hamachi-is-enabled https://cloudrun.co.uk/windows10/set-network-interface-priority-in-windows-10-using-set-netipinterface/ https://github.com/lycheeverse/lychee/issues/902 https://github.com/lycheeverse/lychee/issues/902
-sudo 'Get-NetAdapter | Where-Object -FilterScript {$_.InterfaceAlias -like "Hamachi"} | Set-NetIPInterface -InterfaceMetric 9999' # TODO: report this there https://github.com/seanmonstar/reqwest

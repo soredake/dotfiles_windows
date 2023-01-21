@@ -16,9 +16,10 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # TODO: topgrade
 # TODO: scoop update -qa
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g }
-function amdcleanup { sudo Remove-Item C:\AMD\* -Recurse -Force }
+function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361 https://github.com/microsoft/winget-cli/issues/2802
-function checkarchive { cd ~\Мой` диск\документы; lychee --max-concurrency 2 archive-org.txt } # https://github.com/lycheeverse/lychee/issues/902
+function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 -t 15 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
+function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 -t 15 linux.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
 function iaupload { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -44,7 +45,7 @@ function backup {
   code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt" # https://stackoverflow.com/a/49398449/4207635
   rclone sync -P C:\tools\RPCS3\dev_hdd0\home\00000001\savedata "C:\Users\user\Мой диск\документы\backups\rpcs3"
   rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/*" --exclude ".tmp.drivedownload" --exclude ".tmp.driveupload" C:\Users\User\Мой` диск E:\backups\main
-  rclone dedupe -P --dedupe-mode newest mega:/backups
+  rclone dedupe -P --dedupe-mode newest mega:/
   rclone sync -P --progress-terminal-title E:\backups mega:backups
   # Yuzu https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md
   rclone sync -P $env:APPDATA\yuzu\nand\system\save\8000000000000010\su\avators\profiles.dat "C:\Users\user\Мой диск\документы\backups\yuzu"
@@ -59,3 +60,4 @@ function hyperv-toggle {
   }
 }
 oh-my-posh init pwsh --config "C:\Program Files (x86)\oh-my-posh\themes\pure.omp.json" | Invoke-Expression
+Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557
