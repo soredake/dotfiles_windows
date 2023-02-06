@@ -13,13 +13,11 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 # https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
-# TODO: topgrade
-# TODO: scoop update -qa
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g }
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g; scoop update -qa }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361 https://github.com/microsoft/winget-cli/issues/2802
-function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 -t 15 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
-function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 -t 15 linux.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
+function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
+function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
 function iaupload { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -44,6 +42,7 @@ function backup {
   rclone sync -P "$env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations" "C:\Users\user\Мой диск\документы\backups\explorer_quick_acess"
   code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt" # https://stackoverflow.com/a/49398449/4207635
   rclone sync -P C:\tools\RPCS3\dev_hdd0\home\00000001\savedata "C:\Users\user\Мой диск\документы\backups\rpcs3"
+  rclone sync -P "C:\Users\user\.ssh" "C:\Users\user\Мой диск\документы\backups\ssh"
   rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/*" --exclude ".tmp.drivedownload" --exclude ".tmp.driveupload" C:\Users\User\Мой` диск E:\backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
   rclone sync -P --progress-terminal-title E:\backups mega:backups
