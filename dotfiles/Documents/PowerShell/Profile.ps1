@@ -24,7 +24,7 @@ function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --n
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function backup {
-  Get-ChildItem -Path "C:\Users\user\Мой диск\tttttttttt" -Recurse -File | Move-Item -Destination "C:\Users\user\Мой диск"
+  Get-ChildItem -Path "C:\Users\user\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "C:\Users\user\Мой диск"
   rclone copy -P $env:APPDATA\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
   rclone copy -P $env:APPDATA\Code\User\keybindings.json "C:\Users\User\Мой диск\документы\backups\vscode"
   rclone sync -P $env:APPDATA\qBittorrent "C:\Users\User\Мой диск\документы\backups\qbittorrent_roaming"

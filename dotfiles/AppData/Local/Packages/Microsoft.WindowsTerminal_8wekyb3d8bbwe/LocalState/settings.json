@@ -45,7 +45,7 @@
                 "font": 
                 {
                     "face": "Hack Nerd Font",
-                    "size": 12
+                    "size": 12.0
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
@@ -57,7 +57,7 @@
                 "font": 
                 {
                     "face": "Hack Nerd Font",
-                    "size": 12
+                    "size": 12.0
                 },
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
@@ -69,7 +69,7 @@
                 "font": 
                 {
                     "face": "Hack Nerd Font",
-                    "size": 12
+                    "size": 12.0
                 },
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
@@ -91,7 +91,7 @@
                 "font": 
                 {
                     "face": "Hack Nerd Font",
-                    "size": 12
+                    "size": 12.0
                 },
                 "guid": "{00000000-0000-0000-0000-000000012345}",
                 "historySize": 9001,
@@ -104,7 +104,7 @@
                 "font": 
                 {
                     "face": "Hack Nerd Font",
-                    "size": 12
+                    "size": 12.0
                 },
                 "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
                 "hidden": false,
@@ -116,18 +116,6 @@
                 "hidden": false,
                 "name": "Ubuntu",
                 "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
-            },
-            {
-                "guid": "{f3024baf-8457-59f4-af20-fc556645acfe}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{84fe067e-30f5-58cf-ab27-1c08e9d13973}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
             }
         ]
     },
@@ -478,5 +466,8 @@
             "white": "#C0C0C0",
             "yellow": "#808000"
         }
-    ]
+    ],
+    "theme": "light",
+    "themes": [],
+    "useAcrylicInTabRow": false
 }

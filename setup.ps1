@@ -1,11 +1,10 @@
 function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
 $packages='AppWork.JDownloader','9NFH4HJG2Z9H','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9N64SQZTB3LM','ElectronicArts.EADesktop','lycheeverse.lychee'
-foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219
+foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
 reloadenv
 # set static ip https://techexpert.tips/powershell/powershell-configure-static-ip-address/
 sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1","1.0.0.1"
 sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.233 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-# echo '~\Downloads\Sophia*\Sophia.ps1 -Function "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1"' | sudo pwsh
 sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
 sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
@@ -17,8 +16,10 @@ reloadenv
 sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
 # TODO: trakt scrobbler
 # TODO: msix all software
+# TODO: pin breaktimer version in choco or winget or scoop
+# TODO: request creating desktop links and then move software to winget?
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseQt /DesktopIcon"
-sudo choco install -y ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y adb ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
 sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
 irm get.scoop.sh | iex
 scoop bucket add extras
@@ -48,7 +49,6 @@ sudo dploy stow dotfiles $HOME
 # shortcuts
 Import-Module -name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Disconnect gamepad' -Path $HOME\Desktop -Target "C:\ProgramData\chocolatey\bin\DS4Windows.exe" -Arguments "-command Disconnect" -IconPath 'C:\ProgramData\chocolatey\lib\ds4windows\tools\DS4Windows\DS4Windows.exe'
-# New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "C:\Program Files\PPSSPP\PPSSPPWindows64.exe" # TODO: будут ли при апдейте созданы ярлыки обратно? https://github.com/kzdixon/chocolatey-packages/commit/66e63fe217c4d9d22210a09f3d555ff3da880cf6
 New-Shortcut -Name 'Yuzu EA no update' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\yuzu\yuzu-windows-msvc-early-access\yuzu.exe" # https://github.com/yuzu-emu/yuzu/issues/9380
 New-Shortcut -Name RTSS -Path $HOME\Desktop -Target "C:\Program Files (x86)\RivaTuner Statistics Server\RTSS.exe" # TODO: https://github.com/HunterZ/choco/issues/6
 New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target $HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe # https://github.com/ScoopInstaller/Scoop/issues/4212
