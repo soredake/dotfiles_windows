@@ -1,26 +1,28 @@
 function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
-$packages='AppWork.JDownloader','9NFH4HJG2Z9H','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','TomWatson.BreakTimer','Python.Python.3','9N64SQZTB3LM','ElectronicArts.EADesktop','lycheeverse.lychee'
+
+# setup winget https://github.com/microsoft/winget-cli/discussions/1691#discussioncomment-1684313 https://www.tenforums.com/general-support/50444-how-run-ps1-file-administrator.html#post670680
+PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Unrestricted -File $PWD\setup-winget.ps1' -Verb RunAs}";
+
+$packages='XP8K0HKJFRXGCK','AppWork.JDownloader','9NFH4HJG2Z9H','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','Python.Python.3','ElectronicArts.EADesktop','lycheeverse.lychee'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
+winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 reloadenv
 # set static ip https://techexpert.tips/powershell/powershell-configure-static-ip-address/
 sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1","1.0.0.1"
-sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.233 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.199 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
 sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
 sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 # https://www.phoronix.com/news/Windows-11-22H2-Terminal "DefaultTerminalApp -WindowsTerminal"
-# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable
-echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "Autoplay -Disable", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "TaskManagerWindow -Expanded", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEVC -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1"' | sudo powershell
+# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable, "TaskManagerWindow -Expanded", "Autoplay -Disable"
+echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "HEVC -Install", CheckUWPAppsUpdates, "DNSoverHTTPS -Enable -PrimaryDNS 1.0.0.1 -SecondaryDNS 1.1.1.1"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
 sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
 # TODO: trakt scrobbler
-# TODO: msix all software
-# TODO: pin breaktimer version in choco or winget or scoop
-# TODO: request creating desktop links and then move software to winget?
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseQt /DesktopIcon"
-sudo choco install -y adb ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker oh-my-posh 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows autoruns choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
-sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
+sudo choco install -y adb ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia wsldiskshrinker 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut";
+sudo choco install -y git.install --params "/NoShellHereIntegration /NoOpenSSH"; sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco -y install mpvnet.portable --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" # reloadenv
 irm get.scoop.sh | iex
 scoop bucket add extras
 scoop install cheat-engine
@@ -29,7 +31,6 @@ Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 pwsh -c 'Install-Module -Name posh-git,npm-completion,yarn-completion,Terminal-Icons,PSAdvancedShortcut,PSWindowsUpdate,PSScheduledJob'
 sudo wsl --install --no-launch #Ubuntu # https://github.com/microsoft/WSL/issues/9266
-sudo corepack enable; yarn set version stable # https://yarnpkg.com/getting-started/install https://nodejs.org/dist/latest/docs/api/corepack.html
 npm install --global html-validate
 pwsh -c 'curl --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"'
 # https://haali.su/winutils/
@@ -70,8 +71,6 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplicat
 sudo --ti reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v "ConfigureChatAutoInstall" /t REG_DWORD /d 0 /f
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 sudo net localgroup "Пользователи журналов производительности" User /add
-# stop device connect/remove sound
-Remove-Item -Path 'HKCU:\AppEvents\Schemes\Apps\.Default\DeviceConnect\.Current','HKCU:\AppEvents\Schemes\Apps\.Default\DeviceDisconnect\.Current' -Force
 # cleanup https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
 $debloat='MicrosoftTeams_8wekyb3d8bbwe','Microsoft.Todos_8wekyb3d8bbwe','Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe','Microsoft.Getstarted_8wekyb3d8bbwe','Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe','Microsoft.ZuneMusic_8wekyb3d8bbwe','Microsoft.WindowsCamera_8wekyb3d8bbwe','Microsoft.ZuneVideo_8wekyb3d8bbwe','Microsoft.WindowsMaps_8wekyb3d8bbwe','Microsoft.Windows.Photos_8wekyb3d8bbwe','Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe','Microsoft.People_8wekyb3d8bbwe','Microsoft.BingWeather_8wekyb3d8bbwe','Microsoft.BingNews_8wekyb3d8bbwe','AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m','Microsoft.GetHelp_8wekyb3d8bbwe','Microsoft.549981C3F5F10_8wekyb3d8bbwe',"BlueStacks X",'microsoft.windowscommunicationsapps_8wekyb3d8bbwe',"windows web experience pack"
 foreach ($package in $debloat) { winget uninstall -h $package}

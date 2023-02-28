@@ -23,6 +23,10 @@ function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
+function markwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args}
+function mirrorexternaldisk {
+  rclone sync -P --progress-terminal-title --exclude "backups" --exclude "backups/*" --exclude '$RECYCLE.BIN' --exclude '$RECYCLE.BIN/*' E:\ \\WIN-KTRSBU9GE9P\Transcend\mirror
+}
 function backup {
   Get-ChildItem -Path "C:\Users\user\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "C:\Users\user\Мой диск"
   rclone copy -P $env:APPDATA\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
@@ -58,5 +62,5 @@ function hyperv-toggle {
     write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
   }
 }
-oh-my-posh init pwsh --config "C:\Program Files (x86)\oh-my-posh\themes\pure.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557
