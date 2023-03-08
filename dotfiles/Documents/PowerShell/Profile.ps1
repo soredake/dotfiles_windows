@@ -24,36 +24,38 @@ function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --n
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args}
-function mirrorexternaldisk {
-  rclone sync -P --progress-terminal-title --exclude "backups" --exclude "backups/*" --exclude '$RECYCLE.BIN' --exclude '$RECYCLE.BIN/*' E:\ \\WIN-KTRSBU9GE9P\Transcend\mirror
-}
 function backup {
-  Get-ChildItem -Path "C:\Users\user\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "C:\Users\user\Мой диск"
-  rclone copy -P $env:APPDATA\Code\User\settings.json "C:\Users\User\Мой диск\документы\backups\vscode"
-  rclone copy -P $env:APPDATA\Code\User\keybindings.json "C:\Users\User\Мой диск\документы\backups\vscode"
-  rclone sync -P $env:APPDATA\qBittorrent "C:\Users\User\Мой диск\документы\backups\qbittorrent_roaming"
-  rclone sync -P $env:LOCALAPPDATA\qBittorrent "C:\Users\User\Мой диск\документы\backups\qbittorrent_local"
-  rclone sync -P $env:APPDATA\rclone "C:\Users\User\Мой диск\документы\backups\rclone"
-  rclone sync -P $env:APPDATA\DS4Windows "C:\Users\User\Мой диск\документы\backups\ds4windows"
-  rclone sync -P $env:APPDATA\VolumeLock "C:\Users\User\Мой диск\документы\backups\volumelock"
-  rclone sync -P "C:\Program Files (x86)\MSI Afterburner\Profiles" "C:\Users\User\Мой диск\документы\backups\msi_afterburner"
-  rclone sync -P "C:\Program Files (x86)\RivaTuner Statistics Server\Profiles" "C:\Users\User\Мой диск\документы\backups\rtss"
-  # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
-  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "C:\Users\user\Мой диск\документы\backups\pinned_items\StartMenu"
-  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "C:\Users\user\Мой диск\документы\backups\pinned_items\TaskBar"
-  reg export 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband' C:\Users\user\Мой` диск\документы\backups\pinned_items\Taskband.reg /y
-  # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
-  rclone sync -P "$env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations" "C:\Users\user\Мой диск\документы\backups\explorer_quick_acess"
-  code --list-extensions > "C:\Users\User\Мой диск\документы\backups\vscode\extensions.txt" # https://stackoverflow.com/a/49398449/4207635
-  rclone sync -P C:\tools\RPCS3\dev_hdd0\home\00000001\savedata "C:\Users\user\Мой диск\документы\backups\rpcs3"
-  rclone sync -P "C:\Users\user\.ssh" "C:\Users\user\Мой диск\документы\backups\ssh"
-  rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/*" --exclude ".tmp.drivedownload" --exclude ".tmp.driveupload" C:\Users\User\Мой` диск E:\backups\main
-  rclone dedupe -P --dedupe-mode newest mega:/
-  rclone sync -P --progress-terminal-title E:\backups mega:backups
+  Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
+  # TODO: syncthing
+  rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming"
+  rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"
+  rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
+  rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows"
+  rclone sync -P $env:APPDATA\VolumeLock "$HOME\Мой диск\документы\backups\volumelock"
+  rclone sync -P "C:\Program Files (x86)\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
+  rclone sync -P "C:\Program Files (x86)\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
+  # vscode # https://stackoverflow.com/a/49398449/4207635
+  code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
+  rclone copy -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
+  rclone copy -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
   # Yuzu https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md
-  rclone sync -P $env:APPDATA\yuzu\nand\system\save\8000000000000010\su\avators\profiles.dat "C:\Users\user\Мой диск\документы\backups\yuzu"
+  rclone sync -P $env:APPDATA\yuzu\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
   # Ryujinx https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
-  rclone sync -P $env:APPDATA\Ryujinx\system\Profiles.json "C:\Users\user\Мой диск\документы\backups\ryujinx"
+  rclone sync -P $env:APPDATA\Ryujinx\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
+  # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
+  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
+  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
+  reg export 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband' $HOME\Мой` диск\документы\backups\pinned_items\Taskband.reg /y
+  # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
+  rclone sync -P "$env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations" "$HOME\Мой диск\документы\backups\explorer_quick_acess"
+  rclone sync -P C:\tools\RPCS3\dev_hdd0\home\00000001\savedata "$HOME\Мой диск\документы\backups\rpcs3"
+  rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
+  if (Test-Path -Path "E:\") {
+    rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/" $HOME\Мой` диск E:\backups\main
+    rclone sync -P --progress-terminal-title --exclude "main/" E:\backups mega:backups
+  }
+  rclone sync -P --progress-terminal-title $HOME\Мой` диск mega:backups\main
+  rclone dedupe -P --dedupe-mode newest mega:/
 }
 function hyperv-toggle {
   if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
