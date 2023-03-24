@@ -1,7 +1,9 @@
 function reloadenv { $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222 } # refreshenv
 
+# TODO: install powershell-7 and then relaunch this script? or install pwsh in init.ps1 and then launch setup with it
+
 # setup winget https://github.com/microsoft/winget-cli/discussions/1691#discussioncomment-1684313 https://www.tenforums.com/general-support/50444-how-run-ps1-file-administrator.html#post670680
-PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Unrestricted -File $PWD\setup-winget.ps1' -Verb RunAs}";
+Start-Process pwsh -ArgumentList "-c (Get-AppxProvisionedPackage -Online -LogLevel Warnings | Where-Object -Property DisplayName -EQ Microsoft.DesktopAppInstaller).InstallLocation -replace '%SYSTEMDRIVE%', '$env:SystemDrive' | Add-AppxPackage -Register -DisableDevelopmentMode" -Verb runAs
 # TODO: nanazip
 $packages='XP8K0HKJFRXGCK','AppWork.JDownloader','9NFH4HJG2Z9H','XPFM5P5KDWF0JP','9NCBCSZSJRSB','9NZVDKPMR9RD','XPDC2RH70K22MN','gerardog.gsudo','BlueStack.BlueStacks','9PMZ94127M4G','Microsoft.PowerShell','Microsoft.VisualStudioCode','Python.Python.3','ElectronicArts.EADesktop','lycheeverse.lychee'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
@@ -16,7 +18,7 @@ sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 # https://www.phoronix.com/news/Windows-11-22H2-Terminal
 # CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable
 # TODO: SATADrivesRemovableMedia not working
-echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "DefaultTerminalApp -WindowsTerminal", "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1"' | sudo powershell
+echo '~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "SATADrivesRemovableMedia -Disable", "DefaultTerminalApp -WindowsTerminal", "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1"' | sudo powershell
 sudo powershell -c "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 reloadenv
 sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch zoom powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
@@ -91,7 +93,7 @@ sudo powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection"
 # link windows terminal config
 PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Unrestricted -File $PWD\\link-windows-terminal-config.ps1' -Verb RunAs}";
 # vbs disable script
-sudo powershell .\vbs-disable.ps1
+sudo .\vbs-disable.ps1
 # https://winaero.com/windows-10-deleting-thumbnail-cache/
 # TODO: is this needed?
 sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail` Cache' -Name 'Autorun' -Value 0 -Force
@@ -102,7 +104,7 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Exp
 
 # multipass setup
 sudo multipass set local.driver=virtualbox
-multipass set local.privileged-mounts=Yes
+multipass set local.privileged-mounts=yes
+multipass set client.gui.autostart=no
 multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/C_host
-# multipass mount E:\ primary:/mnt/e_host
 multipass exec primary /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh

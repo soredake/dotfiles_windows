@@ -1,5 +1,7 @@
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 
+# https://github.com/Atlas-OS/Atlas/commit/068de83bc24bb12654a6bcdde91b36d2aa52d991
+
 # bcdedit commands
 bcdedit /set hypervisorlaunchtype off
 bcdedit /set vm no
