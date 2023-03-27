@@ -13,7 +13,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 # https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | %{$_.split('==')[0]} | %{pip install --upgrade $_}; npm update -g; scoop update -qa }
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; npm update -g; scoop update -qa }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361 https://github.com/microsoft/winget-cli/issues/2802
 function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/lycheeverse/lychee/issues/902
@@ -23,9 +23,10 @@ function iauploadf { ia upload --verify --retries 50 --no-backup $args }
 function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
-function markwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args}
+function markwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
+  # TODO: add taiga
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"
   rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
@@ -60,9 +61,10 @@ function backup {
   rclone dedupe -P --dedupe-mode newest mega:/
 }
 function hyperv-toggle {
-  if(((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off'){
+  if (((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off') {
     write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
-  } else {
+  }
+  else {
     write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
   }
 }
