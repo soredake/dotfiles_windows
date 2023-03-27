@@ -3,7 +3,8 @@ $env:z = "$env:TEMP/dotfiles.zip"
 
 New-Item -Path $env:r -ItemType Directory
 Invoke-WebRequest -Uri "https://github.com/soredake/dotfiles_windows/archive/refs/heads/master.zip" -OutFile $env:z
-Expand-Archive $env:z -DestinationPath $env:r
+Expand-Archive $env:z -DestinationPath ~/git
+Move-Item –Path ~\git\dotfiles_windows-master -Destination $env:r
 . $env:r\function.ps1
 reloadenv
 
