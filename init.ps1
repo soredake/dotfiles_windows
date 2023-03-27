@@ -2,6 +2,8 @@ $env:r = "$HOME\git\dotfiles_windows"
 $env:z = "$env:TEMP/dotfiles.zip"
 $env:t = "$HOME\git\dotfiles_windows-master"
 
+Remove-Item -Recurse -Path $env:r -Path $env:t
+
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 New-Item -Path $env:r -ItemType Directory
 Invoke-WebRequest -Uri "https://github.com/soredake/dotfiles_windows/archive/refs/heads/master.zip" -OutFile $env:z
