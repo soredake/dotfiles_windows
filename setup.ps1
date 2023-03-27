@@ -1,21 +1,18 @@
 . $env:r\function.ps1
 
 # TODO: nanazip
-$packages = 'XP8K0HKJFRXGCK', 'AppWork.JDownloader', '9NFH4HJG2Z9H', 'XPFM5P5KDWF0JP', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'gerardog.gsudo', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'ElectronicArts.EADesktop', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV'
+$packages = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'gerardog.gsudo', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 # set static ip https://techexpert.tips/powershell/powershell-configure-static-ip-address/
 sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1", "1.0.0.1"
 sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
-# sudo Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # "DefaultTerminalApp -WindowsTerminal" https://www.phoronix.com/news/Windows-11-22H2-Terminal https://devblogs.microsoft.com/commandline/windows-terminal-is-now-the-default-in-windows-11/
 # CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable, StorageSense -Enable, StorageSenseFrequency -Month
 sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1"
-sudo Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 reloadenv
-sudo choco install -y --pin vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
+sudo choco install -y --pin ea-app jdownloader viber vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
 # TODO: trakt scrobbler
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseAVX2 /DesktopIcon"
 sudo choco install -y virtualbox multipass syncthingtray ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor git.install --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH";
