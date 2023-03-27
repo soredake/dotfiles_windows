@@ -6,7 +6,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 New-Item -Path $env:r -ItemType Directory
 Invoke-WebRequest -Uri "https://github.com/soredake/dotfiles_windows/archive/refs/heads/master.zip" -OutFile $env:z
 Expand-Archive $env:z -DestinationPath ~/git
-Move-Item -Recurse –Path $env:t\* -Destination $env:r
+Move-Item –Path $env:t\* -Destination $env:r
 . $env:r\function.ps1
 
 # winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell
@@ -20,4 +20,4 @@ sudo config CacheMode Auto
 pwsh $env:r\setup.ps1
 
 Remove-Item -Path $env:z
-Remove-Item -Path $env:t -Force
+Remove-Item -Recurse -Path $env:t -Force
