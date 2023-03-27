@@ -2,17 +2,6 @@ function reloadenv {
   $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User") 
 } # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222
 
-if ($PSVersionTable.PSEdition -ne "Core") {
-  # setup winget https://github.com/microsoft/winget-cli/discussions/1691#discussioncomment-1684313 https://www.tenforums.com/general-support/50444-how-run-ps1-file-administrator.html#post670680
-  #Start-Process powershell -ArgumentList "-c (Get-AppxProvisionedPackage -Online -LogLevel Warnings | Where-Object -Property DisplayName -EQ Microsoft.DesktopAppInstaller).InstallLocation -replace '%SYSTEMDRIVE%', '$env:SystemDrive' | Add-AppxPackage -Register -DisableDevelopmentMode" -Verb runAs
-  # install pwsh
-  winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell
-  pwsh $PSCommandPath
-  exit
-}
-
-# TODO: test this script
-
 # TODO: nanazip
 $packages = 'XP8K0HKJFRXGCK', 'AppWork.JDownloader', '9NFH4HJG2Z9H', 'XPFM5P5KDWF0JP', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'gerardog.gsudo', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'ElectronicArts.EADesktop', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
@@ -22,7 +11,7 @@ sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If
 sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
 sudo config CacheMode Auto
 irm script.sophi.app -useb | iex
-sudo Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+# sudo Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # "DefaultTerminalApp -WindowsTerminal" https://www.phoronix.com/news/Windows-11-22H2-Terminal https://devblogs.microsoft.com/commandline/windows-terminal-is-now-the-default-in-windows-11/
 # CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable, StorageSense -Enable, StorageSenseFrequency -Month
 sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1"
