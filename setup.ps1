@@ -1,6 +1,4 @@
-function reloadenv {
-  $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User") 
-} # https://stackoverflow.com/a/31845512 https://github.com/microsoft/winget-cli/issues/222
+. $env:r\function.ps1
 
 # TODO: nanazip
 $packages = 'XP8K0HKJFRXGCK', 'AppWork.JDownloader', '9NFH4HJG2Z9H', 'XPFM5P5KDWF0JP', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'gerardog.gsudo', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'ElectronicArts.EADesktop', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV'
