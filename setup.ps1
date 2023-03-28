@@ -4,19 +4,23 @@
 $packages = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV'
 foreach ($package in $packages) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $package } # https://github.com/microsoft/winget-cli/issues/219 TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
-# set static ip https://techexpert.tips/powershell/powershell-configure-static-ip-address/
-sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -ServerAddresses "1.1.1.1", "1.0.0.1"
-sudo New-NetIPAddress -InterfaceIndex (Get-NetRoute | % { Process { If (!$_.RouteMetric) { $_.ifIndex } } }) -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+if (!$env:vm) {
+  # set static ip https://techexpert.tips/powershell/powershell-configure-static-ip-address/
+  # https://woshub.com/powershell-configure-windows-networking/
+  # TODO: https://github.com/farag2/Sophia-Script-for-Windows/blob/master/src/Sophia_Script_for_Windows_11_PowerShell_7/Module/Sophia.psm1#L13009
+  sudo New-NetIPAddress -InterfaceIndex (Get-NetAdapter -Physical | ? {$_.Status -eq "Up"} | Select ifIndex | Select-String -Pattern "[0-9]+" | % { $_.Matches } | % { $_.Value}) -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+  sudo Set-DnsClientServerAddress -InterfaceIndex (Get-NetAdapter -Physical | ? {$_.Status -eq "Up"} | Select ifIndex | Select-String -Pattern "[0-9]+" | % { $_.Matches } | % { $_.Value}) -ServerAddresses "1.1.1.1", "1.0.0.1"
+}
 irm script.sophi.app -useb | iex
 # "DefaultTerminalApp -WindowsTerminal" https://www.phoronix.com/news/Windows-11-22H2-Terminal https://devblogs.microsoft.com/commandline/windows-terminal-is-now-the-default-in-windows-11/
-# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable, StorageSense -Enable, StorageSenseFrequency -Month
-sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1"
-reloadenv
+# CleanupTask -Register, SoftwareDistributionTask -Register, TempTask -Register, StorageSenseTempFiles -Enable, GPUScheduling -Enable, StorageSense -Enable, StorageSenseFrequency -Month, WindowsSandbox -Enable
+sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ControlPanelView -LargeIcons", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
 sudo choco install -y --pin ea-app jdownloader viber vigembus 64gram achievement-watcher ryujinx steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam-client tor-browser hidhide
 # TODO: trakt scrobbler
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseAVX2 /DesktopIcon"
 sudo choco install -y virtualbox multipass syncthingtray ytdownloader taiga dupeguru keepassxc ffmpeg screentogif.install responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor git.install --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH";
 sudo choco install -y syncplay --pre --version 1.7.0-Beta1; sudo choco -y install mpvnet.portable --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
+reloadenv
 irm get.scoop.sh | iex
 scoop bucket add extras
 scoop install cheat-engine
@@ -86,17 +90,19 @@ sudo powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection"
 sudo 'Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
 # vbs disable script
 sudo .\vbs-disable.ps1
-# https://winaero.com/windows-10-deleting-thumbnail-cache/
-# TODO: is this needed?
-sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail` Cache' -Name 'Autorun' -Value 0 -Force
 # https://winaero.com/change-icon-cache-size-windows-10/
 # TODO: is this needed?
 # 512000
 sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 65535 -Force
+# hide pwsh update notification https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_update_notifications
+setx POWERSHELL_UPDATECHECK Off
 
 # multipass setup
-sudo multipass set local.driver=virtualbox
-multipass set local.privileged-mounts=yes
-multipass set client.gui.autostart=no
-multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
-multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
+if (!$env:vm) {
+  sudo multipass set local.driver=virtualbox
+  multipass set local.privileged-mounts=yes
+  multipass set client.gui.autostart=no
+  multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
+  multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
+}
+# TODO: reconnect with git repo

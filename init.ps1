@@ -21,4 +21,4 @@ sudo config CacheMode Auto
 pwsh $env:r\setup.ps1
 
 Remove-Item -Path $env:z
-Remove-Item -Recurse -Path $env:t -Force
+Remove-Item -Path $env:t -Force
