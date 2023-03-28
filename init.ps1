@@ -13,6 +13,7 @@ Move-Item –Path $env:t\* -Destination $env:r
 
 # winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell
 # replace pwsh with store versions once WUA is not needed anymore
+# replace it with https://github.com/PowerShell/PowerShell-RFC/pull/324
 # -NoNewWindow
 Start-Process -Wait powershell -ArgumentList "-c . $env:r\function.ps1; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')); reloadenv; choco install -y gsudo; choco install -y --pin powershell-core" -Verb runAs
 reloadenv
