@@ -26,6 +26,7 @@ function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
+  # TODO: replace this script with dedicated backup/restore software?
   # TODO: add taiga
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"
