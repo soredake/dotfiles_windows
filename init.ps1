@@ -3,9 +3,7 @@ $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 Invoke-RestMethod get.scoop.sh | Invoke-Expression
 scoop install gsudo
-# winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell
-# replace pwsh with store versions once WUA is not needed anymore
-# or replace it with https://github.com/PowerShell/PowerShell-RFC/pull/324 https://devblogs.microsoft.com/powershell/powershell-openssh-team-investments-for-2023/
+# replace pwsh with store versions once WUA is not needed anymore or replace it with https://github.com/PowerShell/PowerShell-RFC/pull/324 https://devblogs.microsoft.com/powershell/powershell-openssh-team-investments-for-2023/
 sudo config CacheMode Auto # вызов этой команды не закеширует доступ
 sudo "iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 . "C:\ProgramData\chocolatey\helpers\functions\Update-SessionEnvironment.ps1" "C:\ProgramData\chocolatey\helpers\functions\Write-FunctionCallLogMessage.ps1"
