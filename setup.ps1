@@ -6,20 +6,13 @@ sudo Disable-ScheduledTask "Achievement Watcher Upgrade Daily" # https://github.
 $winget = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV', '9N3SQK8PDS8G' # nanazip https://github.com/M2Team/NanaZip/issues/86
 foreach ($p in $winget) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $p } # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
-if (!$env:vm) {
-  # set static ip https://stackoverflow.com/a/53991926
-  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
-  sudo "New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1; Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1"
-}
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
 Invoke-RestMethod script.sophi.app -useb | Invoke-Expression
-sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
 sudo choco install -y --pin syncthingtray ea-app jdownloader viber vigembus 64gram achievement-watcher steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam tor-browser hidhide --params "/NoStart" # TODO: https://github.com/mkevenaar/chocolatey-packages/issues/188, syncthingtray is pinned until https://gitlab.com/yan12125/chocolatey-packages/-/issues/2 is fixed
 sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseAVX2 /DesktopIcon"
-sudo choco install -y ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor git.install --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut";
+sudo choco install -y ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut";
 sudo choco install -y syncplay --pre --version 1.7.0; sudo choco -y install mpvnet.portable --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
 reloadenv
-Invoke-RestMethod get.scoop.sh | Invoke-Expression
 scoop bucket add extras
 scoop bucket add games
 scoop install cheat-engine yuzu-pineapple
@@ -77,21 +70,21 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Exp
 setx POWERSHELL_UPDATECHECK Off
 # cleanup
 Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk", "$HOME\Desktop\Google Docs.lnk", "$HOME\Desktop\Google Sheets.lnk", "$HOME\Desktop\Google Slides.lnk", "$HOME\Desktop\PPSSPP (32-Bit).lnk" # https://github.com/Xav83/chocolatey-packages/pull/24 https://github.com/kzdixon/chocolatey-packages/pull/2 https://github.com/mkevenaar/chocolatey-packages/pull/195а
-# multipass setup
 if (!$env:vm) {
+  # multipass setup
   sudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
   multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
-}
-# TODO: reconnect with git repo
-
-# firefox user.js
-if (!$env:vm) {
+  # firefox user.js
   $env:defaultProfile = (Get-Content $env:APPDATA\Mozilla\Firefox\profiles.ini | Select-String -Pattern 'Default=1' -Context 1 | ForEach-Object { $_.Context.PreContext[0] } | Select-String '(Profiles).*').Matches.Value
   if ($env:defaultProfile) {
     $env:FFPROFILEPATH = "${env:APPDATA}\Mozilla\Firefox\$env:defaultProfile"
     Remove-Item -Path $env:FFPROFILEPATH\user.js; sudo New-Item -ItemType SymbolicLink -Path $env:FFPROFILEPATH\user.js -Target $HOME\git\dotfiles_windows\user.js
   }
+  # set static ip https://stackoverflow.com/a/53991926
+  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
+  sudo "New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1; Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1"
 }
+sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
