@@ -15,5 +15,3 @@ sudo "choco install -y --pin powershell-core; choco install -y git.install --par
 refreshenv # https://github.com/chocolatey/choco/issues/2458
 git clone "https://github.com/soredake/dotfiles_windows" $env:r
 pwsh $env:r\setup.ps1
-
-sudo "[Environment]::SetEnvironmentVariable('PATH', $Env:PATH + '; C:\Users\user\test', [EnvironmentVariableTarget]::Machine)"
