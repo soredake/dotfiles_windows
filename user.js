@@ -41,3 +41,11 @@ user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 // old scrollbars
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802694
 user_pref("widget.windows.overlay-scrollbars.enabled", false);
+
+// https://kb.mozillazine.org/Browser.link.open_newwindow
+// spotify "open in desktop app" feature annoyingly opens new tab (which is not the case with store version)
+// user_pref("browser.link.open_newwindow", 1);
+
+// https://support.mozilla.org/en-US/questions/1176544
+// removes delay between allowing to save file/making "OK" button clickable
+user_pref("security.dialog_enable_delay", 0);

@@ -1,25 +1,30 @@
-# . $env:r\function.ps1
 # https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
 $debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'MicrosoftTeams_8wekyb3d8bbwe', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'Microsoft.549981C3F5F10_8wekyb3d8bbwe', 'BlueStacks` X', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe', 'windows` web` experience` pack'
 foreach ($package in $debloat) { sudo winget uninstall --accept-source-agreements -h $package } # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
-$winget = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', 'BlueStack.BlueStacks', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3', 'lycheeverse.lychee', 'XP99J3KP4XZ4VV', '9N3SQK8PDS8G' # nanazip https://github.com/M2Team/NanaZip/issues/86
-foreach ($p in $winget) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $p } # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861, do i need to to do `--accept-package-agreements --accept-source-agreements`?
+$winget = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3.11', 'XP99J3KP4XZ4VV', '9N3SQK8PDS8G', 'XPFM5P5KDWF0JP' # nanazip https://github.com/M2Team/NanaZip/issues/86
+$uac = 'BlueStack.BlueStacks', 'lycheeverse.lychee' # https://github.com/microsoft/winget-cli/issues/2802 https://github.com/microsoft/winget-cli/issues/549 https://github.com/chocolatey-community/chocolatey-package-requests/issues/358
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
+# TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
+foreach ($p in $uac) { sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $p }
+foreach ($p in $winget) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $p }
+if (!$env:vm) {
+  # set static ip https://stackoverflow.com/a/53991926
+  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
+  sudo "New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1; Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1"
+}
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
 Invoke-RestMethod script.sophi.app -useb | Invoke-Expression
-sudo choco install -y --pin syncthingtray ea-app jdownloader viber vigembus 64gram achievement-watcher steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam tor-browser hidhide --params "/NoStart" # TODO: https://github.com/mkevenaar/chocolatey-packages/issues/188, syncthingtray is pinned until https://gitlab.com/yan12125/chocolatey-packages/-/issues/2 is fixed
-sudo choco install -y --pin --pre pcsx2-dev rpcs3 --params "/Desktop /UseAVX2 /DesktopIcon"
-sudo choco install -y ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut";
-sudo choco install -y syncplay --pre --version 1.7.0; sudo choco -y install mpvnet.portable --pre; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
-refreshenv
-scoop bucket add extras
-scoop bucket add games
-scoop install cheat-engine yuzu-pineapple
+sudo .\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
+sudo choco install -y --pin syncthingtray jdownloader vigembus 64gram achievement-watcher steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam tor-browser hidhide --params "/NoStart" # syncthingtray is pinned until https://gitlab.com/yan12125/chocolatey-packages/-/issues/2 is fixed
+sudo choco install -y ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut"; sudo choco install -y --pre mpvnet.portable pcsx2-dev rpcs3 --params "/Desktop /desktopicon";sudo choco install -y syncplay --pre --version 1.7.0; sudo choco install -y --pin --ignorechecksum ea-app; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
+refreshenv # TODO: PATH should be reloaded after install package from winget
+foreach ($b in "extras","games","nonportable") {scoop bucket add $b}
+scoop install cheat-engine yuzu-pineapple spotx-np
 pip install pipx
 pipx ensurepath
 $pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup")
 # TODO: request ability to install multiple-venvs with one command https://github.com/pypa/pipx/issues/88
-foreach ($p in $pip) { pipx install $p }
+foreach ($p in $pip) {pipx install $p}
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut
@@ -34,7 +39,7 @@ sudo "$env:TEMP/Winget-AutoUpdate-main/Winget-AutoUpdate-Install.ps1" -Notificat
 sudo Invoke-WebRequest -Uri "https://gist.github.com/soredake/f0c63deeaf104e30135a28c3238a6008/raw" -OutFile C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
 # link dotfiles
 sudo 'Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
-# New-Item -Path $env:APPDATA\mpv.net\script-opts -ItemType Directory
+# New-Item -Path $env:APPDATA\mpv.net\script-opts -ItemType Directory # TODO: test if this needed
 sudo dploy stow dotfiles $HOME
 # shortcuts
 Import-Module -Name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
@@ -77,14 +82,4 @@ if (!$env:vm) {
   multipass set client.gui.autostart=no
   multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
-  # firefox user.js
-  $env:defaultProfile = (Get-Content $env:APPDATA\Mozilla\Firefox\profiles.ini | Select-String -Pattern 'Default=1' -Context 1 | ForEach-Object { $_.Context.PreContext[0] } | Select-String '(Profiles).*').Matches.Value
-  if ($env:defaultProfile) {
-    $env:FFPROFILEPATH = "${env:APPDATA}\Mozilla\Firefox\$env:defaultProfile"
-    Remove-Item -Path $env:FFPROFILEPATH\user.js; sudo New-Item -ItemType SymbolicLink -Path $env:FFPROFILEPATH\user.js -Target $HOME\git\dotfiles_windows\user.js
-  }
-  # set static ip https://stackoverflow.com/a/53991926
-  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
-  sudo "New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1; Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1"
 }
-sudo ~\Downloads\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
