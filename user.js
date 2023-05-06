@@ -2,8 +2,9 @@
 // TODO: report this to mozilla (add option to ui)
 user_pref("browser.theme.dark-private-windows", false);
 
-// TODO: report this
+// TODO: add ui option to disable built-in extensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1230656
+// https://www.neowin.net/news/microsoft-edge-will-soon-let-you-remove-some-of-its-unnecessary-features/
 user_pref("extensions.pocket.enabled", false);
 
 // PAC
@@ -35,7 +36,7 @@ user_pref("network.dns.echconfig.enabled", true);
 
 // fonts are looking better with this
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
-// TODO: report this
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
 // old scrollbars
@@ -43,9 +44,17 @@ user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 user_pref("widget.windows.overlay-scrollbars.enabled", false);
 
 // https://kb.mozillazine.org/Browser.link.open_newwindow
-// spotify "open in desktop app" feature annoyingly opens new tab (which is not the case with store version)
+// spotify "open in desktop app" feature annoyingly opens new tab every time
 // user_pref("browser.link.open_newwindow", 1);
 
 // https://support.mozilla.org/en-US/questions/1176544
 // removes delay between allowing to save file/making "OK" button clickable
+// TODO: add ui setting for this
+// TODO: compare with chrome behavior
 user_pref("security.dialog_enable_delay", 0);
+
+// Do not show about:config warning message
+user_pref("browser.aboutConfig.showWarning", false);
+
+// TODO: test what settings are synchronized
+// TODO: sync all this settings https://bugzilla.mozilla.org/show_bug.cgi?id=1269548

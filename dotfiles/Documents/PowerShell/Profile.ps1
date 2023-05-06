@@ -11,9 +11,9 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
-# https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521
+# https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521 https://github.com/PowerShell/PowerShellGet/issues/495
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -qa }
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ak }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361 https://github.com/microsoft/winget-cli/issues/2802
 function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
@@ -27,15 +27,15 @@ function markytwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   # TODO: replace this script with dedicated backup/restore software?
-  # TODO: add taiga
+  rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"
   rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
   rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows"
   rclone sync -P $env:APPDATA\VolumeLock "$HOME\Мой диск\документы\backups\volumelock"
-  rclone sync -P "C:\Program Files (x86)\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
-  rclone sync -P "C:\Program Files (x86)\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
-  rclone sync -P C:\tools\RPCS3\dev_hdd0\home\00000001\savedata "$HOME\Мой диск\документы\backups\rpcs3"
+  rclone sync -P "${env:ProgramFiles(x86)}\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
+  rclone sync -P "${env:ProgramFiles(x86)}\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
+  rclone sync -P $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata "$HOME\Мой диск\документы\backups\rpcs3"
   rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
   # syncthing(-tray)
   rclone copy -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing"
@@ -44,16 +44,15 @@ function backup {
   code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
   rclone copy -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
   rclone copy -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
-  # Yuzu https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md
+  # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
   rclone sync -P $env:APPDATA\yuzu\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
-  # Ryujinx https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
   rclone sync -P $env:APPDATA\Ryujinx\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
   # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
   reg export 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband' $HOME\Мой` диск\документы\backups\pinned_items\Taskband.reg /y
   # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
-  rclone sync -P "$env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations" "$HOME\Мой диск\документы\backups\explorer_quick_acess"
+  rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_acess"
   if (Test-Path -Path "E:\") {
     rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/" $HOME\Мой` диск E:\backups\main
     rclone sync -P --progress-terminal-title --exclude "main/" E:\backups mega:backups
@@ -64,10 +63,12 @@ function backup {
 function hyperv-toggle {
   if (((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off') {
     write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
-  }
-  else {
+  } else {
     write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
   }
 }
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
+
+
+# yt-dlp --sub-langs all --embed-subs --embed-metadata --embed-chapters

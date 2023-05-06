@@ -1,7 +1,5 @@
-# https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
-$debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'MicrosoftTeams_8wekyb3d8bbwe', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'Microsoft.549981C3F5F10_8wekyb3d8bbwe', 'BlueStacks` X', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe', 'windows` web` experience` pack'
-foreach ($package in $debloat) { sudo winget uninstall --accept-source-agreements -h $package } # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
 $winget = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NCBCSZSJRSB', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', '9PMZ94127M4G', 'Microsoft.VisualStudioCode', 'Python.Python.3.11', 'XP99J3KP4XZ4VV', '9N3SQK8PDS8G', 'XPFM5P5KDWF0JP' # nanazip https://github.com/M2Team/NanaZip/issues/86
+$winget += '9N95Q1ZZPMH4', '9PG2DK419DRG', '9MVZQVXJBQ9V', '9NCTDW2W1BH8', '9PMMSR1CGPWG', '9N5TDP8VCMHS'
 $uac = 'BlueStack.BlueStacks', 'lycheeverse.lychee' # https://github.com/microsoft/winget-cli/issues/2802 https://github.com/microsoft/winget-cli/issues/549 https://github.com/chocolatey-community/chocolatey-package-requests/issues/358
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
@@ -14,17 +12,16 @@ if (!$env:vm) {
 }
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
 Invoke-RestMethod script.sophi.app -useb | Invoke-Expression
-sudo .\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable"
+sudo .\Sophia*\Sophia.ps1 -Function CreateRestorePoint, "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "HEVC -Install"
 sudo choco install -y --pin syncthingtray jdownloader vigembus 64gram achievement-watcher steam-rom-manager itch powertoys googledrive parsec goggalaxy hamachi protonvpn steam tor-browser hidhide --params "/NoStart" # syncthingtray is pinned until https://gitlab.com/yan12125/chocolatey-packages/-/issues/2 is fixed
-sudo choco install -y ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut"; sudo choco install -y --pre mpvnet.portable pcsx2-dev rpcs3 --params "/Desktop /desktopicon";sudo choco install -y syncplay --pre --version 1.7.0; sudo choco install -y --pin --ignorechecksum ea-app; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
-refreshenv # TODO: PATH should be reloaded after install package from winget
-foreach ($b in "extras","games","nonportable") {scoop bucket add $b}
+sudo choco install -y syncplay ryujinx postman virtualbox multipass ytdownloader taiga dupeguru keepassxc ffmpeg responsively insomnia 7tt 7zip.install doublecmd wiztree nomacs nodejs.install ppsspp retroarch steascree.install ds4windows choco-cleaner rclone.portable msiafterburner yt-dlp nerdfont-hack tor --params "/DesktopShortcut /NoShellHereIntegration /NoOpenSSH /RTSSDesktopShortcut"; sudo choco install -y --pre mpvnet.portable pcsx2-dev rpcs3 --params "/DesktopShortcut"; sudo choco install -y --pin --ignorechecksum ea-app; sudo choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
+refreshenv # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/chocolatey/choco/issues/2458
+foreach ($b in "extras", "games", "nonportable") { scoop bucket add $b }
 scoop install cheat-engine yuzu-pineapple spotx-np
 pip install pipx
 pipx ensurepath
 $pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup")
-# TODO: request ability to install multiple-venvs with one command https://github.com/pypa/pipx/issues/88
-foreach ($p in $pip) {pipx install $p}
+foreach ($p in $pip) { pipx install $p } # https://github.com/pypa/pipx/issues/971
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut
@@ -62,19 +59,25 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Pol
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/ https://aka.ms/AAh3io0
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # https://winitpro.ru/index.php/2021/12/16/udalit-chat-microsoft-teams-v-windows/ https://www.outsidethebox.ms/21375/ https://aka.ms/AAh4nac
-sudo --ti reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v "ConfigureChatAutoInstall" /t REG_DWORD /d 0 /f
+sudo --ti reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v "ConfigureChatAutoInstall" /t REG_DWORD /d 0 /f # TODO: add to to sophi-scipt?
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 sudo net localgroup "Пользователи журналов производительности" User /add
-# stop qbittorrent/ethernet from waking my pc https://superuser.com/a/1629820/1506333
-sudo powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection"
+# stop qbittorrent/ethernet from waking my pc https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579
+sudo powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection" # TODO: report this to qbitttorent @ test with non-store version
 # vbs disable script
 sudo .\vbs-disable.ps1
 # https://winaero.com/change-icon-cache-size-windows-10/
-sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 65535 -Force
-# hide pwsh update notification, delete this if this https://github.com/microsoft/PowerToys/issues/10231 is fixed
+# sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 65535 -Force
+sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 512535 -Force
+# hide pwsh update notification, delete this if this https://github.com/microsoft/PowerToys/issues/10231 is fixed, # TODO: request settings this by default to off in msstore version
 setx POWERSHELL_UPDATECHECK Off
-# cleanup
-Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk", "$HOME\Desktop\Google Docs.lnk", "$HOME\Desktop\Google Sheets.lnk", "$HOME\Desktop\Google Slides.lnk", "$HOME\Desktop\PPSSPP (32-Bit).lnk" # https://github.com/Xav83/chocolatey-packages/pull/24 https://github.com/kzdixon/chocolatey-packages/pull/2 https://github.com/mkevenaar/chocolatey-packages/pull/195а
+# https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
+$debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'MicrosoftTeams_8wekyb3d8bbwe', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'Microsoft.549981C3F5F10_8wekyb3d8bbwe', 'BlueStacks` X', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe', 'windows` web` experience` pack'
+foreach ($package in $debloat) { sudo winget uninstall --accept-source-agreements -h $package } # TODO: wait for new release to arrive https://github.com/microsoft/winget-cli/pull/2861
+Remove-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Achievement Watcher.lnk", "$HOME\Desktop\Google Docs.lnk", "$HOME\Desktop\Google Sheets.lnk", "$HOME\Desktop\Google Slides.lnk", "$HOME\Desktop\PPSSPP (32-Bit).lnk" # https://github.com/Xav83/chocolatey-packages/pull/24 https://github.com/kzdixon/chocolatey-packages/pull/2 https://github.com/mkevenaar/chocolatey-packages/pull/195
+# windows 11 wipes program files directory and steam can only install games there on system drive
+New-Item C:\SteamLibrary -ItemType Directory
+New-Item -ItemType Junction -Path "${env:ProgramFiles(x86)}\Steam\steamapps" -Target "C:\SteamLibrary"
 if (!$env:vm) {
   # multipass setup
   sudo multipass set local.driver=virtualbox
@@ -83,3 +86,4 @@ if (!$env:vm) {
   multipass launch --name primary --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
 }
+
