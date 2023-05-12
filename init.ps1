@@ -6,7 +6,7 @@ scoop install gsudo
 sudo config CacheMode Auto
 sudo "iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 Get-ChildItem -Path "C:\ProgramData\chocolatey\helpers\functions" -Filter *.ps1 | ForEach-Object { . $_.FullName }
-refreshenv # 
+refreshenv
 sudo "choco install -y --pin powershell-core; choco install -y git.install --params '/NoShellHereIntegration /NoOpenSSH'"
 refreshenv # https://github.com/chocolatey/choco/issues/2458
 git clone "https://github.com/soredake/dotfiles_windows" $env:r
