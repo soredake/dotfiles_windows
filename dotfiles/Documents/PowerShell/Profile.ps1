@@ -13,15 +13,24 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 # https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521 https://github.com/PowerShell/PowerShellGet/issues/495
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
-function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ak }
+function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
-Set-Alias -Name lychee -Value $env:LOCALAPPDATA\Microsoft\WinGet\Packages\lycheeverse.lychee_Microsoft.Winget.Source_8wekyb3d8bbwe\lychee*.exe # https://github.com/microsoft/winget-cli/issues/361 https://github.com/microsoft/winget-cli/issues/2802
+function documentsfoldertyperecursively {
+  # https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
+  # https://superuser.com/questions/487647/sorting-by-date-very-slow
+  # https://stackoverflow.com/a/32058202/4207635
+  $dirs = Get-ChildItem -Directory -Recurse -Path (Read-Host -Prompt 'Enter the full name of the directory you want to copy to')
+  foreach ($dir in $dirs) {
+    Copy-Item ~\git\dotfiles_windows\documents.ini "$dir\desktop.ini"
+  }
+}
 function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
 function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc }
-function iaupload { ia upload --checksum --verify --retries 50 --no-backup $args }
-function iauploadf { ia upload --verify --retries 50 --no-backup $args }
-function iauploadnd { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
-function iauploadfnd { ia upload --verify --retries 50 --no-backup --no-derive $args }
+function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
+function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
+function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
+function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
+function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump=liked, playlists }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markytwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function backup {
@@ -63,12 +72,10 @@ function backup {
 function hyperv-toggle {
   if (((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off') {
     write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
-  } else {
+  }
+  else {
     write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
   }
 }
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
-
-
-# yt-dlp --sub-langs all --embed-subs --embed-metadata --embed-chapters
