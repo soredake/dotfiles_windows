@@ -2,7 +2,7 @@
 sudo apt update
 # sudo add-apt-repository -y ppa:fish-shell/release-3
 deb=protonvpn-stable-release_1.0.3_all.deb
-wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/$deb
+sudo wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/$deb
 sudo apt-get install ./$deb
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf # https://stackoverflow.com/a/73397970 https://askubuntu.com/a/1424249
 sudo apt upgrade -y

@@ -24,15 +24,15 @@ function documentsfoldertyperecursively {
     Copy-Item ~\git\dotfiles_windows\documents.ini "$dir\desktop.ini"
   }
 }
-function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
+function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
 function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
-function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump=liked, playlists }
+function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
-function markytwatchedyoutube { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
+function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   # TODO: replace this script with dedicated backup/restore software?
@@ -49,7 +49,7 @@ function backup {
   # syncthing(-tray)
   rclone copy -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing"
   rclone copy -P $env:LOCALAPPDATA\Syncthing --exclude "LOCK" --exclude "LOG" --exclude "*.log" "$HOME\Мой диск\документы\backups\syncthing\syncthing"
-  # vscode # https://stackoverflow.com/a/49398449/4207635
+  # vscode https://stackoverflow.com/a/49398449/4207635
   code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
   rclone copy -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
   rclone copy -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
@@ -69,7 +69,7 @@ function backup {
   rclone sync -P --progress-terminal-title $HOME\Мой` диск mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
 }
-function hyperv-toggle {
+function hyperv_toggle {
   if (((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off') {
     write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
   }
