@@ -21,7 +21,7 @@ function documentsfoldertyperecursively {
   # https://stackoverflow.com/a/32058202/4207635
   $dirs = Get-ChildItem -Directory -Recurse -Path (Read-Host -Prompt 'Enter the full name of the directory you want to copy to')
   foreach ($dir in $dirs) {
-    Copy-Item ~\git\dotfiles_windows\documents.ini "$dir\desktop.ini"
+    Copy-Item ~\git\dotfiles_windows\misc\explorer-folder-type-documents.ini "$dir\desktop.ini"
   }
 }
 function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
