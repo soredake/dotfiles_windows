@@ -13,6 +13,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 # https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521 https://github.com/PowerShell/PowerShellGet/issues/495
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
+# topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop'
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 function documentsfoldertyperecursively {
@@ -37,10 +38,10 @@ function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   # TODO: replace this script with dedicated backup/restore software?
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga"
-  rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming"
-  rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"
+  rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --exclude "lockfile"
+  rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --exclude "logs/"
   rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
-  rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows"
+  rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --exclude "Logs/"
   rclone sync -P $env:APPDATA\VolumeLock "$HOME\Мой диск\документы\backups\volumelock"
   rclone sync -P "${env:ProgramFiles(x86)}\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
   rclone sync -P "${env:ProgramFiles(x86)}\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
@@ -48,7 +49,7 @@ function backup {
   rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
   # syncthing(-tray)
   rclone copy -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing"
-  rclone copy -P $env:LOCALAPPDATA\Syncthing --exclude "LOCK" --exclude "LOG" --exclude "*.log" "$HOME\Мой диск\документы\backups\syncthing\syncthing"
+  rclone copy -P $env:LOCALAPPDATA\Syncthing "$HOME\Мой диск\документы\backups\syncthing\syncthing" --exclude "LOCK" --exclude "LOG" --exclude "*.log"
   # vscode https://stackoverflow.com/a/49398449/4207635
   code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
   rclone copy -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
@@ -59,12 +60,12 @@ function backup {
   # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
-  reg export 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband' $HOME\Мой` диск\документы\backups\pinned_items\Taskband.reg /y
+  reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\pinned_items\Taskband.reg" /y
   # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
-  rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_acess"
+  rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
   if (Test-Path -Path "E:\") {
-    rclone sync -P --progress-terminal-title --exclude ".tmp.drive*/" $HOME\Мой` диск E:\backups\main
-    rclone sync -P --progress-terminal-title --exclude "main/" E:\backups mega:backups
+    rclone sync -P --progress-terminal-title "$HOME\Мой диск" E:\backups\main --exclude ".tmp.drive*/"
+    rclone sync -P --progress-terminal-title E:\backups mega:backups --exclude "main/"
   }
   rclone sync -P --progress-terminal-title $HOME\Мой` диск mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/

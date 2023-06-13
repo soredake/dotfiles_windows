@@ -59,8 +59,10 @@
   experimental = true
 [core]
   editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
+  autocrlf = true
+  fscache = true
   fsmonitor = true
-	# autocrlf = input
+  symlinks = true
   # fix for https://github.com/microsoft/vscode/issues/121231#issuecomment-819438763
   sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
@@ -76,3 +78,21 @@
   cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED
 [push]
   autoSetupRemote = true
+[init]
+  defaultBranch = main
+[pull]
+  rebase = true
+[credential]
+  helper = manager
+[credential "https://dev.azure.com"]
+  useHttpPath = true
+[http]
+  sslBackend = openssl
+  sslCAInfo = C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt
+[diff "astextplain"]
+  textconv = astextplain
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
