@@ -1,4 +1,5 @@
 Import-Module -Name (dir $HOME\Documents\PowerShell\Modules)
+. "$HOME\Мой диск\документы\private_powershell_profile.ps1"
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
 # https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
@@ -13,7 +14,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 # https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521 https://github.com/PowerShell/PowerShellGet/issues/495
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
-# topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop'
+# function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 function documentsfoldertyperecursively {
@@ -25,8 +26,10 @@ function documentsfoldertyperecursively {
     Copy-Item ~\git\dotfiles_windows\misc\explorer-folder-type-documents.ini "$dir\desktop.ini"
   }
 }
-function checkarchive { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc } # https://github.com/hyperium/hyper/issues/3122
-function checklinux { cd ~\Мой` диск\документы; sudo net stop Hamachi2Svc; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc }
+# https://github.com/lycheeverse/lychee/issues/972
+# https://github.com/hyperium/hyper/issues/3122
+function checkarchive { sudo net stop Hamachi2Svc; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc }
+function checklinux { sudo net stop Hamachi2Svc; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -34,6 +37,7 @@ function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive 
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
+function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   # TODO: replace this script with dedicated backup/restore software?
@@ -67,7 +71,7 @@ function backup {
     rclone sync -P --progress-terminal-title "$HOME\Мой диск" E:\backups\main --exclude ".tmp.drive*/"
     rclone sync -P --progress-terminal-title E:\backups mega:backups --exclude "main/"
   }
-  rclone sync -P --progress-terminal-title $HOME\Мой` диск mega:backups\main
+  rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
 }
 function hyperv_toggle {

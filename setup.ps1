@@ -57,14 +57,15 @@ Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USER
 Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
 Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument '--title "Update everything" pwsh -c upgradeall') -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 11:00)
 sudo choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
-powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0 # https://remontka.pro/wake-timers-windows/
+# https://remontka.pro/wake-timers-windows/
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
 sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 # sudo net localgroup "Пользователи журналов производительности" User /add
-# stop qbittorrent/ethernet from waking my pc https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
+# stop qbittorrent/ethernet from waking my pc from sleep https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
 sudo { powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection #2" } # TODO: report this to qbittorent @ test with non-store version TODO: https://github.com/PowerShell/PowerShell/issues/13183
 # vbs disable script
 sudo .\vbs-disable.ps1
@@ -72,19 +73,17 @@ sudo .\vbs-disable.ps1
 scoop shim rm 7zG 7z 7zfm
 # disable hibernation
 sudo powercfg /h off
-# https://www.outsidethebox.ms/21985/
-sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy' /v 'fMinimizeConnections' /t REG_DWORD /d 0 /f
 # https://winaero.com/change-icon-cache-size-windows-10/ 65535
 # sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 512535 -Force
 # hide pwsh update notification, delete this if this https://github.com/microsoft/PowerToys/issues/10231 and https://github.com/microsoft/winget-cli/issues/212 is fixed, # TODO: turn update notification off in msstore version
 setx POWERSHELL_UPDATECHECK Off
 # https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
-$debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'BlueStacks` X', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe', '9MSSGKG348SP' # 'Microsoft.549981C3F5F10_8wekyb3d8bbwe' - cortana https://support.microsoft.com/en-us/topic/end-of-support-for-cortana-in-windows-d025b39f-ee5b-4836-a954-0ab646ee1efa?ranMID=24542&OCID=AID2200057_aff_7593_1243925 # 'MicrosoftTeams_8wekyb3d8bbwe'
+$debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe' # 'Microsoft.549981C3F5F10_8wekyb3d8bbwe' - cortana https://support.microsoft.com/en-us/topic/end-of-support-for-cortana-in-windows-d025b39f-ee5b-4836-a954-0ab646ee1efa?ranMID=24542&OCID=AID2200057_aff_7593_1243925 # 'MicrosoftTeams_8wekyb3d8bbwe' # 9MSSGKG348SP # 'BlueStacks` X'
 foreach ($p in $debloat) { sudo winget uninstall --accept-source-agreements -h $p }
 if (!$env:vm) {
   sudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
-  multipass launch --name primary -c 4 -m 4G --disk 10G --mount E:\:/mnt/e_host --mount C:\:/mnt/c_host
-  multipass exec primary bash /mnt/c_host/Users/user/git/dotfiles_windows/wsl.sh
+  multipass launch --name primary -c 4 -m 4G --disk 10G --mount E:\:/mnt/e_host --mount D:\:/mnt/d_host --mount C:\:/mnt/c_host
+  multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
 }
