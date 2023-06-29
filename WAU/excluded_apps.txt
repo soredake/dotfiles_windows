@@ -3,6 +3,7 @@ AnthonyBeaumont.AchievementWatcher
 AppWork.JDownloader
 Discord.Discord
 ElectronicArts.EADesktop
+EpicGames.EpicGamesLauncher
 GOG.Galaxy
 Google.Chrome
 Google.Drive

@@ -43,14 +43,9 @@ user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802694
 user_pref("widget.windows.overlay-scrollbars.enabled", false);
 
-// https://kb.mozillazine.org/Browser.link.open_newwindow
-// spotify "open in desktop app" feature annoyingly opens new tab every time
-// user_pref("browser.link.open_newwindow", 1);
-
 // https://support.mozilla.org/en-US/questions/1176544
 // removes delay between allowing to save file/making "OK" button clickable
-// TODO: add ui setting for this
-// TODO: compare with chrome behavior
+// TODO: add ui setting for this and compare with chrome behavior
 user_pref("security.dialog_enable_delay", 0);
 
 // Do not show about:config warning message
