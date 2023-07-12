@@ -1,7 +1,6 @@
-$machine = 'BlueStack.BlueStacks', 'XP99VR1BPSBQJ2', 'lycheeverse.lychee', 'AppWork.JDownloader', 'Google.Drive', 'GOG.Galaxy', 'DupeGuru.DupeGuru', 'Syncplay.Syncplay', 'alexx2000.DoubleCommander', 'AntibodySoftware.WizTree', 'Rclone.Rclone', 'yt-dlp.yt-dlp', 'Gyan.FFmpeg', 'Parsec.Parsec', 'LogMeIn.Hamachi', 'ViGEm.ViGEmBus', 'GitHub.cli', 'mcmilk.7zip-zstd', 'Haali.WinUtils.lswitch', 'Libretro.RetroArch', 'HandBrake.HandBrake', 'ElectronicArts.EADesktop', 'OpenJS.NodeJS', 'Microsoft.PowerToys', 'KeePassXCTeam.KeePassXC', 'ProtonTechnologies.ProtonVPN', 'Canonical.Multipass', 'rcmaehl.MSEdgeRedirect'
-$user = 'XP8K0HKJFRXGCK', '9NFH4HJG2Z9H', '9NZVDKPMR9RD', 'XPDC2RH70K22MN', '9PMZ94127M4G', 'Python.Python.3.11', 'XP99J3KP4XZ4VV', '9N3SQK8PDS8G', 'XPFM5P5KDWF0JP', 'SteamGridDB.RomManager', '64Gram.64Gram', 'Postman.Postman', 'ResponsivelyApp.ResponsivelyApp', 'RussellBanks.Komac', 'RamenSoftware.7+TaskbarTweaker', 'nomacs.nomacs', 'erengy.Taiga', 'ItchIo.Itch' # nanazip https://github.com/M2Team/NanaZip/issues/86
-foreach ($p in $machine) { sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements $p }
-foreach ($p in $user) { winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements $p }
+# [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingCmdletAliases', '')]
+sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements BlueStack.BlueStacks XP99VR1BPSBQJ2 lycheeverse.lychee AppWork.JDownloader Google.Drive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg Parsec.Parsec LogMeIn.Hamachi ViGEm.ViGEmBus GitHub.cli mcmilk.7zip-zstd Haali.WinUtils.lswitch Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NFH4HJG2Z9H 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac RamenSoftware.7+TaskbarTweaker nomacs.nomacs erengy.Taiga ItchIo.Itch # nanazip https://github.com/M2Team/NanaZip/issues/86
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 sudo winget install -h -e --id ViGEm.HidHide -v 1.2.98 # https://github.com/ViGEm/HidHide/issues/109 https://github.com/ViGEm/HidHide/issues/110 https://github.com/ViGEm/HidHide/issues/111
 winget install Microsoft.VisualStudioCode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
@@ -15,17 +14,17 @@ Remove-Item -Recurse -Path ~\Downloads\Sophia*
 irm script.sophi.app -useb | iex
 sudo { ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -SearchIcon", "CastToDeviceContext -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable" }
 # syncthingtray is pinned until https://gitlab.com/yan12125/chocolatey-packages/-/issues/2 is fixed
-sudo { choco install -y --pin ds4windows syncthingtray tor-browser; choco install -y ryujinx virtualbox ytdownloader insomnia ppsspp steascree.install choco-cleaner msiafterburner nerdfont-hack tor --params "'/DesktopShortcut /RTSSDesktopShortcut /No32bitIcon'"; choco install -y --pre mpvnet.portable pcsx2-dev rpcs3 --params "'/DesktopShortcut /NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
+sudo { choco install -y --pin ds4windows syncthingtray tor-browser; choco install -y virtualbox ytdownloader insomnia ppsspp steascree.install choco-cleaner nerdfont-hack tor --params "'/DesktopShortcut /No32bitIcon'"; choco install -y --pre mpvnet.portable pcsx2-dev rpcs3 --params "'/DesktopShortcut /NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
 refreshenv # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/chocolatey/choco/issues/2458
 foreach ($b in "extras", "games") { scoop bucket add $b }
-scoop install cheat-engine yuzu-pineapple
+scoop install cheat-engine yuzu-pineapple ryujinx-ava
 pip install pipx
 pipx ensurepath
 $pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup")
 foreach ($p in $pip) { pipx install $p } # https://github.com/pypa/pipx/issues/971
 Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor
+Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, command-not-found
 npm install --global html-validate gulp-cli create-react-app
 # https://github.com/yt-dlp/yt-dlp/issues/6496#issuecomment-1463202877
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
@@ -48,11 +47,11 @@ New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCAL
 New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target "$HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe"
 New-Shortcut -Name 'SteaScree' -Path $HOME\Desktop -Target "${env:ProgramFiles(x86)}\SteaScree\SteaScree.exe"
 New-Shortcut -Name 'yuzu Early Access' -Path $HOME\Desktop -Target "$HOME\scoop\apps\yuzu-pineapple\current\yuzu.exe"
+New-Shortcut -Name 'Ryujinx' -Path $HOME\Desktop -Target "$HOME\scoop\apps\ryujinx-ava\current\Ryujinx.Ava.exe"
 # Tasks
-# https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 sudo { Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WinGet\Links\lswitch.exe" -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon) }
 sudo Start-ScheduledTask -TaskName "switch language with right ctrl"
-sudo New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
+sudo New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"' # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
 sudo sc failure tor reset=30 actions=restart/5000 # https://serverfault.com/a/983832 TODO: request support for service recovery options in powershell
 Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument '--title "AMD cleanup task" pwsh -c amdcleanup') -TaskName "AMD cleanup task" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At 11:00)
 Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
@@ -68,7 +67,7 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Pol
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # https://winaero.com/change-icon-cache-size-windows-10/ 65535
-# sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max` Cached` Icons' -Type 'String' -Value 512535 -Force
+# sudo { Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max Cached Icons' -Type 'String' -Value 512535 -Force }
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 # sudo net localgroup "Пользователи журналов производительности" User /add
 # stop qbittorrent/ethernet from waking my pc from sleep https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
@@ -77,6 +76,9 @@ sudo { powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection #2"
 sudo .\vbs-disable.ps1
 # prefer 7zip from winget
 scoop shim rm 7zG 7z 7zfm
+# pwsh settings
+Enable-ExperimentalFeature -Name PSFeedbackProvider
+Enable-ExperimentalFeature -Name PSCommandNotFoundSuggestion
 # hide pwsh update notification
 setx POWERSHELL_UPDATECHECK Off
 # multipass setup
@@ -88,5 +90,4 @@ if (!$env:vm) {
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
 }
 # https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
-$debloat = 'Clipchamp.Clipchamp_yxz26nhyzhsrt', 'Microsoft.Todos_8wekyb3d8bbwe', 'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe', 'Microsoft.Getstarted_8wekyb3d8bbwe', 'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe', 'Microsoft.ZuneMusic_8wekyb3d8bbwe', 'Microsoft.WindowsCamera_8wekyb3d8bbwe', 'Microsoft.ZuneVideo_8wekyb3d8bbwe', 'Microsoft.WindowsMaps_8wekyb3d8bbwe', 'Microsoft.Windows.Photos_8wekyb3d8bbwe', 'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe', 'Microsoft.People_8wekyb3d8bbwe', 'Microsoft.BingWeather_8wekyb3d8bbwe', 'Microsoft.BingNews_8wekyb3d8bbwe', 'AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m', 'Microsoft.GetHelp_8wekyb3d8bbwe', 'microsoft.windowscommunicationsapps_8wekyb3d8bbwe'
-foreach ($p in $debloat) { sudo winget uninstall --accept-source-agreements -h $p }
+sudo winget uninstall --accept-source-agreements -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.Getstarted_8wekyb3d8bbwe Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.ZuneVideo_8wekyb3d8bbwe Microsoft.WindowsMaps_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.People_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m Microsoft.GetHelp_8wekyb3d8bbwe microsoft.windowscommunicationsapps_8wekyb3d8bbwe

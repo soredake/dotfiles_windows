@@ -28,12 +28,25 @@ function documentsfoldertyperecursively {
 }
 # https://github.com/lycheeverse/lychee/issues/972
 # https://github.com/hyperium/hyper/issues/3122
-function checkarchive { sudo net stop Hamachi2Svc; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; sudo net start Hamachi2Svc }
-function checklinux { sudo net stop Hamachi2Svc; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; sudo net start Hamachi2Svc }
+# disable protonvpn adapter also
+function lycheefix {
+  if ($args[0] -eq "off") {
+    sudo net start Hamachi2Svc
+    sudo { netsh interface set interface "ProtonVPN TUN" admin=enable; netsh interface set interface "Подключение по локальной сети" admin=enable }
+  }
+  else {
+    sudo net stop Hamachi2Svc
+    sudo { netsh interface set interface "ProtonVPN TUN" admin=disable; netsh interface set interface "Подключение по локальной сети" admin=disable }
+  }
+    
+}
+function checkarchive { lycheefix; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; lycheefix off }
+function checklinux { lycheefix; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; lycheefix off }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
+function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args }
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
 function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
