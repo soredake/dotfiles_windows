@@ -9,7 +9,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn # protonvpn-cli
 mkdir -p ~/.local/bin
 pipx ensurepath
-pipx install {tubeup,https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip,git+https://github.com/jjjake/internetarchive}
+pipx install tubeup
+pipx install https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip
+pipx install git+https://github.com/jjjake/internetarchive
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher pure-fish/pure"
 # sudo chsh -s /usr/bin/fish "$USER"
 wget -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/soredake/dotfiles_linux/fedora/home/fish/.config/fish/config.fish
@@ -31,3 +33,10 @@ ln -sfv ~/.config/internetarchive/ia.ini ~/.config/ia.ini
 # ResultAny=yes
 # ResultInactive=no
 # ResultActive=yes" | sudo tee /etc/polkit-1/localauthority/50-local.d/org.freedesktop.NetworkManager.pkla
+
+# lychee
+export lycheever=0.13.0
+wget https://github.com/lycheeverse/lychee/releases/download/v${lycheever}/lychee-v${lycheever}-x86_64-unknown-linux-gnu.tar.gz
+tar -xvzf lychee-v${lycheever}-x86_64-unknown-linux-gnu.tar.gz
+sudo mv lychee /usr/bin
+rm -f lychee-v${lycheever}-x86_64-unknown-linux-gnu.tar.gz

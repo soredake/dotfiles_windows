@@ -1,14 +1,19 @@
 # [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingCmdletAliases', '')]
-sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements BlueStack.BlueStacks XP99VR1BPSBQJ2 lycheeverse.lychee AppWork.JDownloader Google.Drive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg Parsec.Parsec LogMeIn.Hamachi ViGEm.ViGEmBus GitHub.cli mcmilk.7zip-zstd Haali.WinUtils.lswitch Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner
+sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements BlueStack.BlueStacks XP99VR1BPSBQJ2 lycheeverse.lychee AppWork.JDownloader Google.Drive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg Parsec.Parsec LogMeIn.Hamachi ViGEm.ViGEmBus GitHub.cli mcmilk.7zip-zstd Haali.WinUtils.lswitch Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner melonDS.melonDS
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NFH4HJG2Z9H 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac RamenSoftware.7+TaskbarTweaker nomacs.nomacs erengy.Taiga ItchIo.Itch # nanazip https://github.com/M2Team/NanaZip/issues/86
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 sudo winget install -h -e --id ViGEm.HidHide -v 1.2.98 # https://github.com/ViGEm/HidHide/issues/109 https://github.com/ViGEm/HidHide/issues/110 https://github.com/ViGEm/HidHide/issues/111
 winget install Microsoft.VisualStudioCode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
 sudo winget install --no-upgrade -h -l ~\Steam Valve.Steam
 if (!$env:vm) {
-  # set static ip https://stackoverflow.com/a/53991926
   $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
-  sudo { New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1; Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1 }
+  sudo {
+    # set static ip https://stackoverflow.com/a/53991926
+    New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
+    # lychee fix
+    Set-NetIPInterface -InterfaceIndex $env:interfaceIndex -InterfaceMetric 1
+   }
 }
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
 irm script.sophi.app -useb | iex
@@ -48,6 +53,7 @@ New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target "$HOME\scoop\apps\
 New-Shortcut -Name 'SteaScree' -Path $HOME\Desktop -Target "${env:ProgramFiles(x86)}\SteaScree\SteaScree.exe"
 New-Shortcut -Name 'yuzu Early Access' -Path $HOME\Desktop -Target "$HOME\scoop\apps\yuzu-pineapple\current\yuzu.exe"
 New-Shortcut -Name 'Ryujinx' -Path $HOME\Desktop -Target "$HOME\scoop\apps\ryujinx-ava\current\Ryujinx.Ava.exe"
+New-Shortcut -Name 'melonDS' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\melonDS.melonDS_Microsoft.Winget.Source_8wekyb3d8bbwe\melonDS.exe"
 # Tasks
 sudo { Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WinGet\Links\lswitch.exe" -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon) }
 sudo Start-ScheduledTask -TaskName "switch language with right ctrl"
@@ -67,7 +73,7 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Pol
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # https://winaero.com/change-icon-cache-size-windows-10/ 65535
-# sudo { Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max Cached Icons' -Type 'String' -Value 512535 -Force }
+sudo { Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max Cached Icons' -Type 'String' -Value 512535 -Force }
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
 # sudo net localgroup "Пользователи журналов производительности" User /add
 # stop qbittorrent/ethernet from waking my pc from sleep https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
@@ -91,3 +97,4 @@ if (!$env:vm) {
 }
 # https://docs.microsoft.com/en-us/windows/application-management/provisioned-apps-windows-client-os https://pureinfotech.com/view-installed-apps-powershell-windows-10/
 sudo winget uninstall --accept-source-agreements -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.Getstarted_8wekyb3d8bbwe Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.ZuneVideo_8wekyb3d8bbwe Microsoft.WindowsMaps_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.People_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m Microsoft.GetHelp_8wekyb3d8bbwe microsoft.windowscommunicationsapps_8wekyb3d8bbwe
+# TODO: delete wsl remnants

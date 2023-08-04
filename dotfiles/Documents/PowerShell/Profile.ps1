@@ -1,4 +1,5 @@
 Import-Module -Name (dir $HOME\Documents\PowerShell\Modules)
+Import-Module gsudoModule
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
@@ -17,6 +18,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
+function reboottobios { shutdown /r /fw /f /t 0 }
 function documentsfoldertyperecursively {
   # https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
   # https://superuser.com/questions/487647/sorting-by-date-very-slow
@@ -28,20 +30,22 @@ function documentsfoldertyperecursively {
 }
 # https://github.com/lycheeverse/lychee/issues/972
 # https://github.com/hyperium/hyper/issues/3122
-# disable protonvpn adapter also
 function lycheefix {
+  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
   if ($args[0] -eq "off") {
     sudo net start Hamachi2Svc
-    sudo { netsh interface set interface "ProtonVPN TUN" admin=enable; netsh interface set interface "Подключение по локальной сети" admin=enable }
+    sudo { Get-NetAdapter | Enable-NetAdapter -Confirm:$false }
   }
   else {
     sudo net stop Hamachi2Svc
-    sudo { netsh interface set interface "ProtonVPN TUN" admin=disable; netsh interface set interface "Подключение по локальной сети" admin=disable }
+    sudo { Get-NetAdapter | Disable-NetAdapter -Confirm:$false
+      Get-NetAdapter -InterfaceIndex $env:interfaceIndex | Enable-NetAdapter }
   }
-    
 }
-function checkarchive { lycheefix; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; lycheefix off }
-function checklinux { lycheefix; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; lycheefix off }
+# function checkarchive { lycheefix; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; lycheefix off }
+# function checklinux { lycheefix; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; lycheefix off }
+function checkarchive { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
+function checklinux { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -72,8 +76,8 @@ function backup {
   rclone copy -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
   rclone copy -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
   # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
-  rclone sync -P $env:APPDATA\yuzu\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
-  rclone sync -P $env:APPDATA\Ryujinx\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
+  rclone sync -P "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat" "$HOME\Мой диск\документы\backups\yuzu"
+  rclone sync -P "$HOME\scoop\apps\ryujinx-ava\current\portable\system\Profiles.json" "$HOME\Мой диск\документы\backups\ryujinx"
   # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
