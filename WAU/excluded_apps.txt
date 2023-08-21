@@ -18,6 +18,7 @@ Microsoft.VisualStudioCode
 Mozilla.Firefox
 Mozilla.Firefox.DeveloperEdition
 Mozilla.Firefox.ESR
+Oracle.VirtualBox
 Parsec.Parsec
 Spotify.Spotify
 TeamViewer.TeamViewer
