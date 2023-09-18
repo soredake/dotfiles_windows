@@ -55,32 +55,47 @@ user_pref("browser.aboutConfig.showWarning", false);
 // TODO: sync all this settings https://bugzilla.mozilla.org/show_bug.cgi?id=1269548
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
+user_pref("nglayout.initialpaint.delay", 0); // default=5; used to be 250
 user_pref("nglayout.initialpaint.delay_in_oopif", 0); // default=5
-user_pref("content.notify.interval", 100000); // (.10s); alt=500000 (.50s)
+user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
+user_pref("browser.startup.preXulSkeletonUI", false); // WINDOWS
 user_pref("layout.css.grid-template-masonry-value.enabled", true);
 user_pref("dom.enable_web_task_scheduling", true);
-user_pref("gfx.webrender.all", true); // enables WR (GPU) + additional features
-user_pref("gfx.webrender.precache-shaders", true);
-user_pref("gfx.webrender.compositor", true);
-user_pref("layers.gpu-process.enabled", true);
-user_pref("media.hardware-video-decoding.enabled", true);
-user_pref("gfx.canvas.accelerated", true); // DEFAULT on macOS and Linux v.110
-user_pref("gfx.canvas.accelerated.cache-items", 32768);
-user_pref("gfx.canvas.accelerated.cache-size", 4096);
-user_pref("gfx.content.skia-font-cache-size", 80);
-user_pref("image.cache.size", 10485760);
-user_pref("image.mem.decode_bytes_at_a_time", 131072); // alt=65536; preferred=262144; chunk size for calls to the image decoders
-user_pref("image.mem.shared.unmap.min_expiration_ms", 120000); // default=60000; minimum timeout to unmap shared surfaces since they have been last used
-user_pref("media.memory_cache_max_size", 1048576); // alt=512000; also in Securefox (inactive there)
-user_pref("media.memory_caches_combined_limit_kb", 2560000); // preferred=3145728; // default=524288
-user_pref("browser.cache.memory.max_entry_size", 153600); // alt=51200; preferred=327680 ; alt= -1 -> entries bigger than than 90% of the mem-cache are never cached
-user_pref("network.buffer.cache.size", 262144); // preferred=327680; default=32768
-user_pref("network.buffer.cache.count", 128); // preferred=240; default=24
+user_pref("layout.css.has-selector.enabled", true);
+user_pref("gfx.canvas.accelerated.cache-items", 4096); // default=2048; alt=8192
+user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; alt=1024
+user_pref("gfx.content.skia-font-cache-size", 20); // default=5; Chrome=20
+user_pref("media.memory_cache_max_size", 196608); // default=8192; AF=65536; alt=131072; alt2=512000
+user_pref("media.memory_caches_combined_limit_kb", 1572864); // default=524288
+user_pref("media.cache_readahead_limit", 7200); // 120 min; default=60; stop reading ahead when our buffered data is this many seconds ahead of the current playback
+user_pref("media.cache_resume_threshold", 3600); // 60 min; default=30; when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold
+user_pref("image.mem.decode_bytes_at_a_time", 32768); // default=16384; alt=65536; chunk size for calls to the image decoders
+user_pref("network.buffer.cache.size", 262144); // 256 kb; default=32768 (32 kb)
+user_pref("network.buffer.cache.count", 128); // default=24
 user_pref("network.http.max-connections", 1800); // default=900
 user_pref("network.http.max-persistent-connections-per-server", 10); // default=6; download connections; anything above 10 is excessive
-user_pref("network.ssl_tokens_cache_capacity", 32768); // default=2048; more TLS token caching (fast reconnects)
+user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3
+user_pref("network.websocket.max-connections", 400); // default=200
+user_pref("network.http.pacing.requests.enabled", false);
+user_pref("network.dnsCacheEntries", 10000); // default=400
+user_pref("network.dnsCacheExpiration", 86400); // keep entries for 1 day; alt=3600 (1 hour)
+user_pref("network.dns.max_high_priority_threads", 8); // default=5
+user_pref("network.ssl_tokens_cache_capacity", 20480); // default=2048; more TLS token caching (fast reconnects)
+user_pref("network.http.speculative-parallel-limit", 10);
+user_pref("network.early-hints.enabled", true);
+user_pref("network.early-hints.preconnect.enabled", true);
+user_pref("network.early-hints.preconnect.max_connections", 15); // default=10
+user_pref("network.predictor.enable-hover-on-ssl", true);
+user_pref("network.predictor.preresolve-min-confidence", 40); // default=60
+user_pref("network.predictor.preconnect-min-confidence", 60); // default=90
+user_pref("network.predictor.prefetch-min-confidence", 80); // default=100
+user_pref("network.predictor.prefetch-force-valid-for", 3600); // default=10
+user_pref("network.predictor.prefetch-rolling-load-count", 120); // default=10
+user_pref("network.predictor.max-resources-per-entry", 250); // default=100
+user_pref("network.predictor.max-uri-length", 1000); // default=500
 
 /////////////////////////////////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+user_pref("apz.overscroll.enabled", true); // not DEFAULT on Linux
 user_pref("general.smoothScroll", true); // DEFAULT
 user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 12);
 user_pref("general.smoothScroll.msdPhysics.enabled", true);
@@ -91,4 +106,4 @@ user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", 2.0);
 user_pref("general.smoothScroll.msdPhysics.slowdownSpringConstant", 250);
 user_pref("general.smoothScroll.currentVelocityWeighting", 1.0);
 user_pref("general.smoothScroll.stopDecelerationWeighting", 1.0);
-user_pref("mousewheel.default.delta_multiplier_y", 300); // 250-400
+user_pref("mousewheel.default.delta_multiplier_y", 300); // 250-400; adjust this number to your liking
