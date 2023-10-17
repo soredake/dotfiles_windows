@@ -57,7 +57,6 @@ function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-fr
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
-  # TODO: replace this script with dedicated backup/restore software?
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --exclude "lockfile"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --exclude "logs/"

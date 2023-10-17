@@ -46,7 +46,7 @@ user_pref("widget.windows.overlay-scrollbars.enabled", false);
 // https://support.mozilla.org/en-US/questions/1176544
 // removes delay between allowing to save file/making "OK" button clickable
 // TODO: add ui setting for this and compare with chrome behavior
-user_pref("security.dialog_enable_delay", 0);
+// user_pref("security.dialog_enable_delay", 0);
 
 // Do not show about:config warning message
 user_pref("browser.aboutConfig.showWarning", false);

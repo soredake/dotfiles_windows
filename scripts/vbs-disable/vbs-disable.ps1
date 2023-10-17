@@ -61,4 +61,4 @@ foreach ($service in $services) {
 }
 
 # Disable system devices
-& $PSScriptRoot\toggleDev.cmd"*Hyper-V*"
+& $PSScriptRoot\toggleDev.cmd "*Hyper-V*"

@@ -1,5 +1,5 @@
 # [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingCmdletAliases', '')]
-sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements BlueStack.BlueStacks XP99VR1BPSBQJ2 lycheeverse.lychee AppWork.JDownloader Google.Drive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg Parsec.Parsec LogMeIn.Hamachi ViGEm.ViGEmBus GitHub.cli mcmilk.7zip-zstd Haali.WinUtils.lswitch Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner melonDS.melonDS StrawberryMusicPlayer.Strawberry Oracle.VirtualBox AwthWathje.SteaScree PPSSPPTeam.PPSSPP Oracle.JDK.17 SSHFS-Win.SSHFS-Win
+sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements BlueStack.BlueStacks XP99VR1BPSBQJ2 lycheeverse.lychee AppWork.JDownloader Google.Drive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg Parsec.Parsec LogMeIn.Hamachi ViGEm.ViGEmBus GitHub.cli mcmilk.7zip-zstd Haali.WinUtils.lswitch Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner melonDS.melonDS StrawberryMusicPlayer.Strawberry Oracle.VirtualBox AwthWathje.SteaScree PPSSPPTeam.PPSSPP Oracle.JDK.17 SSHFS-Win.SSHFS-Win Google.PlatformTools
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NFH4HJG2Z9H 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac RamenSoftware.7+TaskbarTweaker nomacs.nomacs erengy.Taiga ItchIo.Itch 9N64SQZTB3LM WinFsp.WinFsp # nanazip https://github.com/M2Team/NanaZip/issues/86
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 sudo winget install -h -e --id ViGEm.HidHide -v 1.2.98 # https://github.com/ViGEm/HidHide/issues/109 https://github.com/ViGEm/HidHide/issues/110 https://github.com/ViGEm/HidHide/issues/111
@@ -30,7 +30,6 @@ Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, command-not-found
 npm install --global html-validate gulp-cli create-react-app
-# https://github.com/yt-dlp/yt-dlp/issues/6496#issuecomment-1463202877
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
 Invoke-WebRequest -Uri "https://github.com/Romanitho/Winget-AutoUpdate/archive/refs/heads/main.zip" -OutFile "$env:TEMP/Winget-AutoUpdate.zip"
 Expand-Archive "$env:TEMP/Winget-AutoUpdate.zip" -DestinationPath "$env:TEMP"
@@ -72,10 +71,10 @@ sudo powercfg /h off
 sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name 'DisableStartupSound' -Value 1 -Force
 # disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.techrepublic.com/article/how-to-disable-the-lock-screen-in-windows-11-an-update/
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
-# https://winaero.com/change-icon-cache-size-windows-10/ 65535
+# https://winaero.com/change-icon-cache-size-windows-10/ 65535 512535
 sudo { Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'Max Cached Icons' -Type 'String' -Value 512535 -Force }
 # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
-# sudo net localgroup "Пользователи журналов производительности" User /add
+# sudo net localgroup "Пользователи журналов производительности" $env:USERNAME /add
 # stop qbittorrent/ethernet from waking my pc from sleep https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
 sudo { powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection #2" } # TODO: report this to qbittorent @ test with non-store version TODO: https://github.com/PowerShell/PowerShell/issues/13183
 # https://www.outsidethebox.ms/21985/
