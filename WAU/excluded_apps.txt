@@ -1,6 +1,7 @@
 64Gram.64Gram
 AnthonyBeaumont.AchievementWatcher
 AppWork.JDownloader
+Canonical.Multipass
 Discord.Discord
 ElectronicArts.EADesktop
 EpicGames.EpicGamesLauncher
@@ -21,6 +22,7 @@ Mozilla.Firefox.ESR
 Oracle.VirtualBox
 Parsec.Parsec
 Spotify.Spotify
+StrawberryMusicPlayer.Strawberry
 TeamViewer.TeamViewer
 TeamViewer.TeamViewer.Host
 TomWatson.BreakTimer

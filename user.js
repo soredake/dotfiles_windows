@@ -32,7 +32,7 @@ user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1725938
 // https://tls-ech.dev/
-user_pref("network.dns.echconfig.enabled", true);
+//user_pref("network.dns.echconfig.enabled", true);
 
 // fonts are looking better with this
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692

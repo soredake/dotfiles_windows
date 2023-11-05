@@ -13,7 +13,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
-# https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PowerShellGet/issues/521 https://github.com/PowerShell/PowerShellGet/issues/495
+# https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/automatically-updating-modules https://github.com/PowerShell/PSResourceGet/issues/521 https://github.com/PowerShell/PSResourceGet/issues/495
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
