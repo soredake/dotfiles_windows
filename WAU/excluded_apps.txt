@@ -22,6 +22,7 @@ Mozilla.Firefox.ESR
 Oracle.VirtualBox
 Parsec.Parsec
 Spotify.Spotify
+StartIsBack.StartAllBack
 StrawberryMusicPlayer.Strawberry
 TeamViewer.TeamViewer
 TeamViewer.TeamViewer.Host
