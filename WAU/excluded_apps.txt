@@ -1,6 +1,7 @@
 64Gram.64Gram
 AnthonyBeaumont.AchievementWatcher
 AppWork.JDownloader
+AwthWathje.SteaScree
 Canonical.Multipass
 Discord.Discord
 ElectronicArts.EADesktop
@@ -8,7 +9,9 @@ EpicGames.EpicGamesLauncher
 GOG.Galaxy
 Google.Chrome
 Google.Drive
+IG.IGClient
 ItchIo.Itch
+LogMeIn.Hamachi
 Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
 Microsoft.Office
@@ -33,6 +36,7 @@ Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
+qBittorrent.qBittorrent
 rammichael.7+TaskbarTweaker
 rammichael.7+TaskbarTweaker.Beta
 stromcon.emusak

@@ -10,7 +10,7 @@ refreshenv
 sudo winget install --no-upgrade -h WingetPathUpdater # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/549#issuecomment-1675410316 https://github.com/microsoft/winget-cli/issues/222#issuecomment-1675434402
 sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
 # sudo choco install -y --pin powershell-core
-sudo winget install -h Microsoft.PowerShell
+sudo winget install --no-upgrade -h Microsoft.PowerShell
 # refreshenv # https://github.com/chocolatey/choco/issues/2458
 git clone "https://github.com/soredake/dotfiles_windows" $env:r
 pwsh $env:r\setup.ps1

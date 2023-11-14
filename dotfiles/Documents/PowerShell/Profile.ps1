@@ -17,9 +17,10 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # https://www.activestate.com/resources/quick-reads/how-to-update-all-python-packages/ https://github.com/pypa/pip/issues/4551
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
-function amdcleanup { Remove-Item C:\AMD\* -Recurse -Force }
 function reboottobios { shutdown /r /fw /f /t 0 }
 function documentsfoldertyperecursively {
+  # https://github.com/microsoft/PowerToys/issues/26297
+  # https://github.com/microsoft/PowerToys/issues/25547
   # https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
   # https://superuser.com/questions/487647/sorting-by-date-very-slow
   # https://stackoverflow.com/a/32058202/4207635
@@ -42,17 +43,22 @@ function lycheefix {
       Get-NetAdapter -InterfaceIndex $env:interfaceIndex | Enable-NetAdapter }
   }
 }
+
 # function checkarchive { lycheefix; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; lycheefix off }
 # function checklinux { lycheefix; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; lycheefix off }
-function checkarchive { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
-function checklinux { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
+
+function checkarchive { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
+function checklinux { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
+
+# function checkarchive { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
+# function checklinux { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
+
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args }
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
-function mpvnetdvd { mpvnet dvd:// --dvd-device=VIDEO_TS }
 function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function backup {
@@ -62,7 +68,7 @@ function backup {
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --exclude "logs/"
   rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
   rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --exclude "Logs/"
-  rclone sync -P $env:APPDATA\VolumeLock "$HOME\Мой диск\документы\backups\volumelock"
+  # rclone sync -P $env:APPDATA\VolumeLock "$HOME\Мой диск\документы\backups\volumelock"
   rclone sync -P "${env:ProgramFiles(x86)}\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
   rclone sync -P "${env:ProgramFiles(x86)}\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
   rclone sync -P $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata "$HOME\Мой диск\документы\backups\rpcs3"
@@ -77,10 +83,6 @@ function backup {
   # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
   rclone sync -P "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat" "$HOME\Мой диск\документы\backups\yuzu"
   rclone sync -P "$HOME\scoop\apps\ryujinx-ava\current\portable\system\Profiles.json" "$HOME\Мой диск\документы\backups\ryujinx"
-  # https://www.thewindowsclub.com/backup-restore-pinned-taskbar-items-windows-10
-  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
-  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
-  reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\pinned_items\Taskband.reg" /y
   # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
   rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
   if (Test-Path -Path "E:\") {
@@ -89,14 +91,6 @@ function backup {
   }
   rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
-}
-function hyperv_toggle {
-  if (((sudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype    ') -eq 'Off') {
-    write-host("Enabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype auto
-  }
-  else {
-    write-host("Disabling Hyper-V..."); sudo bcdedit /set hypervisorlaunchtype off
-  }
 }
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379

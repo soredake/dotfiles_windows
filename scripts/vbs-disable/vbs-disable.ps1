@@ -9,7 +9,8 @@ bcdedit /set vsmlaunchtype Off
 bcdedit /set loadoptions DISABLE-LSA-ISO, DISABLE-VBS
 
 # disable hyper-v with DISM
-DISM /Online /Disable-Feature:Microsoft-Hyper-V-All /Quiet /NoRestart
+DISM /Online /Disable-Feature:Microsoft-Hyper-V-All /NoRestart
+DISM /Online /Disable-Feature:VirtualMachinePlatform /NoRestart
 
 # apply registry changes
 # https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Windows.DeviceGuard::VirtualizationBasedSecuritye
