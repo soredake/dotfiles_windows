@@ -15,14 +15,14 @@ irm script.sophi.app -useb | iex
 sudo { ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "Windows10ContextMenu -Enable" }
 sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements -e --id Oracle.VirtualBox -v 6.1.48
 sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements ViGEm.ViGEmBus ViGEm.HidHide BlueStack.BlueStacks XP99VR1BPSBQJ2 AppWork.JDownloader Google.GoogleDrive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Parsec.Parsec LogMeIn.Hamachi mcmilk.7zip-zstd Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS Microsoft.PowerToys KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner StrawberryMusicPlayer.Strawberry AwthWathje.SteaScree PPSSPPTeam.PPSSPP SSHFS-Win.SSHFS-Win Dropbox.Dash IG.IGClient RamenSoftware.Windhawk qBittorrent.qBittorrent
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac nomacs.nomacs erengy.Taiga ItchIo.Itch 9N64SQZTB3LM WinFsp.WinFsp Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg lycheeverse.lychee Haali.WinUtils.lswitch # nanazip https://github.com/M2Team/NanaZip/issues/86
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac nomacs.nomacs erengy.Taiga ItchIo.Itch 9N64SQZTB3LM WinFsp.WinFsp Ryujinx.Ryujinx.Ava aandrew-me.ytDownloader Rclone.Rclone yt-dlp.yt-dlp Gyan.FFmpeg lycheeverse.lychee Haali.WinUtils.lswitch # nanazip https://github.com/M2Team/NanaZip/issues/86
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install Microsoft.VisualStudioCode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
 sudo winget install --no-upgrade -h -l ~\Steam Valve.Steam
-sudo { choco install -y --pin ds4windows tor-browser; choco install -y syncthingtray ytdownloader insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/DesktopShortcut /NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
+sudo { choco install -y --pin ds4windows tor-browser; choco install -y syncthingtray insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/DesktopShortcut /NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
 refreshenv # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/chocolatey/choco/issues/2458
 foreach ($b in "extras", "games") { scoop bucket add $b }
-scoop install cheat-engine yuzu-pineapple ryujinx-ava # https://github.com/Ryujinx/Ryujinx/issues/3662
+scoop install cheat-engine yuzu-pineapple # https://github.com/Ryujinx/Ryujinx/issues/3662
 pip install pipx
 pipx ensurepath
 $pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup")
@@ -50,7 +50,7 @@ New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCAL
 New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target "$HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe"
 New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "$env:ProgramFiles\PPSSPP\PPSSPPWindows64.exe"
 New-Shortcut -Name 'yuzu Early Access' -Path $HOME\Desktop -Target "$HOME\scoop\apps\yuzu-pineapple\current\yuzu.exe"
-New-Shortcut -Name 'Ryujinx' -Path $HOME\Desktop -Target "$HOME\scoop\apps\ryujinx-ava\current\Ryujinx.Ava.exe"
+New-Shortcut -Name 'Ryujinx' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Ryujinx.Ryujinx.Ava_Microsoft.Winget.Source_8wekyb3d8bbwe\publish\Ryujinx.Ava.exe"
 # Tasks
 sudo { Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon) } # https://github.com/microsoft/PowerToys/issues/15817
 sudo Start-ScheduledTask -TaskName "switch language with right ctrl"
