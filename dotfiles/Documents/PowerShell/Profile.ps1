@@ -18,41 +18,10 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function reboottobios { shutdown /r /fw /f /t 0 }
-function documentsfoldertyperecursively {
-  # https://github.com/microsoft/PowerToys/issues/26297
-  # https://github.com/microsoft/PowerToys/issues/25547
-  # https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
-  # https://superuser.com/questions/487647/sorting-by-date-very-slow
-  # https://stackoverflow.com/a/32058202/4207635
-  $dirs = Get-ChildItem -Directory -Recurse -Path (Read-Host -Prompt 'Enter the full name of the directory you want to copy to')
-  foreach ($dir in $dirs) {
-    Copy-Item ~\git\dotfiles_windows\misc\explorer-folder-type-documents.ini "$dir\desktop.ini"
-  }
-}
-# https://github.com/lycheeverse/lychee/issues/972
-# https://github.com/hyperium/hyper/issues/3122
-function lycheefix {
-  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
-  if ($args[0] -eq "off") {
-    sudo net start Hamachi2Svc
-    sudo { Get-NetAdapter | Enable-NetAdapter -Confirm:$false }
-  }
-  else {
-    sudo net stop Hamachi2Svc
-    sudo { Get-NetAdapter | Disable-NetAdapter -Confirm:$false
-      Get-NetAdapter -InterfaceIndex $env:interfaceIndex | Enable-NetAdapter }
-  }
-}
-
-# function checkarchive { lycheefix; cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 archive-org.txt; lycheefix off }
-# function checklinux { lycheefix; cd "$HOME\Мой диск\документы"; lychee --max-concurrency 10 linux.txt; lycheefix off }
-
 function checkarchive { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
 function checklinux { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
-
 # function checkarchive { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
 # function checklinux { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
-
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -61,6 +30,12 @@ function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
 function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
+function multipassmountfix {
+  # temp fix until 1.13.0 arrive https://github.com/canonical/multipass/issues/3252
+  multipass mount C:\ primary:/mnt/c_host
+  multipass mount D:\ primary:/mnt/d_host
+  multipass mount E:\ primary:/mnt/e_host
+}
 function backup {
   Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga"

@@ -24,6 +24,7 @@ Mozilla.Firefox.DeveloperEdition
 Mozilla.Firefox.ESR
 Oracle.VirtualBox
 Parsec.Parsec
+Ryochan7.DS4Windows
 Spotify.Spotify
 StartIsBack.StartAllBack
 StrawberryMusicPlayer.Strawberry
