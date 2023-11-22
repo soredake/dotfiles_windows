@@ -40,3 +40,4 @@ wget https://github.com/lycheeverse/lychee/releases/download/v${lycheever}/lyche
 tar -xvzf lychee-v${lycheever}-x86_64-unknown-linux-gnu.tar.gz
 mv lychee ~/.local/bin
 rm -f lychee-v${lycheever}-x86_64-unknown-linux-gnu.tar.gz
+chmod +x ~/.local/bin/lychee

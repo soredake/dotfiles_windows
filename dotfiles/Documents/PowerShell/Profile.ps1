@@ -62,6 +62,10 @@ function backup {
   rclone sync -P "$HOME\scoop\apps\ryujinx-ava\current\portable\system\Profiles.json" "$HOME\Мой диск\документы\backups\ryujinx"
   # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
   rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
+  # https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-taskbar-in-windows-11.3630/ https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-start-menu-in-windows-11.3629/
+  rclone sync -P "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
+  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
+  reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\pinned_items\Taskband.reg" /y
   if (Test-Path -Path "E:\") {
     rclone sync -P --progress-terminal-title "$HOME\Мой диск" E:\backups\main --exclude ".tmp.drive*/"
     rclone sync -P --progress-terminal-title E:\backups mega:backups --exclude "main/"

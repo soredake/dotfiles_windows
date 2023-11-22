@@ -8,9 +8,8 @@ bcdedit /set vm yes
 bcdedit /set vsmlaunchtype Auto
 bcdedit /set loadoptions ""
 
-# disable hyper-v with DISM
-DISM /Online /Enable-Feature:Microsoft-Hyper-V-All /NoRestart
-DISM /Online /Enable-Feature:VirtualMachinePlatform /NoRestart
+# enable hyper-v with DISM
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All, VirtualMachinePlatform
 
 # apply registry changes
 # https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Windows.DeviceGuard::VirtualizationBasedSecuritye

@@ -1,40 +1,37 @@
 # [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingCmdletAliases', '')]
+# https://www.outsidethebox.ms/9961/#default-state
+sudo Enable-ComputerRestore -Drive $env:SystemDrive
 if (!$env:vm) {
   $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
-  sudo {
-    # set static ip https://stackoverflow.com/a/53991926
+  sudo { # set static ip https://stackoverflow.com/a/53991926
     New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
-  }
+    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1 }
   $env:interfaceGuid = (Get-NetAdapter | Where-Object { $_.InterfaceDescription -like 'Intel(R) I211*' } | Select-Object -Property InterfaceGuid).InterfaceGuid
   # http://war2.ru/modules/newbb_plus/viewtopic.php?topic_id=1882&forum=1
   # https://www.ru.playblackdesert.com/Community/Detail?topicNo=45670&topicType=101#
-  sudo {
-    reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\$env:interfaceGuid" /v 'TcpAckFrequency' /t REG_DWORD /d 1 /f
+  sudo { reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\$env:interfaceGuid" /v 'TcpAckFrequency' /t REG_DWORD /d 1 /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\$env:interfaceGuid" /v 'TCPNoDelay' /t REG_DWORD /d 1 /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\$env:interfaceGuid" /v 'TcpDelAckTicks' /t REG_DWORD /d 0 /f
-    reg add 'HKLM\SOFTWARE\Microsoft\MSMQ\Parameters' /v 'TCPNoDelay' /t REG_DWORD /d 1 /f
-  }
+    reg add 'HKLM\SOFTWARE\Microsoft\MSMQ\Parameters' /v 'TCPNoDelay' /t REG_DWORD /d 1 /f }
 }
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
 irm script.sophi.app -useb | iex
 sudo { ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "Windows10ContextMenu -Enable" }
-sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements -e --id Oracle.VirtualBox -v 6.1.48
 sudo winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys
-sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Ryochan7.DS4Windows BlueStack.BlueStacks XP99VR1BPSBQJ2 AppWork.JDownloader Google.GoogleDrive GOG.Galaxy DupeGuru.DupeGuru Syncplay.Syncplay alexx2000.DoubleCommander AntibodySoftware.WizTree Parsec.Parsec LogMeIn.Hamachi mcmilk.7zip-zstd Libretro.RetroArch HandBrake.HandBrake ElectronicArts.EADesktop OpenJS.NodeJS KeePassXCTeam.KeePassXC ProtonTechnologies.ProtonVPN Canonical.Multipass rcmaehl.MSEdgeRedirect Guru3D.Afterburner StrawberryMusicPlayer.Strawberry AwthWathje.SteaScree PPSSPPTeam.PPSSPP SSHFS-Win.SSHFS-Win Dropbox.Dash IG.IGClient RamenSoftware.Windhawk qBittorrent.qBittorrent
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G Python.Python.3.11 9N3SQK8PDS8G XPFM5P5KDWF0JP SteamGridDB.RomManager 64Gram.64Gram Postman.Postman ResponsivelyApp.ResponsivelyApp RussellBanks.Komac nomacs.nomacs erengy.Taiga ItchIo.Itch 9N64SQZTB3LM Ryujinx.Ryujinx.Ava aandrew-me.ytDownloader Rclone.Rclone yt-dlp.yt-dlp Haali.WinUtils.lswitch WinFsp.WinFsp Gyan.FFmpeg
+sudo winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP99VR1BPSBQJ2 virtualbox Ryochan7.DS4Windows bluestacks AppWork.JDownloader google-drive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd retroarch handbrake eaapp nodejs KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G 9N3SQK8PDS8G XPFM5P5KDWF0JP 9N64SQZTB3LM Python.Python.3 SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io Ryujinx.Ryujinx.Ava ytdownloader Rclone.Rclone yt-dlp.yt-dlp Haali.WinUtils.lswitch LesFerch.WinSetView
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
-winget install Microsoft.VisualStudioCode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
+winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
 sudo winget install --no-upgrade -h -l ~\Steam Valve.Steam
-sudo { choco install -y --pin tor-browser; choco install -y syncthingtray insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/DesktopShortcut /NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
+sudo { choco install -y --pin tor-browser; choco install -y syncthingtray insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
 # refreshenv # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/chocolatey/choco/issues/2458
 foreach ($b in "extras", "games") { scoop bucket add $b }
 scoop install cheat-engine yuzu-pineapple
 pip install pipx
 pipx ensurepath
-$pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup")
+$pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup", "trakt-scrobbler")
 foreach ($p in $pip) { pipx install $p } # https://github.com/pypa/pipx/issues/971
-Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
+# Install-PackageProvider -Name NuGet -Scope CurrentUser -Confirm:$false -Force
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, command-not-found
 npm install --global html-validate gulp-cli create-react-app
@@ -42,20 +39,19 @@ curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\script
 Invoke-WebRequest -Uri "https://github.com/Romanitho/Winget-AutoUpdate/archive/refs/heads/main.zip" -OutFile "$env:TEMP/Winget-AutoUpdate.zip"
 Expand-Archive "$env:TEMP/Winget-AutoUpdate.zip" -DestinationPath "$env:TEMP"
 sudo { pwsh "$env:TEMP/Winget-AutoUpdate-main/Winget-AutoUpdate-Install.ps1" -StartMenuShortcut -Silent -NotificationLevel None -UpdatesInterval Weekly -DoNotUpdate -UpdatesAtTime 11AM; Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt; dploy stow WAU C:\ProgramData\Winget-AutoUpdate }
-# link dotfiles https://github.com/microsoft/terminal/issues/14730
+# link dotfiles
 New-Item -Path $env:APPDATA\mpv.net\script-opts -ItemType Directory
-sudo { Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; sudo dploy stow dotfiles $HOME #New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-}
+sudo { Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json } # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
 sudo dploy stow dotfiles $HOME
 # Shortcuts, https://github.com/ScoopInstaller/Scoop/issues/4212 https://github.com/microsoft/winget-cli/issues/3314 https://github.com/hrydgard/ppsspp/issues/17487
 Import-Module -Name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
 # New-Shortcut -Name 'Disconnect gamepad' -Path $HOME\Desktop -Target "C:\Program Files\DS4Windows\DS4Windows.exe" -Arguments "-command Disconnect" -IconPath "C:\Program Files\DS4Windows\DS4Windows.exe"
+# New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target "$HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe"
+# New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "$env:ProgramFiles\PPSSPP\PPSSPPWindows64.exe"
+# New-Shortcut -Name 'yuzu Early Access' -Path $HOME\Desktop -Target "$HOME\scoop\apps\yuzu-pineapple\current\yuzu.exe"
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
-New-Shortcut -Name 'Cheat Engine' -Path $HOME\Desktop -Target "$HOME\scoop\apps\cheat-engine\current\cheatengine-x86_64.exe"
-New-Shortcut -Name 'PPSSPP' -Path $HOME\Desktop -Target "$env:ProgramFiles\PPSSPP\PPSSPPWindows64.exe"
-New-Shortcut -Name 'yuzu Early Access' -Path $HOME\Desktop -Target "$HOME\scoop\apps\yuzu-pineapple\current\yuzu.exe"
-New-Shortcut -Name 'Ryujinx' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Ryujinx.Ryujinx.Ava_Microsoft.Winget.Source_8wekyb3d8bbwe\publish\Ryujinx.Ava.exe"
+New-Shortcut -Name 'Ryujinx' -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Target "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Ryujinx.Ryujinx.Ava_Microsoft.Winget.Source_8wekyb3d8bbwe\publish\Ryujinx.Ava.exe"
 # Tasks
 sudo { Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon) # https://github.com/microsoft/PowerToys/issues/15817
   Start-ScheduledTask -TaskName "switch language with right ctrl"
@@ -64,7 +60,7 @@ sudo { Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$e
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument "--title Backup pwsh -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 12:00 -DaysOfWeek 3)
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\wt.exe" -Argument '--title "Upgrade everything" pwsh -c upgradeall') -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 11:00)
   # https://github.com/bcurran3/ChocolateyPackages/issues/46 https://github.com/bcurran3/ChocolateyPackages/issues/48
-  Set-ScheduledTask -TaskName choco-cleaner -Settings $(New-ScheduledTaskSettingsSet -StartWhenAvailable) }
+  Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) }
 # TODO: is this really gonna be enabled in next release? https://docs.chocolatey.org/en-us/configuration#userememberedargumentsforupgrades https://github.com/chocolatey/docs/blob/0fc9cb057c3287bd12d2cc78fef59ff9c55723c0/input/en-us/configuration.md#general-1 https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
 sudo choco feature enable -n=useRememberedArgumentsForUpgrades
 # https://remontka.pro/wake-timers-windows/
@@ -77,10 +73,8 @@ sudo Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Pol
 sudo reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v 'NoLockScreen' /t REG_DWORD /d 1 /f
 # https://winaero.com/change-icon-cache-size-windows-10/ https://www.elevenforum.com/t/change-icon-cache-size-in-windows-11.2050/ 65535 512535
 # sudo { Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer' -Name 'MaxCachedIcons' -Type 'String' -Value 65535 -Force }
-# https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
-# sudo net localgroup "Пользователи журналов производительности" $env:USERNAME /add
-# stop qbittorrent/ethernet from waking my pc from sleep https://superuser.com/a/1629820/1506333 https://superuser.com/a/1320579 https://aka.ms/AAkvx4s
-# sudo { powercfg /devicedisablewake "Intel(R) I211 Gigabit Network Connection #2" }
+# https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr
+sudo { Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME }
 # https://remontka.pro/windows-defender-turn-off/
 sudo { reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v 'DisableAntiSpyware' /t REG_DWORD /d 1 /f
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v 'ServiceKeepAlive' /t REG_DWORD /d 1 /f
@@ -93,9 +87,10 @@ sudo Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All, 
 scoop shim rm 7zG 7z 7zfm
 # https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.4
 Enable-ExperimentalFeature -Name PSCommandNotFoundSuggestion
-# hide pwsh update notification https://github.com/PowerShell/PowerShell/issues/19528 https://github.com/PowerShell/PowerShell/issues/19520
+# hide pwsh update notification https://github.com/PowerShell/PowerShell/issues/19528 https://github.com/PowerShell/PowerShell/issues/19520 https://github.com/PowerShell/PowerShell/issues/20210
+# TODO: disable update check https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4#support-for-microsoft-update-in-powershell-72-and-newer when ENABLE_MU and USE_MU is set to 1
 setx POWERSHELL_UPDATECHECK Off
-# winget setting
+# winget
 sudo winget settings --enable LocalManifestFiles
 # winsetview
 WinSetView.ps1 explorer-preset.ini
@@ -109,3 +104,8 @@ if (!$env:vm) {
 }
 # https://github.com/MicrosoftDocs/windows-itpro-docs/blob/fa1414a7716f274200e9b7829124b2afac29ac20/windows/application-management/provisioned-apps-windows-client-os.md sudo { Get-AppxPackage -AllUsers | Select-Object -Property PackageFamilyName }
 sudo winget uninstall --accept-source-agreements -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.People_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe
+# trakts setup
+trakts autostart enable
+trakts config set players.monitored mpv
+trakts config set fileinfo.whitelist E:\non-anime
+trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
