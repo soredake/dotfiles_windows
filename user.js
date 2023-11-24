@@ -14,7 +14,7 @@ user_pref(
 );
 
 // DOH
-user_pref("network.trr.mode", 2);
+user_pref("network.trr.mode", 3);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
