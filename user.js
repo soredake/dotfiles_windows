@@ -13,8 +13,8 @@ user_pref(
   "***REMOVED***"
 );
 
-// DOH
-user_pref("network.trr.mode", 3);
+// DOH by default
+user_pref("network.trr.mode", 2);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904

@@ -8,29 +8,29 @@ if (!$env:vm) {
     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1 }
 }
 Remove-Item -Recurse -Path ~\Downloads\Sophia*
-irm script.sophi.app -useb | iex
+iwr script.sophia.team -useb | iex
 sudo { ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "HiddenItems -Enable", "FileExtensions -Show", "TaskbarChat -Hide", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "Windows10ContextMenu -Enable", "GPUScheduling -Enable", "StartLayout -ShowMorePins", "Hibernation -Disable" } # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj
 sudo { winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP99VR1BPSBQJ2 virtualbox Ryochan7.DS4Windows bluestacks AppWork.JDownloader google-drive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd retroarch handbrake eaapp nodejs KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   winget install --no-upgrade -h -l ~\Steam Valve.Steam }
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G 9N3SQK8PDS8G XPFM5P5KDWF0JP 9N64SQZTB3LM Python.Python.3 SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io Ryujinx.Ryujinx.Ava ytdownloader Rclone.Rclone yt-dlp.yt-dlp Haali.WinUtils.lswitch LesFerch.WinSetView
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G 9N3SQK8PDS8G XPFM5P5KDWF0JP 9N64SQZTB3LM Python.Python.3.11 SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io Ryujinx.Ryujinx.Ava ytdownloader Rclone.Rclone yt-dlp.yt-dlp Haali.WinUtils.lswitch LesFerch.WinSetView
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
-winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091
-sudo { choco install -y --pin tor-browser; choco install -y syncthingtray insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
+winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
+sudo { choco install -y --pin syncthingtray tor-browser; choco install -y insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'" }
 # refreshenv # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/chocolatey/choco/issues/2458
 foreach ($b in "extras", "games") { scoop bucket add $b }
+# 'games', 'extras' | foreach { scoop bucket add $_ }
 scoop install cheat-engine yuzu-pineapple
 pip install pipx
 pipx ensurepath
-# $pip = @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup", "trakt-scrobbler");
-foreach ($p in @("internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup", "trakt-scrobbler")) { pipx install $p } # https://github.com/pypa/pipx/issues/971
+foreach ($p in "internetarchive", "git+https://github.com/arecarn/dploy.git", "tubeup", "trakt-scrobbler") { pipx install $p } # https://github.com/pypa/pipx/issues/971
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, npm-completion, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, command-not-found
 npm install --global html-validate gulp-cli create-react-app
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/tree-profiles.lua" "https://raw.githubusercontent.com/fbriere/mpv-scripts/master/scripts/brace-expand.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
 Invoke-WebRequest -Uri "https://github.com/Romanitho/Winget-AutoUpdate/archive/refs/heads/main.zip" -OutFile "$HOME/Downloads/Winget-AutoUpdate.zip"
 Expand-Archive "$HOME/Downloads/Winget-AutoUpdate.zip" -DestinationPath "$HOME/Downloads"
-sudo { pwsh "$HOME/Downloads/Winget-AutoUpdate-main/Winget-AutoUpdate-Install.ps1" -StartMenuShortcut -Silent -NotificationLevel None -UpdatesInterval Weekly -DoNotUpdate -UpdatesAtTime 11AM; Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt; dploy stow WAU C:\ProgramData\Winget-AutoUpdate }
+sudo { pwsh "$HOME/Downloads/Winget-AutoUpdate-main/Winget-AutoUpdate-Install.ps1" -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel None -UpdatesInterval Weekly -DoNotUpdate -UpdatesAtTime 11AM; Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt; dploy stow WAU C:\ProgramData\Winget-AutoUpdate }
 # link dotfiles
 New-Item -Path $env:APPDATA\mpv.net\script-opts -ItemType Directory
 sudo { Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json } # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
@@ -73,7 +73,7 @@ sudo Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All, 
 scoop shim rm 7zG 7z 7zfm
 # https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.4
 Enable-ExperimentalFeature -Name PSCommandNotFoundSuggestion
-# disable pwsh update check https://github.com/PowerShell/PowerShell/issues/19528 https://github.com/PowerShell/PowerShell/issues/19520 https://github.com/PowerShell/PowerShell/issues/20210
+# disable pwsh update check https://github.com/PowerShell/PowerShell/issues/19528 https://github.com/PowerShell/PowerShell/issues/19520 https://github.com/PowerShell/PowerShell/issues/20210 https://github.com/PowerShell/PowerShell/issues/20833
 setx POWERSHELL_UPDATECHECK Off
 # winget
 sudo winget settings --enable LocalManifestFiles
@@ -87,4 +87,4 @@ sudo winget uninstall --accept-source-agreements -h Clipchamp.Clipchamp_yxz26nhy
 trakts autostart enable
 trakts config set players.monitored mpv syncplay@mpv
 trakts config set fileinfo.whitelist E:\non-anime E:\shared-unruhe E:\shared-tablet
-trakts config set players.mpv.ipc_path \\.\pipe\mpvsocket
+trakts config set players.mpv.ipc_path '\\.\pipe\mpvsocket'
