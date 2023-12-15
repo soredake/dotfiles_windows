@@ -1,6 +1,7 @@
 64Gram.64Gram
 AppWork.JDownloader
 Canonical.Multipass
+Chocolatey.Chocolatey
 Discord.Discord
 ElectronicArts.EADesktop
 EpicGames.EpicGamesLauncher
@@ -14,7 +15,6 @@ Microsoft.EdgeWebView2Runtime
 Microsoft.Office
 Microsoft.PowerShell
 Microsoft.VisualStudioCode
-Oracle.VirtualBox
 Parsec.Parsec
 Ryochan7.DS4Windows
 TomWatson.BreakTimer
@@ -24,4 +24,13 @@ Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
+# same problem https://github.com/qbittorrent/qBittorrent/issues/18115
+Oracle.VirtualBox
+# https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
 qBittorrent.qBittorrent
+# https://github.com/microsoft/winget-cli/issues/3656
+Python.Launcher
+# https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen
+Microsoft.DotNet.DesktopRuntime.6
+# https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
+Microsoft.XNARedist

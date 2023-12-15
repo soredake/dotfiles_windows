@@ -1,0 +1,11 @@
+
+players:
+
+    mpv:
+        ipc_path: \\.\pipe\mpvsocket
+    monitored: [mpv, syncplay@mpv]
+
+
+fileinfo:
+    whitelist: ['E:\non-anime', 'E:\shared-unruhe', 'E:\shared-tablet']
+version: '1.0'
