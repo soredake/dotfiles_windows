@@ -17,6 +17,7 @@ Microsoft.PowerShell
 Microsoft.VisualStudioCode
 Parsec.Parsec
 Ryochan7.DS4Windows
+SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
 VMware.WorkstationPro
