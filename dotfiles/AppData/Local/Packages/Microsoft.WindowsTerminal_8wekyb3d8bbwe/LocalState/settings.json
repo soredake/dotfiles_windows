@@ -16,10 +16,6 @@
             "keys": "ctrl+v"
         },
         {
-            "command": "find",
-            "keys": "ctrl+shift+f"
-        },
-        {
             "command": 
             {
                 "action": "splitPane",
@@ -27,6 +23,10 @@
                 "splitMode": "duplicate"
             },
             "keys": "alt+shift+d"
+        },
+        {
+            "command": "find",
+            "keys": "ctrl+shift+f"
         }
     ],
     "alwaysShowNotificationIcon": false,
@@ -54,7 +54,7 @@
         "list": 
         [
             {
-                "commandline": "pwsh.exe -nologo",
+                "commandline": "pwsh.exe",
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
                 "name": "PowerShell",
@@ -81,35 +81,21 @@
                 "name": "Windows PowerShell"
             },
             {
-                "colorScheme": "Tango+Solarized dark",
-                "commandline": "C:/tools/msys64/msys2_shell.cmd -defterm -no-start -mingw64 -use-full-path -here -shell zsh",
-                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                "hidden": false,
-                "icon": "C:\\tools\\msys64\\msys2.ico",
-                "name": "MSYS2/zsh",
-                "tabTitle": "MSYS2/zsh"
-            },
-            {
                 "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
                 "hidden": false,
                 "name": "Azure Cloud Shell",
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "closeOnExit": "graceful",
-                "commandline": "\"%PROGRAMFILES%\\git\\bin\\bash.exe\" --login -i -l",
-                "cursorColor": "#FFFFFF",
-                "guid": "{00000000-0000-0000-0000-000000012345}",
-                "historySize": 9001,
-                "icon": "%PROGRAMFILES%\\git\\mingw64\\share\\git\\git-for-windows.ico",
-                "name": "Git Bash",
-                "snapOnInput": true
-            },
-            {
                 "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
                 "hidden": true,
                 "name": "Ubuntu",
                 "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
             }
         ]
     },
