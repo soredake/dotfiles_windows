@@ -18,8 +18,8 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function reboottobios { shutdown /r /fw /f /t 0 }
-function checkarchive { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
-function checklinux { multipass exec primary -- /home/ubuntu/.local/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
+function checkarchive { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
+function checklinux { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
 # function checkarchive { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
 # function checklinux { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }

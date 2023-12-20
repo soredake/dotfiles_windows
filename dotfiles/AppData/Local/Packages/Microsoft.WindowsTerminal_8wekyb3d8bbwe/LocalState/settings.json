@@ -45,6 +45,7 @@
         {
             "antialiasingMode": "cleartype",
             "colorScheme": "Tango+Solarized dark",
+            "experimental.retroTerminalEffect": false,
             "font": 
             {
                 "face": "Hack Nerd Font",
