@@ -30,6 +30,7 @@ function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
 function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
+function proxinjector-cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 function multipassmountfix {
   # temp fix until 1.13.0 arrive https://github.com/canonical/multipass/issues/3252
   multipass mount C:\ primary:/mnt/c_host

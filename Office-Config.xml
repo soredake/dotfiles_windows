@@ -1,0 +1,26 @@
+<Configuration ID="96e38015-a53b-48b9-97fb-fb8c539fef98">
+  <Add OfficeClientEdition="64" Channel="PerpetualVL2021">
+    <Product ID="Standard2021Volume" PIDKEY="KDX7X-BNVR8-TXXGX-4Q7Y8-78VT3">
+      <Language ID="en-us" />
+      <Language ID="ru-ru" />
+      <Language ID="uk-ua" />
+      <ExcludeApp ID="OneDrive" />
+      <ExcludeApp ID="OneNote" />
+      <ExcludeApp ID="Outlook" />
+      <ExcludeApp ID="Publisher" />
+    </Product>
+    <Product ID="LanguagePack">
+      <Language ID="en-us" />
+      <Language ID="ru-ru" />
+      <Language ID="uk-ua" />
+    </Product>
+  </Add>
+  <Property Name="SharedComputerLicensing" Value="0" />
+  <Property Name="FORCEAPPSHUTDOWN" Value="TRUE" />
+  <Property Name="DeviceBasedLicensing" Value="0" />
+  <Property Name="SCLCacheOverride" Value="0" />
+  <Property Name="AUTOACTIVATE" Value="1" />
+  <Updates Enabled="TRUE" />
+  <RemoveMSI />
+  <Display Level="Full" AcceptEULA="TRUE" />
+</Configuration>

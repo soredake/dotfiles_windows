@@ -21,7 +21,7 @@ echo "exec fish" >>~/.bashrc
 # https://github.com/gdamdam/iagitup/issues/23
 mkdir ~/.ia
 ln -sfv ~/.config/internetarchive/ia.ini ~/.config/ia.ini
-# ln -sfv ~/.config/internetarchive/ia.ini ~/.ia/ia.ini
+ln -sfv ~/.config/internetarchive/ia.ini ~/.ia/ia.ini
 curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install lychee
