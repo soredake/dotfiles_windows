@@ -1,0 +1,1 @@
+-f (bestvideo[height=2160][fps=30]/bestvideo[height<=?1440][fps<=?60])[vcodec!*=av01]+bestaudio/best

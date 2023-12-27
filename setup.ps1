@@ -1,4 +1,3 @@
-# [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingCmdletAliases', '')]
 if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual|VMware") { $env:vm = 1 }
 if (!$env:vm) {
   $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
@@ -8,12 +7,13 @@ if (!$env:vm) {
 }
 iwr script.sophia.team -useb | iex
 sudo {
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "Windows10ContextMenu -Enable", "Hibernation -Disable" # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u "TeamsInstallation -Disable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "OneDrive -Uninstall", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "Windows10ContextMenu -Enable", "Hibernation -Disable" # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP99VR1BPSBQJ2 Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows bluestacks AppWork.JDownloader google-drive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd retroarch handbrake eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
+  # https://github.com/microsoft/winget-cli/issues/4009
   winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys; winget install --no-upgrade -h -l ~\Steam Valve.Steam; choco install -y --pin syncthingtray tor-browser; choco install -y insomnia choco-cleaner nerdfont-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
   C:\Program` Files\OfficeDeploymentTool\setup.exe /configure $PSScriptRoot/Office-Config.xml
 }
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G XPFM5P5KDWF0JP mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io Ryujinx.Ryujinx.Ava ytdownloader Rclone.Rclone yt-dlp.yt-dlp Haali.WinUtils.lswitch LesFerch.WinSetView PragmaTwice.proxinject
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9PMZ94127M4G XPFM5P5KDWF0JP Ryujinx.Ryujinx.Ava LesFerch.WinSetView Haali.WinUtils.lswitch yt-dlp.yt-dlp Rclone.Rclone ytdownloader mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io PragmaTwice.proxinject
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
 'games', 'extras', 'versions' | foreach { scoop bucket add $_ }
@@ -64,9 +64,9 @@ sudo { reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v 'DisableAn
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v 'DisableIOAVProtection' /t REG_DWORD /d 1 /f
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v 'DisableRealtimeMonitoring' /t REG_DWORD /d 1 /f }
 # https://github.com/MicrosoftDocs/windows-itpro-docs/blob/fa1414a7716f274200e9b7829124b2afac29ac20/windows/application-management/provisioned-apps-windows-client-os.md sudo { Get-AppxPackage -AllUsers | Select-Object -Property PackageFamilyName }
-sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.People_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.TeamsXboxGameBarWidget_8wekyb3d8bbwe MicrosoftTeams_8wekyb3d8bbwe # --accept-source-agreements https://www.amd.com/en/support/kb/faq/pa-325
+sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.People_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.OutlookForWindows_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe # --accept-source-agreements Microsoft.TeamsXboxGameBarWidget_8wekyb3d8bbwe MicrosoftTeams_8wekyb3d8bbwe https://www.amd.com/en/support/kb/faq/pa-325
 # misc, https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
-sudo { winget settings --enable LocalManifestFiles; choco feature enable -n=useRememberedArgumentsForUpgrades; Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All, VirtualMachinePlatform }
+sudo { winget settings --enable LocalManifestFiles; choco feature enable -n=useRememberedArgumentsForUpgrades }
 trakts autostart enable
 # multipass setup
 if (!$env:vm) { sudo multipass set local.driver=virtualbox; multipass set local.privileged-mounts=yes; multipass set client.gui.autostart=no; multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount D:\:/mnt/d_host --mount C:\:/mnt/c_host; multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh }
@@ -76,3 +76,5 @@ reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 # winsetview https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
 WinSetView.ps1 $PSScriptRoot/explorer-preset.ini
+
+sudo reg add "HKLM\SYSTEM\CurrentControlSet\Services\WebClient\Parameters" /v BasicAuthLevel /t REG_DWORD /d 2 /f

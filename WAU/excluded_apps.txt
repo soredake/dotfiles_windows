@@ -29,7 +29,7 @@ Viber.Viber
 Oracle.VirtualBox
 # https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
 qBittorrent.qBittorrent
-# https://github.com/microsoft/winget-cli/issues/3656
+# https://github.com/microsoft/winget-cli/issues/3656 https://github.com/microsoft/winget-cli/issues/4007
 Python.Launcher
 # https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen
 Microsoft.DotNet.DesktopRuntime.6
