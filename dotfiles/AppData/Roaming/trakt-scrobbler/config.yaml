@@ -1,6 +1,8 @@
 players:
   mpv:
     ipc_path: \\.\pipe\mpvsocket
+  syncplay@mpv:
+    ipc_path: \\.\pipe\\\.\pipe\mpvsocket
   monitored: [mpv, syncplay@mpv]
 
 fileinfo:

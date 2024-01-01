@@ -1,6 +1,6 @@
 $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-irm get.scoop.sh | iex
+where.exe scoop; if (-not $?) { irm get.scoop.sh | iex }
 scoop config use_external_7zip true
 scoop install gsudo
 sudo config CacheMode Auto

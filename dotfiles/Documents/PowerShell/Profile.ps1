@@ -18,10 +18,8 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 # function upgradeall { topgrade --only 'powershell' 'pip3' 'pipx' 'node' 'scoop' }
 function upgradeall { Get-InstalledModule | Update-Module; pip freeze | % { $_.split('==')[0] } | % { pip install --upgrade $_ }; pipx upgrade-all; npm update -g; scoop update -a; scoop cleanup -ka }
 function reboottobios { shutdown /r /fw /f /t 0 }
-function checkarchive { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
-function checklinux { multipass exec primary -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
-# function checkarchive { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
-# function checklinux { wsl --shell-type login -- lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
+function checkarchive { multipass exec primary -- /home/linuxbrew/.linuxbrew/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt }
+function checklinux { multipass exec primary -- /home/linuxbrew/.linuxbrew/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --max-concurrency 10 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt }
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -76,4 +74,4 @@ function backup {
   rclone dedupe -P --dedupe-mode newest mega:/
 }
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
-Write-Host -NoNewLine "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
+Write-Output "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
