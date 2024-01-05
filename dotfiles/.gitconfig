@@ -97,6 +97,6 @@
   process = git-lfs filter-process
   required = true
 [pack]
-	useBitmapBoundaryTraversal = true
+  useBitmapBoundaryTraversal = true
 [advice]
-	statusUoption = false
+  statusUoption = false
