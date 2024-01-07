@@ -1,5 +1,6 @@
 $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+setx PIPX_BIN_DIR $HOME\scoop\persist\python310\Scripts
 where.exe scoop; if (-not $?) { irm get.scoop.sh | iex }
 scoop config use_external_7zip true
 scoop install gsudo

@@ -1,5 +1,7 @@
 Import-Module -Name (dir $HOME\Documents\PowerShell\Modules)
 Import-Module gsudoModule
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
+Write-Output "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
@@ -74,5 +76,3 @@ function backup {
   rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
 }
-oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
-Write-Output "`e[6 q" # no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379

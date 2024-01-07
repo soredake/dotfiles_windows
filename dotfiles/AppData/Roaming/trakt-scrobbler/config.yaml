@@ -6,5 +6,12 @@ players:
   monitored: [mpv, syncplay@mpv]
 
 fileinfo:
-  whitelist: ['E:\non-anime', "E:/shared-unruhe", 'E:\shared-tablet', "E:/gccx"]
+  whitelist:
+    [
+      'E:\non-anime',
+      "E:/shared-unruhe\\anime",
+      "E:/shared-unruhe\\non-anime",
+      'E:\shared-tablet',
+      "E:/gccx",
+    ]
 version: "1.0"

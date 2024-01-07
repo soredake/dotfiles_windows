@@ -45,13 +45,12 @@
         {
             "antialiasingMode": "cleartype",
             "colorScheme": "Tango+Solarized dark",
-            "experimental.retroTerminalEffect": false,
             "font": 
             {
                 "face": "Hack Nerd Font",
-                "size": 12.0
+                "size": 13.0
             },
-            "useAtlasEngine": false
+            "useAtlasEngine": true
         },
         "list": 
         [
