@@ -11,7 +11,10 @@ fileinfo:
       'E:\non-anime',
       "E:/shared-unruhe\\anime",
       "E:/shared-unruhe\\non-anime",
+      "E:/shared-unruhe/non-anime",
+      "E:/shared-unruhe/anime",
       'E:\shared-tablet',
       "E:/gccx",
+      "E:\\gccx",
     ]
 version: "1.0"

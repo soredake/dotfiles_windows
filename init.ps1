@@ -1,7 +1,9 @@
 $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-setx PIPX_BIN_DIR $HOME\scoop\persist\python310\Scripts
-where.exe scoop; if (-not $?) { irm get.scoop.sh | iex }
+setx PIPX_BIN_DIR $env:LOCALAPPDATA\Programs\Python\Python312\Scripts
+# https://github.com/microsoft/winget-cli/issues/2124
+($settings = Get-Content -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Raw | ConvertFrom-Json) | % { if ($_.network -eq $null) { $_ | Add-Member -MemberType NoteProperty -Name 'network' -Value (New-Object PSObject) -Force }; $_.network | Add-Member -MemberType NoteProperty -Name 'downloader' -Value 'wininet' -Force }; $settings | ConvertTo-Json | Set-Content -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
+where.exe scoop; if (-not $?) { irm get.scoop.sh | iex } # https://github.com/ScoopInstaller/Install/issues/70
 scoop config use_external_7zip true
 scoop install gsudo
 sudo config CacheMode Auto
