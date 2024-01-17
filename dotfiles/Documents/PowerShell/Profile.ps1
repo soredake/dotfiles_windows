@@ -35,12 +35,13 @@ function markyoutubewatched { yt-dlp --skip-download --mark-watched --cookies-fr
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function mps { multipass stop }
 function proxinjector-cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
-function github-backup { python (where.exe github-backup) $args }
 function backup {
-  Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
+  $EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
+  # Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
+  gci "$HOME\Мой диск\unsorted" -Recurse -File | % { $destFile = "$HOME\Мой диск\$($_.Name)"; while (Test-Path $destFile) { $destFile = "$HOME\Мой диск\$([System.IO.Path]::GetFileNameWithoutExtension($_.Name))_$((Get-Random -Maximum 9999))$([System.IO.Path]::GetExtension($_.Name))" }; mv $_.FullName $destFile }
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --exclude "db/image/" --exclude "theme/"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --exclude "lockfile"
-  rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --exclude "logs/"
+  rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --exclude "logs/" --exclude "rss/articles/*.ico"
   rclone sync -P $env:APPDATA\rclone "$HOME\Мой диск\документы\backups\rclone"
   rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
   rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --exclude "Logs/"
@@ -65,12 +66,12 @@ function backup {
   rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
   # https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-taskbar-in-windows-11.3630/ https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-start-menu-in-windows-11.3629/
   # https://aka.ms/AAnrixg
-  rclone sync -P "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" "$HOME\Мой диск\документы\backups\pinned_items\StartMenu"
-  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\pinned_items\TaskBar"
-  reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\pinned_items\Taskband.reg" /y
-  if (Test-Path -Path "E:\") {
-    rclone sync -P --progress-terminal-title "$HOME\Мой диск" E:\backups\main --exclude ".tmp.drive*/"
-    rclone sync -P --progress-terminal-title E:\backups mega:backups --exclude "main/"
+  rclone sync -P "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\StartMenu"
+  rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\TaskBar"
+  reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\Taskband.reg" /y
+  if (Test-Path -Path "${EHDD}:\") {
+    rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${EHDD}:\backups\main --exclude ".tmp.drive*/"
+    rclone sync -P --progress-terminal-title ${EHDD}:\backups mega:backups --exclude "main/"
   }
   rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/

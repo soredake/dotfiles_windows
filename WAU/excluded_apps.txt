@@ -28,10 +28,10 @@ Viber.Viber
 # same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
 Oracle.VirtualBox
 # https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
-qBittorrent.qBittorrent
-# https://github.com/microsoft/winget-cli/issues/3656 https://github.com/microsoft/winget-cli/issues/4007
-Python.Launcher
-# https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen
+#qBittorrent.qBittorrent
+# https://github.com/microsoft/winget-cli/issues/3656 https://github.com/microsoft/winget-cli/issues/4007 https://github.com/microsoft/winget-pkgs/issues/135072
+#Python.Launcher
+# https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen https://github.com/microsoft/winget-cli/issues/2995
 Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
 Microsoft.XNARedist

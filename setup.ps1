@@ -1,4 +1,4 @@
-if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual|VMware") { $env:vm = 1 }
+if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual|VMware") { $env:vm = 1 }
 if (!$env:vm) {
   $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
   sudo { # set static ip https://stackoverflow.com/a/53991926
@@ -10,20 +10,25 @@ sudo { ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSe
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements XP99VR1BPSBQJ2 WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader Google.GoogleDrive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd retroarch handbrake eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner bcuninstaller voidtools.Everything strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys; winget install --no-upgrade -h -l ~\Steam Valve.Steam; choco install -y --pin tor-browser; choco install -y syncthingtray insomnia choco-cleaner nerd-fonts-hack tor; choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"; choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:19:00'"
   C:\Program` Files\OfficeDeploymentTool\setup.exe /configure $PSScriptRoot\Office-Config.xml }
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9P2B8MCSVPLN XPFM5P5KDWF0JP Python.Python.3.12 Ryujinx.Ryujinx.Ava LesFerch.WinSetView Haali.WinUtils.lswitch yt-dlp.yt-dlp Rclone.Rclone ytdownloader mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io PragmaTwice.proxinject lycheeverse.lychee
+sudo winget install -h Plex.Plex Jellyfin.JellyfinMediaPlayer Jellyfin.Server XPFM11Z0W10R7G
+winget install -h IanWalton.JellyfinMPVShim 9NBLGGH4T892
+scoop install plex-mpv-shim
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD XPDC2RH70K22MN 9P2B8MCSVPLN XPFM5P5KDWF0JP Python.Python.3.12 Haali.WinUtils.lswitch yt-dlp.yt-dlp Rclone.Rclone ytdownloader mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io PragmaTwice.proxinject lycheeverse.lychee
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'" # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
 'games', 'extras', 'versions', 'sysinternals' | foreach { scoop bucket add $_ }
-# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, nodejs installer uses machine scope https://github.com/nodejs/version-management/issues/16, python does not support non-uac installation https://github.com/microsoft/winget-cli/issues/3285
-scoop install cheat-engine yuzu-pineapple proxychains nodejs process-explorer
-pip install pipx github-backup
+# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, nodejs installer uses machine scope https://github.com/nodejs/version-management/issues/16
+scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
+scoop install cheat-engine yuzu-pineapple proxychains nodejs process-explorer ryujinx-ava winsetview czkawka-gui
+scoop hold ryujinx-ava
+pip install pipx
 # Get-ChildItem -Path "C:\ProgramData\chocolatey\helpers\functions" -Filter *.ps1 | ForEach-Object { . $_.FullName }; refreshenv
-pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" # github-backup
+pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git"
 # https://github.com/jjjake/internetarchive/pull/621
 pipx inject tubeup setuptools; pipx inject internetarchive setuptools
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, Microsoft.WinGet.Client, PSCompletions; psc add npm
-Enable-ExperimentalFeature -Name PSFeedbackProvider, PSCommandNotFoundSuggestion # https://learn.microsoft.com/en-us/windows/powertoys/cmd-not-found
+Enable-ExperimentalFeature -Name PSFeedbackProvider, PSCommandNotFoundSuggestion # https://learn.microsoft.com/en-us/windows/powertoys/cmd-not-found https://github.com/microsoft/PowerToys/issues/30818
 npm i -g html-validate gulp-cli create-react-app
 Invoke-WebRequest -Uri "https://icon-icons.com/downloadimage.php?id=152991&root=2552/ICO/48/&file=firefox_browser_logo_icon_152991.ico" -OutFile "$env:TEMP\firefox.ico"
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
@@ -40,12 +45,10 @@ Import-Module -Name $HOME\Documents\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Microsoft\WindowsApps\firefox.exe" -Arguments "-P letyshops" -IconPath "$env:TEMP\firefox.ico"
 New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
-New-Shortcut -Name 'Ryujinx' -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Target (where.exe Ryujinx.Ava.exe) # install it from choco again when avalonia is merged https://github.com/Ryujinx/Ryujinx/issues/3662
-New-Shortcut -Name 'WinSetView' -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Target (where.exe WinSetView)
 # Tasks
 sudo {
-  # TODO: test this
-  schtasks /Create /SC ONLOGON /TN "RestartHamachi" /TR "powershell.exe -WindowStyle Hidden -Command 'Start-Sleep -Seconds 600; Restart-Service -Name Hamachi2Svc'" /RL HIGHEST
+  # workaround for https://github.com/lycheeverse/lychee/issues/902 and https://github.com/hyperium/hyper/issues/3122
+  schtasks /Create /SC ONLOGON /TN "RestartHamachi" /TR "powershell.exe -WindowStyle Hidden -Command 'Start-Sleep -Seconds 900; Restart-Service -Name Hamachi2Svc'" /RL HIGHEST
   # https://github.com/microsoft/PowerToys/issues/15817
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
   Start-ScheduledTask -TaskName "switch language with right ctrl"
@@ -74,7 +77,7 @@ sudo {
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v 'DisableRealtimeMonitoring' /t REG_DWORD /d 1 /f
 }
 # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
-sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.OutlookForWindows_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe Microsoft.OfficeDeploymentTool # --accept-source-agreements Microsoft.TeamsXboxGameBarWidget_8wekyb3d8bbwe MicrosoftTeams_8wekyb3d8bbwe https://www.amd.com/en/support/kb/faq/pa-325 Microsoft.People_8wekyb3d8bbwe https://blogs.windows.com/windows-insider/2024/01/03/announcing-windows-11-insider-preview-build-26020-canary-channel/
+sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.OutlookForWindows_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe Microsoft.OfficeDeploymentTool # --accept-source-agreements https://www.amd.com/en/support/kb/faq/pa-325 Microsoft.People_8wekyb3d8bbwe https://blogs.windows.com/windows-insider/2024/01/03/announcing-windows-11-insider-preview-build-26020-canary-channel/
 # misc, https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
 sudo { winget settings --enable LocalManifestFiles; choco feature enable -n=useRememberedArgumentsForUpgrades; powercfg -change -monitor-timeout-ac 5; powercfg -change -standby-timeout-ac 15 }; trakts autostart enable; firefox -CreateProfile letyshops
 # multipass setup
@@ -84,4 +87,5 @@ reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 # winsetview https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
-WinSetView.ps1 $PSScriptRoot\explorer-preset.ini
+winsetview.ps1 $PSScriptRoot\explorer-preset.ini
+# TODO: taiga, night light settings
