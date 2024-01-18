@@ -36,10 +36,10 @@ Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
 Microsoft.XNARedist
 # https://github.com/Romanitho/Winget-AutoUpdate/issues/542
-Ryujinx.Ryujinx.Ava
-LesFerch.WinSetView
+#Ryujinx.Ryujinx.Ava
+#LesFerch.WinSetView
 Haali.WinUtils.lswitch
-yt-dlp.yt-dlp
-Rclone.Rclone
-Gyan.FFmpeg
-lycheeverse.lychee
+#yt-dlp.yt-dlp
+#Rclone.Rclone
+#Gyan.FFmpeg
+#lycheeverse.lychee
