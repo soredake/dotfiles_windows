@@ -29,8 +29,13 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
 winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
+# workaround for https://github.com/erengy/taiga/issues/1151#issuecomment-1761431682
+taskkill /im Taiga.exe
+Start-Sleep -Seconds 30
+curl -L -o $env:APPDATA\Taiga\Taiga.exe "https://taiga.moe/latest.php"
 'games', 'extras', 'versions', 'sysinternals' | foreach { scoop bucket add $_ }
-# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, nodejs installer uses machine scope https://github.com/nodejs/version-management/issues/16 TODO: maybe migrate all portable apps to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
+# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, nodejs installer uses machine scope https://github.com/nodejs/version-management/issues/16
+# Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
 scoop install cheat-engine yuzu-pineapple proxychains nodejs process-explorer ryujinx-ava winsetview czkawka-gui lychee yt-dlp ffmpeg rclone adb
 scoop hold ryujinx-ava
@@ -42,8 +47,9 @@ pipx inject tubeup setuptools
 pipx inject internetarchive setuptools
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 # https://learn.microsoft.com/en-us/windows/powertoys/cmd-not-found https://github.com/microsoft/PowerToys/issues/30818
-Install-Module -Name posh-git, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, Microsoft.WinGet.Client, PSCompletions; psc add npm
+Install-Module -Name posh-git, Terminal-Icons, PSAdvancedShortcut, CompletionPredictor, Microsoft.WinGet.Client, PSCompletions
 Enable-ExperimentalFeature -Name PSFeedbackProvider, PSCommandNotFoundSuggestion
+psc add npm
 npm i -g html-validate gulp-cli create-react-app
 Invoke-WebRequest -Uri "https://icon-icons.com/downloadimage.php?id=152991&root=2552/ICO/48/&file=firefox_browser_logo_icon_152991.ico" -OutFile "$env:TEMP\firefox.ico"
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
@@ -54,7 +60,7 @@ Expand-Archive "$HOME/Downloads/Winget-AutoUpdate.zip" -DestinationPath "$HOME/D
 sudo {
   ~\Downloads\Winget-AutoUpdate-main\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel None -UpdatesInterval Weekly -DoNotUpdate -UpdatesAtTime 11AM
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
-  sudo dploy stow WAU C:\ProgramData\Winget-AutoUpdate
+  dploy stow WAU C:\ProgramData\Winget-AutoUpdate
 }
 # link dotfiles
 New-Item -Path $env:APPDATA\trakt-scrobbler -ItemType Directory
@@ -89,7 +95,8 @@ sudo {
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v 'DisableIOAVProtection' /t REG_DWORD /d 1 /f
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v 'DisableRealtimeMonitoring' /t REG_DWORD /d 1 /f
   # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
-  sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.OutlookForWindows_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe Microsoft.OfficeDeploymentTool # --accept-source-agreements https://www.amd.com/en/support/kb/faq/pa-325 Microsoft.People_8wekyb3d8bbwe https://blogs.windows.com/windows-insider/2024/01/03/announcing-windows-11-insider-preview-build-26020-canary-channel/
+  # --accept-source-agreements https://www.amd.com/en/support/kb/faq/pa-325 Microsoft.People_8wekyb3d8bbwe https://blogs.windows.com/windows-insider/2024/01/03/announcing-windows-11-insider-preview-build-26020-canary-channel/
+  sudo winget uninstall -h Clipchamp.Clipchamp_yxz26nhyzhsrt Microsoft.Todos_8wekyb3d8bbwe Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe Microsoft.WindowsCamera_8wekyb3d8bbwe Microsoft.Windows.Photos_8wekyb3d8bbwe Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe Microsoft.BingWeather_8wekyb3d8bbwe Microsoft.BingNews_8wekyb3d8bbwe AdvancedMicroDevicesInc-2.AMDLink_0a9344xs7nr4m microsoft.windowscommunicationsapps_8wekyb3d8bbwe Microsoft.OutlookForWindows_8wekyb3d8bbwe Microsoft.ZuneMusic_8wekyb3d8bbwe Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe Microsoft.OfficeDeploymentTool
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
   choco feature enable -n=useRememberedArgumentsForUpgrades
   winget settings --enable LocalManifestFiles
@@ -102,7 +109,7 @@ if (!$env:vm) {
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
   multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount D:\:/mnt/d_host --mount C:\:/mnt/c_host
-  multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh 
+  multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
 }
 trakts autostart enable
 firefox -CreateProfile letyshops
@@ -119,4 +126,3 @@ New-Shortcut -Name 'BreakTimer - disable' -Path $HOME\Desktop -Target "$env:LOCA
 New-Shortcut -Name 'BreakTimer - enable' -Path $HOME\Desktop -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 # winsetview https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
 winsetview.ps1 $PSScriptRoot\explorer-preset.ini
-# TODO: taiga, night light settings

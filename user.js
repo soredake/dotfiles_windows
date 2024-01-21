@@ -7,12 +7,6 @@ user_pref("browser.theme.dark-private-windows", false);
 // https://www.neowin.net/news/microsoft-edge-will-soon-let-you-remove-some-of-its-unnecessary-features/
 user_pref("extensions.pocket.enabled", false);
 
-// PAC
-user_pref(
-  "network.proxy.autoconfig_url",
-  "***REMOVED***"
-);
-
 // DOH by default
 user_pref("network.trr.mode", 2);
 

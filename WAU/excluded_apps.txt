@@ -43,3 +43,7 @@ Haali.WinUtils.lswitch
 #Rclone.Rclone
 #Gyan.FFmpeg
 #lycheeverse.lychee
+
+# 
+Plex.PlexMediaServer
+Postman.Postman

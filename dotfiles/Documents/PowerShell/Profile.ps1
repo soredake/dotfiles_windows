@@ -36,7 +36,10 @@ function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function mps { multipass stop }
 function proxinjector-cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 function backup {
-  $EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
+  $env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
+
+  backup-oracle
+
   # Get-ChildItem -Path "$HOME\Мой диск\unsorted" -Recurse -File | Move-Item -Destination "$HOME\Мой диск"
   gci "$HOME\Мой диск\unsorted" -Recurse -File | % { $destFile = "$HOME\Мой диск\$($_.Name)"; while (Test-Path $destFile) { $destFile = "$HOME\Мой диск\$([System.IO.Path]::GetFileNameWithoutExtension($_.Name))_$((Get-Random -Maximum 9999))$([System.IO.Path]::GetExtension($_.Name))" }; mv $_.FullName $destFile }
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --exclude "db/image/" --exclude "theme/"
@@ -69,9 +72,9 @@ function backup {
   rclone sync -P "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\StartMenu"
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\TaskBar"
   reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\Taskband.reg" /y
-  if (Test-Path -Path "${EHDD}:\") {
-    rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${EHDD}:\backups\main --exclude ".tmp.drive*/"
-    rclone sync -P --progress-terminal-title ${EHDD}:\backups mega:backups --exclude "main/"
+  if (Test-Path -Path "${env:EHDD}:\") {
+    rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\backups\main --exclude ".tmp.drive*/"
+    rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups --exclude "main/"
   }
   rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
   rclone dedupe -P --dedupe-mode newest mega:/
