@@ -1,0 +1,11 @@
+[wsl2]
+memory=4GB
+processors=4
+swap=2GB
+
+[experimental]
+autoMemoryReclaim=gradual
+sparseVhd=true
+
+[boot]
+systemd=true

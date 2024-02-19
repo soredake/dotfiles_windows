@@ -2,21 +2,21 @@ players:
   mpv:
     ipc_path: \\.\pipe\mpvsocket
   syncplay@mpv:
-    ipc_path: \\.\pipe\\\.\pipe\mpvsocket
+    # ipc_path: \\.\pipe\mpvsocket
+    # ipc_path: \\.\pipe\\\.\pipe\mpvsocket
+    ipc_path: \\.\pipe\mpvSyncplaySocket
   monitored: [mpv, syncplay@mpv]
 
 fileinfo:
   whitelist:
     [
-      'E:\non-anime',
-      "E:/shared-unruhe\\anime",
       "E:/shared-unruhe\\non-anime",
       "E:/shared-unruhe/non-anime",
-      "E:/shared-unruhe/anime",
       'E:\shared-tablet',
       "E:/gccx",
       "E:\\gccx",
       "E:\\tv-show",
       "E:\\movies",
+      "E:\\Arrowverse CW Crossovers\\",
     ]
 version: "1.0"

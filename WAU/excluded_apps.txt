@@ -6,17 +6,23 @@ Discord.Discord
 ElectronicArts.EADesktop
 EpicGames.EpicGamesLauncher
 GOG.Galaxy
-Google.Drive
+Google.GoogleDrive
 IG.IGClient
 ItchIo.Itch
 LogMeIn.Hamachi
+Microsoft.DevHome
 Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
 Microsoft.Office
 Microsoft.PowerShell
 Microsoft.VisualStudioCode
+Microsoft.WindowsTerminal
 Parsec.Parsec
+Plex.PlexMediaServer
+PointPlanck.FileBot
+#Postman.Postman
 Ryochan7.DS4Windows
+SpecialK.SpecialK
 SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
@@ -29,8 +35,6 @@ Viber.Viber
 Oracle.VirtualBox
 # https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
 #qBittorrent.qBittorrent
-# https://github.com/microsoft/winget-cli/issues/3656 https://github.com/microsoft/winget-cli/issues/4007 https://github.com/microsoft/winget-pkgs/issues/135072
-#Python.Launcher
 # https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen https://github.com/microsoft/winget-cli/issues/2995
 Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
@@ -43,7 +47,3 @@ Haali.WinUtils.lswitch
 #Rclone.Rclone
 #Gyan.FFmpeg
 #lycheeverse.lychee
-
-# 
-Plex.PlexMediaServer
-Postman.Postman
