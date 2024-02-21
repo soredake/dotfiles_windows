@@ -19,6 +19,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
+
 function upgradeall {
   topgrade --cleanup --only 'powershell' 'pipx' 'node' 'scoop'
   psc update *
@@ -31,8 +32,33 @@ function oraclessh {
 function reboottobios { shutdown /r /fw /f /t 0 }
 function checkarchive { multipass exec primary -- /home/linuxbrew/.linuxbrew/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/archive-org.txt; mps }
 function checklinux { multipass exec primary -- /home/linuxbrew/.linuxbrew/bin/lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 /mnt/c_host/Users/$env:USERNAME/Мой` диск/документы/linux.txt; mps }
-function checkarchivewindows { cd "$HOME\Мой диск\документы"; lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt }
-function checklinuxwindows { cd "$HOME\Мой диск\документы"; lychee --max-concurrency 5 linux.txt }
+
+# TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
+function lycheefixon {
+  sudo {
+    Get-NetAdapter | Where-Object { $_.Name -ne "Ethernet 3" } | Disable-NetAdapter -Confirm:$false
+  }
+}
+function lycheefixoff {
+  sudo {
+    Get-NetAdapter | Enable-NetAdapter
+  }
+}
+
+
+function checkarchivewindows {
+  lycheefixon
+  cd "$HOME\Мой диск\документы"
+  lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt
+  lycheefixoff
+}
+function checklinuxwindows {
+  lycheefixon
+  cd "$HOME\Мой диск\документы"
+  lychee --max-concurrency 5 linux.txt
+  lycheefixoff
+}
+
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -44,7 +70,10 @@ function download-subtitles { subliminal download -l en -hi $args[0] }
 function mkd { mkdir $args[0] 2>$null; cd $args[0] }
 function mps { multipass stop }
 function proxinjector-cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
+
 function backup {
+  $host.ui.RawUI.WindowTitle = "Backup task"
+
   $env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
 
   # oracle server backup
@@ -53,9 +82,11 @@ function backup {
   # moving unsorted files back to main folder
   Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
     $destFile = "$HOME\Мой диск\$($_.Name)"
+
     while (Test-Path $destFile) {
       $destFile = "$HOME\Мой диск\$([System.IO.Path]::GetFileNameWithoutExtension($_.Name))_$((Get-Random -Maximum 9999))$([System.IO.Path]::GetExtension($_.Name))"
     }
+    
     Move-Item $_.FullName $destFile
   }
 
@@ -112,9 +143,10 @@ function backup {
     rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\backups\main --exclude ".tmp.drive*/"
     rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups --exclude "main/"
   }
-  rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main
+  rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main --exclude ".tmp.drive*/"
   rclone dedupe -P --dedupe-mode newest mega:/
 }
+
 # https://github.com/microsoft/winget-cli/issues/1653
 # https://github.com/microsoft/winget-cli/issues/1155
 function listallsoftware { winget list --source winget | Sort-Object Name }
@@ -143,10 +175,3 @@ function forwardMultipassPort {
   sudo { PsExec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe controlvm "primary" natpf1 "$name,$protocol,,$port1,,$port2" }
   # }
 }
-
-# forwardMultipassPort -name "vpn" -protocol "tcp" -port1 51820 -port2 51820
-
-# forwardMultipassPort vpn tcp 51820 51820
-# forwardMultipassPort qbittorrent_webui tcp 22222 22222
-# forwardMultipassPort qbittorrent_p2p tcp 9999 9999
-# forwardMultipassPort qbittorrent_p2p udp 9999 9999
