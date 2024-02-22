@@ -86,7 +86,7 @@ function backup {
     while (Test-Path $destFile) {
       $destFile = "$HOME\Мой диск\$([System.IO.Path]::GetFileNameWithoutExtension($_.Name))_$((Get-Random -Maximum 9999))$([System.IO.Path]::GetExtension($_.Name))"
     }
-    
+
     Move-Item $_.FullName $destFile
   }
 
@@ -111,6 +111,9 @@ function backup {
   7z a -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\ryujinx.7z" "$HOME\scoop\persist\ryujinx-ava\portable\bis\user\save"
   7z a -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\yuzu.7z" "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\user\save"
   7z a -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\rpcs3.7z" "$env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata"
+  # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
+  rclone sync -P $HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
+  rclone sync -P $HOME\scoop\persist\ryujinx-ava\portable\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
 
   # tab session manager backups
   rclone sync -P "$HOME\Downloads\TabSessionManager - Backup" "$HOME\Мой диск\документы\backups\TabSessionManager - Backup"
@@ -124,26 +127,27 @@ function backup {
   rclone sync -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
   rclone sync -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
 
-  # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
-  rclone sync -P "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat" "$HOME\Мой диск\документы\backups\yuzu"
-  rclone sync -P $env:APPDATA\Ryujinx\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
-
   # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
   rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
 
   # https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-taskbar-in-windows-11.3630/ https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-start-menu-in-windows-11.3629/
   # https://aka.ms/AAnrixg
-  rclone sync -P "$env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\StartMenu"
+  rclone sync -P $env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState "$HOME\Мой диск\документы\backups\taskbar_pinned_items\StartMenu"
   rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\TaskBar"
   reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\Taskband.reg" /y
 
-  # backing up my google drive folder to external HDD
-  # backing up my backups on external HDD to mega cloud
   if (Test-Path -Path "${env:EHDD}:\") {
+    # backing up my google drive folder to external HDD
     rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\backups\main --exclude ".tmp.drive*/"
+
+    # backing up my backups on external HDD to mega cloud
     rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups --exclude "main/"
   }
+
+  # backing up my google drive folder to mega cloud
   rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main --exclude ".tmp.drive*/"
+
+  # deduping mega
   rclone dedupe -P --dedupe-mode newest mega:/
 }
 
