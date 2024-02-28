@@ -7,8 +7,14 @@ user_pref("browser.theme.dark-private-windows", false);
 // https://www.neowin.net/news/microsoft-edge-will-soon-let-you-remove-some-of-its-unnecessary-features/
 user_pref("extensions.pocket.enabled", false);
 
+// https://www.ghacks.net/2024/02/22/how-to-enable-tab-previews-in-firefox/
+user_pref("browser.tabs.cardPreview.enabled", true);
+
 // DOH by default
 user_pref("network.trr.mode", 2);
+
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1874464
+user_pref("network.dns.native_https_query", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
@@ -39,7 +45,6 @@ user_pref("widget.windows.overlay-scrollbars.enabled", false);
 
 // https://support.mozilla.org/en-US/questions/1176544
 // removes delay between allowing to save file/making "OK" button clickable
-// TODO: add ui setting for this and compare with chrome behavior
 // user_pref("security.dialog_enable_delay", 0);
 
 // Do not show about:config warning message

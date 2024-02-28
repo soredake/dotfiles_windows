@@ -18,11 +18,12 @@ Microsoft.PowerShell
 Microsoft.VisualStudioCode
 Microsoft.WindowsTerminal
 Parsec.Parsec
+Plex.Plex
 Plex.PlexMediaServer
 PointPlanck.FileBot
-#Postman.Postman
 Ryochan7.DS4Windows
 SpecialK.SpecialK
+Spotify.Spotify
 SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser

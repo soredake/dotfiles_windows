@@ -98,5 +98,6 @@
   required = true
 [pack]
   useBitmapBoundaryTraversal = true
+	allowPackReuse = multi
 [advice]
   statusUoption = false
