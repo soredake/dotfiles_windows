@@ -17,7 +17,7 @@ sudo {
   ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable"
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements EpicGames.EpicGamesLauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader Google.GoogleDrive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner bcuninstaller voidtools.Everything strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 BiSS.WSLDiskShrinker HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Jellyfin.Server XPFM11Z0W10R7G
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements EpicGames.EpicGamesLauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader Google.GoogleDrive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner bcuninstaller voidtools.Everything strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win Dropbox.Dash galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 BiSS.WSLDiskShrinker HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Jellyfin.Server XPFM11Z0W10R7G Samsung.SamsungMagician
 
   # lychee is installed in machine scope until https://github.com/microsoft/winget-cli/issues/4044 is fixed
   winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys lycheeverse.lychee
@@ -26,7 +26,7 @@ sudo {
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
 
   choco install -y syncthingtray insomnia choco-cleaner nerd-fonts-hack tor
-  choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'" # TODO: move them to scoop?
+  choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
   choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
 
   C:\Program` Files\OfficeDeploymentTool\setup.exe /configure $PSScriptRoot\Office-Config.xml
@@ -43,7 +43,7 @@ iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -confirm_spot
 wsl --install --no-launch Ubuntu-22.04
 
 
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD Discord.Discord 9P2B8MCSVPLN Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim 9NBLGGH4T892 Plex.Plexamp # PragmaTwice.proxinject
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD Discord.Discord 9P2B8MCSVPLN 9NTXGKQ8P7N0 Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim 9NBLGGH4T892 Plex.Plexamp # PragmaTwice.proxinject
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
@@ -78,7 +78,7 @@ Enable-ExperimentalFeature -Name PSFeedbackProvider, PSCommandNotFoundSuggestion
 psc add npm winget
 npm i -g html-validate gulp-cli create-react-app
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim -ItemType Directory
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua"
+curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua"
 
 # TODO: make mpv command name configurable
 (Get-Content "$env:APPDATA\mpv.net\scripts\webm.lua") -replace '"mpv"', '"mpvnet.exe"' | Set-Content "$env:APPDATA\mpv.net\scripts\webm.lua"
