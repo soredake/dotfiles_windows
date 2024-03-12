@@ -1,8 +1,7 @@
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
-Import-Module -Name (dir $documentsPath\PowerShell\Modules)
+Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
 Import-Module gsudoModule
-Import-Module $env:ProgramFiles\PowerToys\WinGetCommandNotFound.psd1
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
 # loading private powershell profile
@@ -26,15 +25,12 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 
 function upgradeall {
-  topgrade --cleanup --only 'powershell' 'pipx' 'node' 'scoop'
+  # 'pipx'
+  topgrade --cleanup --only 'powershell' 'node' 'scoop'
+  pipx upgrade-all
   psc update *
 }
 
-function oraclessh {
-  ssh -L 34567:localhost:34568 oracle
-  # C:\Program` Files\SSHFS-Win\bin\sshfs.exe localhost:/home/ubuntu/oracle "C:\Users\user\Мой диск\документы\oracle" -o directport=34568
-  # sshfs localhost -o directport=34568
-}
 function reboottobios { shutdown /r /fw /f /t 0 }
 
 # TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
@@ -52,13 +48,13 @@ function lycheefixoff {
 
 function checkarchivewindows {
   lycheefixon
-  cd "$HOME\Мой диск\документы"
+  Set-Location "$HOME\Мой диск\документы"
   lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt
   lycheefixoff
 }
 function checklinuxwindows {
   lycheefixon
-  cd "$HOME\Мой диск\документы"
+  Set-Location "$HOME\Мой диск\документы"
   lychee --max-concurrency 5 linux.txt
   lycheefixoff
 }
@@ -74,10 +70,10 @@ function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-fr
 # https://superuser.com/a/1830291/1506333
 function YoutubeExtractAllUrls { yt-dlp $args --skip-download --no-warning --print webpage_url }
 
-function download-subtitles { subliminal download -l en -hi $args[0] }
-function mkd { mkdir $args[0] 2>$null; cd $args[0] }
+function download_subtitles { subliminal download -l en -hi $args[0] }
+function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
 function mps { multipass stop }
-function proxinjector-cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
+function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 function backup {
@@ -151,7 +147,7 @@ function backup {
     rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\backups\main --delete-excluded --exclude ".tmp.drive*/"
 
     # backing up my backups on external HDD to mega cloud
-    rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups --delete-before --delete-excluded --exclude "main/"
+    rclone sync -P --progress-terminal-title ${env:EHDD}:\backups\other mega:backups --delete-before
   }
 
   # backing up my google drive folder to mega cloud
@@ -167,27 +163,13 @@ function backup {
 # https://github.com/microsoft/winget-cli/issues/3494
 function listallsoftware { winget list --source winget | Sort-Object Name }
 
-function setdiscardmultipass { sudo { psexec.exe -s VBoxManage storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+# https://github.com/canonical/multipass/issues/3112
+function setdiscardmultipass { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
-function showmultipassvminfo { sudo { psexec.exe -s VBoxManage showvminfo primary --machinereadable } }
+function showmultipassvminfo { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
 function multipassdeleteportforward {
   param (
     [string]$name
   )
-  sudo { psexec.exe -s VBoxManage modifyvm primary --natpf1 delete $name }
-}
-
-function forwardMultipassPort {
-  # sudo {
-  param (
-    [string]$name,
-    [string]$protocol,
-    [int]$port1,
-    [int]$port2
-  )
-
-  Write-Output "$name,$protocol,,$port1,,$port2"
-
-  sudo { PsExec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe controlvm "primary" natpf1 "$name,$protocol,,$port1,,$port2" }
-  # }
+  sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
 }

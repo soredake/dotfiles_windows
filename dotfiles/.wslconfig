@@ -1,7 +1,8 @@
 [wsl2]
 memory=4GB
 processors=4
-swap=2GB
+swap=5GB
+# kernel = C:\\Users\\user\\wsl2-xanmod-kernel
 
 [experimental]
 autoMemoryReclaim=gradual
