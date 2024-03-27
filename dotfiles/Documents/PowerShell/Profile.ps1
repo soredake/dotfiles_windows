@@ -31,8 +31,6 @@ function upgradeall {
   psc update *
 }
 
-function reboottobios { shutdown /r /fw /f /t 0 }
-
 # TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
 function lycheefixon {
   sudo {
@@ -81,10 +79,10 @@ function backup {
 
   $env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
 
-  # oracle server backup
-  # backup-oracle
+  # Oracle server backup
+  backup-oracle
 
-  # moving unsorted files back to main folder
+  # Moving unsorted files back to main folder
   Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
     $destFile = "$HOME\Мой диск\$($_.Name)"
 
@@ -95,7 +93,7 @@ function backup {
     Move-Item $_.FullName $destFile
   }
 
-  # software
+  # Software
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"--delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
@@ -106,7 +104,7 @@ function backup {
   rclone sync -P "${env:ProgramFiles(x86)}\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
   rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
 
-  # games and emulators
+  # Games and emulators
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\RPCS3.7z" $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\EMPRESS.7z" "$env:PUBLIC\Documents\EMPRESS"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\OnlineFix.7z" "$env:PUBLIC\Documents\OnlineFix"
@@ -120,15 +118,15 @@ function backup {
   rclone sync -P $HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
   rclone sync -P $HOME\scoop\persist\ryujinx-ava\portable\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
 
-  # tab session manager backups
+  # Tab Session Manager backups
   # rclone sync -P "$HOME\Downloads\TabSessionManager - Backup" "$HOME\Мой диск\документы\backups\TabSessionManager - Backup"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
 
-  # syncthing(-tray)
+  # Syncthing(-tray)
   rclone sync -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing"
   rclone sync -P $env:LOCALAPPDATA\Syncthing "$HOME\Мой диск\документы\backups\syncthing\syncthing" --delete-excluded --exclude "LOCK" --exclude "index*/LOG" --exclude "index*/*.log" --exclude "*.tmp.*"
 
-  # vscode https://stackoverflow.com/a/49398449/4207635
+  # Visual Studio Code https://stackoverflow.com/a/49398449/4207635
   code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
   rclone sync -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
   rclone sync -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
@@ -143,17 +141,17 @@ function backup {
   reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\Taskband.reg" /y
 
   if (Test-Path -Path "${env:EHDD}:\") {
-    # backing up my google drive folder to external HDD
-    rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\backups\main --delete-excluded --exclude ".tmp.drive*/"
+    # Backing up my google drive folder to external HDD
+    rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\main --delete-excluded --exclude ".tmp.drive*/"
 
-    # backing up my backups on external HDD to mega cloud
-    rclone sync -P --progress-terminal-title ${env:EHDD}:\backups\other mega:backups --delete-before
+    # Backing up my backups on external HDD to mega cloud
+    rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups
   }
 
-  # backing up my google drive folder to mega cloud
-  rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:backups\main --delete-before --delete-excluded --exclude ".tmp.drive*/"
+  # Backing up my google drive folder to mega cloud
+  rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-excluded --exclude ".tmp.drive*/"
 
-  # deduping clouds
+  # Deduping clouds
   rclone dedupe -P --dedupe-mode newest mega:/
   rclone dedupe -P --dedupe-mode newest gdrive:/
 }

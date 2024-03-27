@@ -5,9 +5,9 @@
     "whitelist": [ "sdh" ]
   },
   {
-    "alang": "*",
+    "alang": ["jpn", "ja"],
     "slang": [ "eng?", "en?", "und" ],
-    "blacklist": [ "English [Signs/Songs]" ]
+    "blacklist": [ "songs", "signs" ]
   },
   {
       "alang": "*",

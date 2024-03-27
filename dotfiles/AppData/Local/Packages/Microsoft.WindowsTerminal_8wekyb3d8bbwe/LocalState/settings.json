@@ -16,6 +16,10 @@
             "keys": "ctrl+v"
         },
         {
+            "command": "find",
+            "keys": "ctrl+shift+f"
+        },
+        {
             "command": 
             {
                 "action": "splitPane",
@@ -23,10 +27,6 @@
                 "splitMode": "duplicate"
             },
             "keys": "alt+shift+d"
-        },
-        {
-            "command": "find",
-            "keys": "ctrl+shift+f"
         }
     ],
     "alwaysShowNotificationIcon": false,
@@ -103,6 +103,12 @@
                 "hidden": true,
                 "name": "Ubuntu-22.04",
                 "source": "Windows.Terminal.Wsl"
+            },
+            {
+                "guid": "{5fb123f1-af88-5b5c-8953-d14a8def1978}",
+                "hidden": false,
+                "name": "PowerShell 7",
+                "source": "Windows.Terminal.PowershellCore"
             }
         ]
     },

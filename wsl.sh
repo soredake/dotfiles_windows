@@ -3,7 +3,7 @@ sudo add-apt-repository -y ppa:fish-shell/release-3 # i need newer version https
 # sudo apt update
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf # https://stackoverflow.com/a/73397970 https://askubuntu.com/a/1424249
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
-sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn tmux speedtest-cli
+sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn tmux speedtest-cli jq
 curl -fsSL get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 mkdir -p ~/.local/bin
 # TODO: request update https://pacstall.dev/packages/topgrade-bin

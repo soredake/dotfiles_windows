@@ -18,7 +18,7 @@ Microsoft.PowerShell
 Microsoft.VisualStudioCode
 Microsoft.WindowsTerminal
 Parsec.Parsec
-Plex.Plex
+#Plex.Plex
 Plex.PlexMediaServer
 PointPlanck.FileBot
 Ryochan7.DS4Windows
@@ -33,6 +33,10 @@ ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
 Microsoft.VCLibs.Desktop.14
+# https://github.com/Romanitho/Winget-AutoUpdate/issues/594
+Retroshare.Retroshare
+# https://github.com/microsoft/winget-cli/issues/4158 https://github.com/microsoft/winget-cli/issues/4290
+Microsoft.DotNet.DesktopRuntime.8
 # https://github.com/microsoft/winget-cli/issues/4208
 Microsoft.UI.Xaml.2.7
 # same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
@@ -44,7 +48,7 @@ Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
 Microsoft.XNARedist
 # https://github.com/Romanitho/Winget-AutoUpdate/issues/542
-#Ryujinx.Ryujinx.Ava
+#Ryujinx.Ryujinx
 #LesFerch.WinSetView
 Haali.WinUtils.lswitch
 #yt-dlp.yt-dlp
