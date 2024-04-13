@@ -1,8 +1,8 @@
 // https://www.askvg.com/tip-disable-dark-mode-in-private-browsing-windows-in-firefox/
-// TODO: report this to mozilla (add option to ui)
+// TODO: Report this to mozilla (add option to ui)
 user_pref("browser.theme.dark-private-windows", false);
 
-// TODO: add ui option to disable built-in extensions
+// TODO: Add ui option to disable built-in extensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1230656
 // https://www.neowin.net/news/microsoft-edge-will-soon-let-you-remove-some-of-its-unnecessary-features/
 user_pref("extensions.pocket.enabled", false);
@@ -28,7 +28,7 @@ user_pref("network.predictor.enable-prefetch", true);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
-user_pref("general.smoothScroll.msdPhysics.enabled", true);
+// user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1725938
 // https://tls-ech.dev/
@@ -63,8 +63,6 @@ user_pref("media.memory_cache_max_size", 65536); // default=8192; AF=65536; alt=
 user_pref("media.cache_readahead_limit", 7200); // 120 min; default=60; stop reading ahead when our buffered data is this many seconds ahead of the current playback
 user_pref("media.cache_resume_threshold", 3600); // 60 min; default=30; when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold
 user_pref("image.mem.decode_bytes_at_a_time", 32768); // default=16384; alt=65536; chunk size for calls to the image decoders
-user_pref("network.buffer.cache.size", 262144); // 256 kb; default=32768 (32 kb)
-user_pref("network.buffer.cache.count", 128); // default=24
 user_pref("network.http.max-connections", 1800); // default=900
 user_pref("network.http.max-persistent-connections-per-server", 10); // default=6; download connections; anything above 10 is excessive
 user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3

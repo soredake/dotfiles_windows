@@ -1,16 +1,20 @@
+# Documents folder are moved to OneDrive
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
 Import-Module gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
-# loading private powershell profile
+# Loading private powershell profile
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"
 
-# no cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
+# No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
 
-# mirroring linux shells bindings and completion menu
+# https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+
+# Mirroring linux shells bindings and completion menu
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
 # https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
@@ -25,10 +29,11 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 }
 
 function upgradeall {
-  # 'pipx'
+  # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725
   topgrade --cleanup --only 'powershell' 'node' 'scoop'
   pipx upgrade-all
   psc update *
+  yt-dlp --update-to master
 }
 
 # TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC

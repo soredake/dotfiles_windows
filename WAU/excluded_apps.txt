@@ -32,22 +32,19 @@ Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
-Microsoft.VCLibs.Desktop.14
 # https://github.com/Romanitho/Winget-AutoUpdate/issues/594
 Retroshare.Retroshare
 # https://github.com/microsoft/winget-cli/issues/4158 https://github.com/microsoft/winget-cli/issues/4290
 Microsoft.DotNet.DesktopRuntime.8
-# https://github.com/microsoft/winget-cli/issues/4208
-Microsoft.UI.Xaml.2.7
-# same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
-Oracle.VirtualBox
 # https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
 #qBittorrent.qBittorrent
+# Same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
+Oracle.VirtualBox
 # https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen https://github.com/microsoft/winget-cli/issues/2995
 Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
 Microsoft.XNARedist
-# https://github.com/Romanitho/Winget-AutoUpdate/issues/542
+# https://github.com/microsoft/winget-cli/issues/4044
 #Ryujinx.Ryujinx
 #LesFerch.WinSetView
 Haali.WinUtils.lswitch

@@ -2,8 +2,13 @@ $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 setx PIPX_BIN_DIR $env:LOCALAPPDATA\Programs\Python\Python312\Scripts
 
+# Link winget settings early
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-($settings = Get-Content -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Raw | ConvertFrom-Json) | ForEach-Object { if ($_.network -eq $null) { $_ | Add-Member -MemberType NoteProperty -Name 'network' -Value (New-Object PSObject) -Force }; $_.network | Add-Member -MemberType NoteProperty -Name 'downloader' -Value 'wininet' -Force }; $settings | ConvertTo-Json | Set-Content -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
+# Currently this feature is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357
+# "experimentalFeatures": {
+#   "sideBySide": true
+# }
+New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$HOME\git\dotfiles_windows\winget-settings.json"
 
 # https://github.com/ScoopInstaller/Install/issues/70
 where.exe scoop
@@ -11,7 +16,10 @@ if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
 
+# Configuring scoop to use NanaZip
 scoop config use_external_7zip true
+
+# Gsudo installation and configuration
 scoop install gsudo
 sudo config CacheMode Auto
 

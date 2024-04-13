@@ -1,11 +1,13 @@
 #!/bin/bash
-sudo add-apt-repository -y ppa:fish-shell/release-3 # i need newer version https://unix.stackexchange.com/a/740124
-# sudo apt update
+sudo add-apt-repository -yn ppa:fish-shell/release-3 # i need newer version https://unix.stackexchange.com/a/740124
+sudo add-apt-repository -yn ppa:kisak/kisak-mesa     # https://github.com/microsoft/wslg/issues/40#issuecomment-2037539322
+sudo apt update
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf # https://stackoverflow.com/a/73397970 https://askubuntu.com/a/1424249
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn tmux speedtest-cli jq
 curl -fsSL get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 mkdir -p ~/.local/bin
+
 # TODO: request update https://pacstall.dev/packages/topgrade-bin
 curl -s https://api.github.com/repos/topgrade-rs/topgrade/releases/latest | jq -r ".assets[] | select(.name | test(\"x86_64-unknown-linux-gnu.tar.gz\")) | .browser_download_url" | xargs wget
 tar -xzf topgrade*.tar.gz -C ~/.local/bin/
@@ -25,7 +27,14 @@ tee ~/.config/fish/conf.d/config.fish >/dev/null <<EOF
 #eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 fish_add_path \$HOME/.local/bin
 #alias upall 'sudo apt update; sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y; pipx upgrade-all; brew update && brew upgrade && brew cleanup'
-alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_update''
+function clean-snaps
+  LANG=C snap list --all | while read snapname ver rev trk pub notes
+    if string match -q "*disabled*" $notes
+      sudo snap remove "$snapname" --revision="$rev"
+    end
+  end
+end
+alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_update'; clean-snaps'
 echo -en "\e[6 q"
 EOF
 
@@ -46,5 +55,33 @@ ln -sfv ~/.config/internetarchive/ia.ini ~/.ia/ia.ini
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # brew install lychee
 
-# https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
-sudo systemctl enable /usr/share/systemd/tmp.mount
+# https://wiki.archlinux.org/title/Systemd/Journal#Journal_size_limit
+# https://github.com/systemd/systemd/issues/17382
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/00-journal-size.conf >/dev/null <<EOF
+[Journal]
+SystemMaxUse=200M
+EOF
+sudo systemctl daemon-reload
+
+# https://github.com/microsoft/WSL/issues/4071
+if grep -q microsoft /proc/version; then
+  # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
+  sudo systemctl enable /usr/share/systemd/tmp.mount
+
+  # https://github.com/microsoft/wslg/issues/1156#issuecomment-1876266025
+  sudo tee /etc/systemd/system/x11-symlink.service >/dev/null <<EOF
+[Unit]
+Description=Setup X11 Symlink
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/rm -rf /tmp/.X11-unix
+ExecStart=/bin/ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo systemctl daemon-reload
+  sudo systemctl enable x11-symlink.service
+fi
