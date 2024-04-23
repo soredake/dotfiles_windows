@@ -19,21 +19,25 @@ if (!$env:vm) {
 scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
 
 # Installing my winget packages
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD Discord.Discord 9P2B8MCSVPLN 9NTXGKQ8P7N0 Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim Reshade.Setup.AddonsSupport
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD Discord.Discord 9P2B8MCSVPLN 9NTXGKQ8P7N0 Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim Reshade.Setup.AddonsSupport Playnite.Playnite
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\persist\mpv-git\portable_config -ItemType Directory
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim -ItemType Directory
 
 # Downloading sophiscript
 Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
 
 sudo {
   # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -SearchIcon", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable"
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
+  # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # TODO: switch to plain 7zip when 24.XX will be stable https://www.7-zip.org/
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Jellyfin.Server XPFM11Z0W10R7G xp8jrf5sxv03zm
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru Syncplay.Syncplay doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything strawberry-music AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect Jellyfin.Server XPFM11Z0W10R7G xp8jrf5sxv03zm
+
+  # >=1.13.0 is broken https://github.com/canonical/multipass/issues/3442
+  winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
 
   # lychee is installed in machine scope until https://github.com/microsoft/winget-cli/issues/4044 is fixed
   # PowerToys is here because i need to remap my broken ESC key to PAUSE
@@ -46,7 +50,7 @@ sudo {
   scoop install rom-properties-np
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
+  choco install -y syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack humble-app aimp
   choco install -y --pin nerd-fonts-hack
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
   choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
@@ -55,7 +59,7 @@ sudo {
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
 
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
-  choco feature enable -n=useRememberedArgumentsForUpgrades
+  choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
   # Installing Microsoft Office suite
   C:\Program` Files\OfficeDeploymentTool\setup.exe /configure $PSScriptRoot\Office-Config.xml
@@ -82,6 +86,8 @@ sudo {
   # Linking dotfiles
   dploy stow WAU C:\ProgramData\Winget-AutoUpdate
   dploy stow dotfiles $HOME
+  # https://github.com/arecarn/dploy/issues/13
+  dploy stow mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
 
   # Task for enabling language change by pressing right ctrl
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
@@ -94,6 +100,9 @@ sudo {
 
   # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "$HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+
+  # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "$HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Backup task
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
@@ -152,13 +161,14 @@ wsl --install --no-launch Ubuntu-22.04
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
 
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
+# TODO: ask microsft to document this installer options
 winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, NodeJS installer uses machine scope https://github.com/nodejs/version-management/issues/16
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee yuzu-pineapple (only multiplayer) and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
-scoop install eza lsd cheat-engine yuzu-pineapple nodejs ryujinx winsetview yt-dlp ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep sonixd windows11-classic-context-menu mpv-git "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # yuzu-pineapple is dead
+scoop install eza lsd cheat-engine nodejs ryujinx winsetview yt-dlp ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep sonixd windows11-classic-context-menu mpv-git sudachi "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # yuzu-pineapple is dead
 scoop hold ryujinx tor-browser
 
 pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" subliminal guessit
@@ -171,13 +181,19 @@ pipx inject guessit setuptools
 
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 # TODO: CompletionPredictor is breaks PSCompletions https://github.com/PowerShell/CompletionPredictor/issues/37
-Install-Module -Name posh-git, PSAdvancedShortcut, CompletionPredictor, PSCompletions
+Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions
 psc add npm winget scoop
 npm i -g html-validate gulp-cli create-react-app
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua"
+curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/reset-auto/sub-select.lua"
+New-Item -Path $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
+curl -L --create-dirs --remote-name-all --output-dir $HOME\git\dotfiles_windows\mpv-git-scoop-config\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/reset-auto/sub-select.lua"
 
 # TODO: make MPV command name configurable
 (Get-Content "$env:APPDATA\mpv.net\scripts\webm.lua") -replace '"mpv"', '"mpvnet.exe"' | Set-Content "$env:APPDATA\mpv.net\scripts\webm.lua"
+
+# https://github.com/CogentRedTester/mpv-sub-select/issues/30
+(Get-Content "$env:APPDATA\mpv.net\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv.net\scripts\sub-select.lua"
+(Get-Content "$HOME\git\dotfiles_windows\mpv-git-scoop-config\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$HOME\git\dotfiles_windows\mpv-git-scoop-config\scripts\sub-select.lua"
 
 # Multipass setup
 if (!$env:vm) {
@@ -195,8 +211,6 @@ psc config update 0
 psc config module_update 0
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
-
-# TODO: hardlink explorer-prsset.ini to winsetview app folder
 
 # https://remontka.pro/wake-timers-windows/
 # https://winaero.com/windows-11-may-soon-install-monthly-updates-without-a-reboot/

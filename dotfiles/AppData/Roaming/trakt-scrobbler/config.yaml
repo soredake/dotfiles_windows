@@ -1,11 +1,12 @@
 players:
-  mpv:
-    ipc_path: \\.\pipe\mpvsocket
+  # mpv:
+  #   ipc_path: \\.\pipe\mpvsocket
   syncplay@mpv:
     # ipc_path: \\.\pipe\mpvsocket
     # ipc_path: \\.\pipe\\\.\pipe\mpvsocket
     ipc_path: \\.\pipe\mpvSyncplaySocket
-  monitored: [mpv, syncplay@mpv, plex]
+  monitored: [syncplay@mpv, plex]
+  # monitored: [mpv, syncplay@mpv, plex]
 
 fileinfo:
   whitelist:

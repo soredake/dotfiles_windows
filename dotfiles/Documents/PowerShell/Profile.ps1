@@ -85,7 +85,7 @@ function backup {
   $env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
 
   # Oracle server backup
-  backup-oracle
+  #backup-oracle
 
   # Moving unsorted files back to main folder
   Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
@@ -98,6 +98,8 @@ function backup {
     Move-Item $_.FullName $destFile
   }
 
+  # TODO: what files/folders are used by running processes?
+  # TODO: add plex
   # Software
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
@@ -110,6 +112,7 @@ function backup {
   rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
 
   # Games and emulators
+  7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Playnite.7z" "$env:APPDATA\Playnite"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\RPCS3.7z" $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\EMPRESS.7z" "$env:PUBLIC\Documents\EMPRESS"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\OnlineFix.7z" "$env:PUBLIC\Documents\OnlineFix"
@@ -117,14 +120,13 @@ function backup {
   # 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\PPSSPP.7z" "$documentsPath\PPSSPP"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\GoldbergSteamEmuSaves.7z" "$env:APPDATA\Goldberg SteamEmu Saves"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\ryujinx.7z" "$HOME\scoop\persist\ryujinx-ava\portable\bis\user\save"
-  7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\yuzu.7z" "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\user\save"
+  # 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\yuzu.7z" "$HOME\scoop\apps\yuzu-pineapple\current\user\nand\user\save" TODO: sudachi
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\rpcs3.7z" "$env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata"
   # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
   rclone sync -P $HOME\scoop\apps\yuzu-pineapple\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\yuzu"
   rclone sync -P $HOME\scoop\persist\ryujinx-ava\portable\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
 
   # Tab Session Manager backups
-  # rclone sync -P "$HOME\Downloads\TabSessionManager - Backup" "$HOME\Мой диск\документы\backups\TabSessionManager - Backup"
   7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
 
   # Syncthing(-tray)

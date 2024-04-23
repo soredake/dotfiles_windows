@@ -1,6 +1,5 @@
 64Gram.64Gram
 AppWork.JDownloader
-Canonical.Multipass
 Chocolatey.Chocolatey
 Discord.Discord
 ElectronicArts.EADesktop
@@ -15,7 +14,6 @@ Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
 Microsoft.Office
 Microsoft.PowerShell
-Microsoft.VisualStudioCode
 Microsoft.WindowsTerminal
 Parsec.Parsec
 #Plex.Plex
@@ -24,6 +22,7 @@ PointPlanck.FileBot
 Ryochan7.DS4Windows
 SpecialK.SpecialK
 Spotify.Spotify
+Ubisoft.Connect
 SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
@@ -32,6 +31,10 @@ Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
+# WAU updating enabled back until https://github.com/microsoft/vscode/issues/52855 is fixed
+#Microsoft.VisualStudioCode
+# https://github.com/canonical/multipass/issues/3442
+Canonical.Multipass
 # https://github.com/Romanitho/Winget-AutoUpdate/issues/594
 Retroshare.Retroshare
 # https://github.com/microsoft/winget-cli/issues/4158 https://github.com/microsoft/winget-cli/issues/4290
