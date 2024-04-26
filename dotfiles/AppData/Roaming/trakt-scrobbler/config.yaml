@@ -1,23 +1,16 @@
-players:
-  # mpv:
-  #   ipc_path: \\.\pipe\mpvsocket
-  syncplay@mpv:
-    # ipc_path: \\.\pipe\mpvsocket
-    # ipc_path: \\.\pipe\\\.\pipe\mpvsocket
-    ipc_path: \\.\pipe\mpvSyncplaySocket
-  monitored: [syncplay@mpv, plex]
-  # monitored: [mpv, syncplay@mpv, plex]
-
 fileinfo:
   whitelist:
-    [
-      "C:\\Users\\user\\shared-unruhe\\non-anime",
-      "C:/Users/user/shared-unruhe\\non-anime",
-      "C:\\Users\\user\\shared-tablet",
-      "C:\\Users\\user\\torrents\\tv",
-      "C:\\Users\\user\\torrents\\movies",
-      "C:\\Users\\user\\shared-oracle\\tv",
-      "C:\\Users\\user\\shared-oracle\\movies",
-      "E:\\gccx",
-    ]
+    - C:\Users\user\shared-unruhe\non-anime
+    - C:/Users/user/shared-unruhe\non-anime
+    - C:\Users\user\shared-tablet
+    - C:\Users\user\torrents\tv
+    - C:\Users\user\torrents\movies
+    - C:\Users\user\shared-oracle\tv
+    - C:\Users\user\shared-oracle\movies
+    - E:\gccx
+
+players:
+  syncplay@mpv:
+    ipc_path: \\.\pipe\mpvSyncplaySocket
+  monitored: [syncplay@mpv, plex]
 version: "1.0"

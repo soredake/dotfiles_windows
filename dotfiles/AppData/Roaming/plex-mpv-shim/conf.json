@@ -38,7 +38,7 @@
     "mpv_ext": true,
     "mpv_ext_ipc": "mpvsocket",
     "mpv_ext_no_ovr": true,
-    "mpv_ext_path": "C:\\Users\\user\\AppData\\Local\\Programs\\mpv.net\\mpvnet.exe",
+    "mpv_ext_path": "C:\\Users\\user\\scoop\\apps\\mpv-git\\current\\mpv.exe",
     "mpv_ext_start": true,
     "mpv_log_level": "info",
     "player_name": "torocat-powerful-pc",
