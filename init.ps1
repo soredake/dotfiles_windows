@@ -4,7 +4,7 @@ setx PIPX_BIN_DIR $env:LOCALAPPDATA\Programs\Python\Python312\Scripts
 
 # Link winget settings early
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-# Currently this feature is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357
+# Currently this feature is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357 https://github.com/microsoft/winget-cli/issues/4425
 # "experimentalFeatures": {
 #   "sideBySide": true
 # }
@@ -24,6 +24,13 @@ scoop install gsudo
 sudo config CacheMode Auto
 
 sudo {
+  # enabling proxy
+  winget settings --enable ProxyCommandLineOptions
+
+  # https://remontka.pro/enable-developer-mode-windows/
+  # Developer Mode is needed to create symlinks in winget without admin rights, adding to PATH approach have problems https://github.com/microsoft/winget-cli/issues/4044 https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
+  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
+
   # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/549#issuecomment-1675410316 https://github.com/microsoft/winget-cli/issues/222#issuecomment-1675434402
   winget install --no-upgrade -h --accept-source-agreements WingetPathUpdater
 

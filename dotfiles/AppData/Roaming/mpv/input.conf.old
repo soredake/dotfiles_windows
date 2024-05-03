@@ -1,0 +1,16 @@
+# control the system ao driver, not the softvol
+# MOUSE_BTN3 add ao-volume 2
+# MOUSE_BTN4 add ao-volume -2
+# 9 add ao-volume -2
+# 0 add ao-volume +2
+# m cycle ao-mute
+# VOLUME_DOWN add ao-volume -2
+# VOLUME_UP add ao-volume +2
+# MUTE cycle ao-mute
+# Shift+( add volume -2
+# Shift+) add volume 2
+# https://github.com/mpv-player/mpv/commit/981a9372ff0034178a986f8bc1ec1ad6b973bb6c
+# VOLUME_DOWN add volume -2
+# VOLUME_UP add volume +2
+# MOUSE_BTN3 add volume 2
+# MOUSE_BTN4 add volume -2

@@ -5,9 +5,6 @@ Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
 Import-Module gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
-# Loading private powershell profile
-. "$HOME\Мой диск\документы\private_powershell_profile.ps1"
-
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
 
@@ -77,6 +74,7 @@ function download_subtitles { subliminal download -l en -hi $args[0] }
 function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
 function mps { multipass stop }
 function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
+function what_blocks_sleep { sudo { powercfg -requests } }
 
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 function backup {
@@ -100,6 +98,7 @@ function backup {
 
   # TODO: what files/folders are used by running processes?
   # TODO: add plex
+  # TODO: C:\Users\user\AppData\Roaming\AIMP
   # Software
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
@@ -178,3 +177,6 @@ function multipassdeleteportforward {
   )
   sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
 }
+
+# Loading private powershell profile
+. "$HOME\Мой диск\документы\private_powershell_profile.ps1"

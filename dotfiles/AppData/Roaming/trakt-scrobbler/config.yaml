@@ -2,6 +2,8 @@ fileinfo:
   whitelist:
     - C:\Users\user\shared-unruhe\non-anime
     - C:/Users/user/shared-unruhe\non-anime
+    - C:\Users\user\shared-unruhe-oracle
+    - C:/Users/user/shared-unruhe-oracle
     - C:\Users\user\shared-tablet
     - C:\Users\user\torrents\tv
     - C:\Users\user\torrents\movies
@@ -12,5 +14,7 @@ fileinfo:
 players:
   syncplay@mpv:
     ipc_path: \\.\pipe\mpvSyncplaySocket
-  monitored: [syncplay@mpv, plex]
+  mpv:
+    ipc_path: \\.\pipe\mpvsocket
+  monitored: [syncplay@mpv, mpv, plex]
 version: "1.0"

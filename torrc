@@ -1,5 +1,7 @@
 # vim: ft=properties
 DataDirectory C:\Users\User\AppData\Local\tor
+# http proxy added for downloading aimp
+HTTPTunnelPort 8118
 SocksPort 9050
 SocksPolicy accept 127.0.0.1
 SocksPolicy reject *

@@ -2,5 +2,9 @@
   "$schema": "https://aka.ms/winget-settings.schema.json",
   "network": {
     "downloader": "wininet"
+  },
+  "experimentalFeatures": {
+    "sideBySide": false,
+    "proxy": true
   }
 }

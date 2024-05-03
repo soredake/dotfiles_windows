@@ -1,0 +1,17 @@
+[
+  {
+    "alang": "*",
+    "slang": [ "eng?", "en?", "und" ],
+    "whitelist": [ "sdh" ]
+  },
+  {
+    "alang": ["jpn", "ja"],
+    "slang": [ "eng?", "en?", "und" ],
+    "blacklist": [ "songs", "signs", "forced" ]
+  },
+  {
+      "alang": "*",
+      "slang": [ "eng?", "en?", "und" ],
+      "condition": "sub.id == 2"
+  }
+]
