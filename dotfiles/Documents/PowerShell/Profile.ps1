@@ -177,6 +177,10 @@ function multipassdeleteportforward {
   )
   sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
 }
+function MultipassExportLogsFromLastHour {
+  Get-WinEvent -FilterHashtable @{LogName = 'Application'; ProviderName = 'Multipass'; StartTime = (Get-Date).AddHours(-1) } | Out-File -FilePath $HOME\Export.txt
+}
+
 
 # Loading private powershell profile
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"

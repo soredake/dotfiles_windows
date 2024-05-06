@@ -41,7 +41,11 @@ Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
 
 sudo {
   # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable"
+  # https://www.outsidethebox.ms/22048/
+  # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
+  # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
+  # Get tips and suggestions when using Windows…: WindowsTips -Disable
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable"
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
@@ -49,7 +53,7 @@ sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock wacup XPFM11Z0W10R7G xp8jrf5sxv03zm
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock XPFM11Z0W10R7G xp8jrf5sxv03zm
 
   # input-ipc-server support is broken AGAIN in 1.7.3 https://github.com/Syncplay/syncplay/issues/529#issuecomment-2083327441
   winget install -h --id=Syncplay.Syncplay -v "1.7.2" -e
@@ -72,10 +76,10 @@ sudo {
   choco install -y --pin nerd-fonts-hack
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
   choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
-  
+
   # https://github.com/bcurran3/ChocolateyPackages/issues/48
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
-  
+
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
   choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
@@ -121,6 +125,8 @@ sudo {
   # TODO: test winget + proxinject / proxychains
   # [net.webrequest]::defaultwebproxy = new-object net.webproxy "http://127.0.0.1:8118"
   # scoop install aimp
+  # TODO: waiting for AIMP pr to be merged
+  #winget install -h AIMP.AIMP --proxy "http://127.0.0.1:8118" --architecture x86
 
   # Task for enabling language change by pressing right ctrl
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
@@ -152,6 +158,8 @@ sudo {
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
   # I don't need defender https://remontka.pro/windows-defender-turn-off/
+  # Why i disabled defender: https://github.com/microsoft/winget-cli/issues/3505#issuecomment-1666813120 https://github.com/ScoopInstaller/Scoop/wiki/Antivirus-and-Anti-Malware-Problems https://github.com/microsoft/WSL/issues/8995 https://github.com/microsoft/WSL/issues/1932
+  # TODO: https://github.com/microsoft/devhome/issues/1983#issuecomment-1837182515
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v DisableAntiSpyware /t REG_DWORD /d 1 /f
   reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v ServiceKeepAlive /t REG_DWORD /d 0 /f
   # reg add 'HKLM\SOFTWARE\Policies\Microsoft\Microsoft Antimalware\SpyNet' /v SubmitSamplesConsent /t REG_DWORD /d 0 /f

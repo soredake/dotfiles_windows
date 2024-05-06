@@ -31,6 +31,8 @@ Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
+# https://github.com/microsoft/winget-pkgs/pull/151684
+dokan-dev.Dokany
 # input-ipc-server support is broken AGAIN in 1.7.3 https://github.com/Syncplay/syncplay/issues/529#issuecomment-2083327441
 Syncplay.Syncplay
 # WAU updating enabled back until https://github.com/microsoft/vscode/issues/52855 is fixed
