@@ -26,15 +26,13 @@ Ubisoft.Connect
 SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
-VMware.WorkstationPro
+#VMware.WorkstationPro
 Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber
 # https://github.com/microsoft/winget-pkgs/pull/151684
 dokan-dev.Dokany
-# input-ipc-server support is broken AGAIN in 1.7.3 https://github.com/Syncplay/syncplay/issues/529#issuecomment-2083327441
-Syncplay.Syncplay
 # WAU updating enabled back until https://github.com/microsoft/vscode/issues/52855 is fixed
 #Microsoft.VisualStudioCode
 # https://github.com/canonical/multipass/issues/3442
@@ -51,11 +49,3 @@ Oracle.VirtualBox
 Microsoft.DotNet.DesktopRuntime.6
 # https://github.com/microsoft/winget-pkgs/issues/85901 https://github.com/microsoft/winget-cli/issues/1831
 Microsoft.XNARedist
-# https://github.com/microsoft/winget-cli/issues/4044
-#Ryujinx.Ryujinx
-#LesFerch.WinSetView
-Haali.WinUtils.lswitch
-#yt-dlp.yt-dlp
-#Rclone.Rclone
-#Gyan.FFmpeg
-#lycheeverse.lychee

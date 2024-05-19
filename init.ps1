@@ -1,13 +1,12 @@
 $env:r = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-setx PIPX_BIN_DIR $env:LOCALAPPDATA\Programs\Python\Python312\Scripts
+
+# https://github.com/ScoopInstaller/Extras/issues/13073
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
 # Link winget settings early
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-# Currently this feature is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357 https://github.com/microsoft/winget-cli/issues/4425
-# "experimentalFeatures": {
-#   "sideBySide": true
-# }
+# sideBySide feature currently is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357 https://github.com/microsoft/winget-cli/issues/4425
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$HOME\git\dotfiles_windows\winget-settings.json"
 
 # https://github.com/ScoopInstaller/Install/issues/70
@@ -16,15 +15,12 @@ if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
 
-# Configuring scoop to use NanaZip
-scoop config use_external_7zip true
-
 # Gsudo installation and configuration
 scoop install gsudo
 sudo config CacheMode Auto
 
 sudo {
-  # enabling proxy
+  # Enabling proxy
   winget settings --enable ProxyCommandLineOptions
 
   # https://remontka.pro/enable-developer-mode-windows/
@@ -35,6 +31,7 @@ sudo {
   winget install --no-upgrade -h --accept-source-agreements WingetPathUpdater
 
   # Install git with machine scope until their installer will have support for user scope https://github.com/git-for-windows/git/discussions/4399#discussioncomment-5877325 https://github.com/microsoft/winget-cli/issues/3240
+  # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
 
   # Repository needs to be cloned in this scope in order for git to be in PATH until git installer gains support for per-user non-uac install

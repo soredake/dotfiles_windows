@@ -11,26 +11,12 @@ Write-Output "`e[6 q"
 # https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
-# Mirroring linux shells bindings and completion menu
-Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
-Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
-# https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
-Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
-  [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchBackward()
-  [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
-}
-Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
-  [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
-  [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
-}
-
 function upgradeall {
   # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
   topgrade --cleanup --only 'powershell' 'node' 'scoop'
   pipx upgrade-all
   psc update *
-  yt-dlp --update-to master
+  #yt-dlp --update-to master
 }
 
 # TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
@@ -100,9 +86,11 @@ function backup {
   # TODO: add plex
   # TODO: C:\Users\user\AppData\Roaming\AIMP
   # Software
+  pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
   rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
   rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
   rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"--delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
+  rclone sync -P "${env:ProgramFiles(x86)}\FanControl\Configurations" "$HOME\Мой диск\документы\backups\fancontrol"
   rclone sync -P $HOME\scoop\persist\rclone "$HOME\Мой диск\документы\backups\rclone"
   rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
   rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --delete-excluded --exclude "Logs/"
@@ -184,3 +172,17 @@ function MultipassExportLogsFromLastHour {
 
 # Loading private powershell profile
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"
+
+# Mirroring linux shells bindings and completion menu
+Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
+Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
+# https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
+  [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchBackward()
+  [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
+}
+Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
+  [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
+  [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
+}

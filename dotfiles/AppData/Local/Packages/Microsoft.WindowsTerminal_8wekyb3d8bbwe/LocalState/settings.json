@@ -33,6 +33,7 @@
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "firstWindowPreference": "persistedWindowLayout",
     "newTabMenu": 
     [
         {
@@ -103,12 +104,6 @@
                 "hidden": true,
                 "name": "Ubuntu-22.04",
                 "source": "Windows.Terminal.Wsl"
-            },
-            {
-                "guid": "{5fb123f1-af88-5b5c-8953-d14a8def1978}",
-                "hidden": false,
-                "name": "PowerShell 7",
-                "source": "Windows.Terminal.PowershellCore"
             }
         ]
     },
@@ -483,6 +478,7 @@
             "yellow": "#808000"
         }
     ],
+    "startOnUserLogin": true,
     "theme": "light",
     "themes": [],
     "useAcrylicInTabRow": false,

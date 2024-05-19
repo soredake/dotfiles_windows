@@ -19,14 +19,14 @@ if (!$env:vm) {
 scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
 
 # Installing my winget packages
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements 9N8G7TSCL18R XP8K0HKJFRXGCK 9NZVDKPMR9RD Discord.Discord 9P2B8MCSVPLN 9NTXGKQ8P7N0 Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch mpv.net SteamGridDB.RomManager 64gram postman responsivelyapp komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim Reshade.Setup.AddonsSupport Playnite.Playnite PragmaTwice.proxinject lycheeverse.lychee
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Discord.Discord Viber.Viber Python.Python.3.12 Haali.WinUtils.lswitch SteamGridDB.RomManager 64gram komac nomacs erengy.Taiga itch.io specialk IanWalton.JellyfinMPVShim Reshade.Setup.AddonsSupport Playnite.Playnite PragmaTwice.proxinject lycheeverse.lychee HumbleBundle.HumbleApp XP8K0HKJFRXGCK 9NZVDKPMR9RD 9P2B8MCSVPLN 9NTXGKQ8P7N0
 
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, NodeJS installer uses machine scope https://github.com/nodejs/version-management/issues/16
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
-# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee yuzu-pineapple (only multiplayer) and syncthingtray
-# https://github.com/ScoopInstaller/Scoop/issues/2035 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
-scoop install cheat-engine nodejs-lts ryujinx winsetview yt-dlp ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep windows11-classic-context-menu mpv-git sudachi proxychains "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
+# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), nodejs and syncthingtray
+# https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
+scoop install cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
 scoop hold ryujinx tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -49,22 +49,17 @@ sudo {
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
-  # TODO: switch to plain 7zip when 24.XX will be stable https://www.7-zip.org/
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi 7zip-zstd eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock XPFM11Z0W10R7G xp8jrf5sxv03zm
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay VMware.WorkstationPro Cloudflare.Warp xp8jrf5sxv03zm
 
-  # input-ipc-server support is broken AGAIN in 1.7.3 https://github.com/Syncplay/syncplay/issues/529#issuecomment-2083327441
-  winget install -h --id=Syncplay.Syncplay -v "1.7.2" -e
-
-  # >=1.13.0 is broken https://github.com/canonical/multipass/issues/3442
+  # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
 
-  # PowerToys is here because i need to remap my broken ESC key to PAUSE
+  # PowerToys is here because I need to remap my broken ESC key to PAUSE
   winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys
-
-  # Windows 11 installer wipes Program Files directories so i install Steam to user directory now
+  # Windows 11 installer wipes Program Files directories so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
 
   # This requires UAC
@@ -72,7 +67,7 @@ sudo {
   scoop install rom-properties-np
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack humble-app
+  choco install -y syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
   choco install -y --pin nerd-fonts-hack
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
   choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
@@ -157,19 +152,8 @@ sudo {
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
-  # I don't need defender https://remontka.pro/windows-defender-turn-off/
-  # Why i disabled defender: https://github.com/microsoft/winget-cli/issues/3505#issuecomment-1666813120 https://github.com/ScoopInstaller/Scoop/wiki/Antivirus-and-Anti-Malware-Problems https://github.com/microsoft/WSL/issues/8995 https://github.com/microsoft/WSL/issues/1932
-  # TODO: https://github.com/microsoft/devhome/issues/1983#issuecomment-1837182515
-  reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v DisableAntiSpyware /t REG_DWORD /d 1 /f
-  reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender' /v ServiceKeepAlive /t REG_DWORD /d 0 /f
-  # reg add 'HKLM\SOFTWARE\Policies\Microsoft\Microsoft Antimalware\SpyNet' /v SubmitSamplesConsent /t REG_DWORD /d 0 /f
-  reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableIOAVProtection /t REG_DWORD /d 1 /f
-  reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection' /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f
-
-  # Register vscode for restart
-  # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
-  # https://github.com/microsoft/vscode/issues/211583
-  New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value "C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+  # I don't need this file types scanned
+  Add-MpPreference -ExclusionExtension ".cbz", ".jpeg", ".jpg", ".png", ".webp", ".avif", ".jxl", ".gif", ".mp3", ".flac", ".ogg", ".wav", ".mkv", ".avi", ".mp4", ".m4v", ".mpg", ".ts", ".webm", ".parts", ".ass", ".srt", ".vhd", ".vhdx", ".vdi", ".vmdk", ".xci", ".torrents"
 
   # I need local manifests
   winget settings --enable LocalManifestFiles
@@ -191,6 +175,7 @@ sudo {
     "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
     "Microsoft.ZuneMusic_8wekyb3d8bbwe",
     "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+    "Microsoft.WindowsNotepad_8wekyb3d8bbwe"
     "Microsoft.OfficeDeploymentTool"
   )
   foreach ($package in $packages) {
@@ -205,39 +190,38 @@ wsl --install --no-launch Ubuntu-22.04
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
 
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
-# TODO: ask microsft to document this installer options
 winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
-pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" subliminal guessit
+# Add pipx bin dir to PATH
+pipx ensurepath
+# Refresh PATH env
+. "$HOME/refrenv.ps1"
+# Installing pipx packages
+pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop" guessit
 # https://github.com/jjjake/internetarchive/pull/621
 pipx inject tubeup setuptools
 pipx inject internetarchive setuptools
-pipx inject subliminal setuptools
+# https://github.com/Diaoul/subliminal/issues/1061
+#pipx inject subliminal setuptools
 # https://github.com/guessit-io/guessit/issues/766
 pipx inject guessit setuptools
 
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-# TODO: CompletionPredictor is breaks PSCompletions https://github.com/PowerShell/CompletionPredictor/issues/37
+# CompletionPredictor is breaks PSCompletions https://github.com/PowerShell/CompletionPredictor/issues/37
 Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions
 psc add npm winget scoop
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
-TODO: dedupe this list
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv.net\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/reset-auto/sub-select.lua"
 New-Item -Path $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
-curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/serenae-fansubs/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/reset-auto/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua"
+curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua"
 Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
-Expand-Archive "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
-Move-Item "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\*" "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
+Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
+Move-Item -Force "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\*" "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
+Remove-Item -Recurse -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu"
 
 # https://github.com/mrxdst/webtorrent-mpv-hook
 New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$HOME\scoop\persist\nodejs-lts\bin\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
-
-# TODO: make MPV command name configurable
-(Get-Content "$env:APPDATA\mpv.net\scripts\webm.lua") -replace '"mpv"', '"mpvnet.exe"' | Set-Content "$env:APPDATA\mpv.net\scripts\webm.lua"
-
 # https://github.com/CogentRedTester/mpv-sub-select/issues/30
-(Get-Content "$env:APPDATA\mpv.net\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv.net\scripts\sub-select.lua"
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua"
 
 # Multipass setup
@@ -257,28 +241,27 @@ psc config module_update 0
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
-# https://remontka.pro/wake-timers-windows/
-# https://winaero.com/windows-11-may-soon-install-monthly-updates-without-a-reboot/
-# powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
-
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 reg add 'HKCU\Control Panel\Mouse' /v MouseSpeed /t REG_SZ /d 0 /f
 reg add 'HKCU\Control Panel\Mouse' /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add 'HKCU\Control Panel\Mouse' /v MouseThreshold2 /t REG_SZ /d 0 /f
 
-# https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-
 # Shortcuts https://github.com/microsoft/winget-cli/issues/3314
-Iort-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
+Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 Invoke-WebRequest -Uri "https://icon-icons.com/downloadimage.php?id=152991&root=2552/ICO/48/&file=firefox_browser_logo_icon_152991.ico" -OutFile "$env:TEMP\firefox.ico"
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $desktopPath -Target "$env:LOCALAPPDATA\Microsoft\WindowsApps\firefox.exe" -Arguments "-P letyshops" -IconPath "$env:TEMP\firefox.ico"
 New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $desktopPath -Target "$env:LOCALAPPDATA\Microsoft\WindowsApps\firefox.exe" -Arguments "-P alwaysonproxy" -IconPath "$env:TEMP\firefox.ico"
 New-Shortcut -Name 'BreakTimer - disable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 
-# WinSetView https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
+# WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
+# https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
 winsetview.ps1 $PSScriptRoot\explorer-preset.ini
 
 # Register mpv-git associations
 sudo cmd /c $HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat
+
+# Start Visual Studio Code at logon
+# https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
+# https://github.com/microsoft/vscode/issues/211583
+New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
