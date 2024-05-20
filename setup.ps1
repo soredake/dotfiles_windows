@@ -194,7 +194,7 @@ winget install vscode --no-upgrade -h --accept-package-agreements --accept-sourc
 
 # Add pipx bin dir to PATH
 pipx ensurepath
-# Refresh PATH env
+# Refreshing PATH env
 . "$HOME/refrenv.ps1"
 # Installing pipx packages
 pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop" guessit
