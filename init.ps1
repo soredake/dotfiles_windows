@@ -10,10 +10,12 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/mai
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$HOME\git\dotfiles_windows\winget-settings.json"
 
 # https://github.com/ScoopInstaller/Install/issues/70
+# scoop installation and configuration
 where.exe scoop
 if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
+scoop config use_external_7zip true
 
 # Gsudo installation and configuration
 scoop install gsudo

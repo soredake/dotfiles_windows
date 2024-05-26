@@ -12,11 +12,11 @@ Write-Output "`e[6 q"
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
 function upgradeall {
+  # `wsl` step can run topgrade in WSL
   # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
-  topgrade --cleanup --only 'powershell' 'node' 'scoop'
+  topgrade --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
   pipx upgrade-all
   psc update *
-  #yt-dlp --update-to master
 }
 
 # TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
@@ -66,7 +66,7 @@ function listallsoftware { winget list --source winget | Sort-Object Name }
 function setdiscardmultipass { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
 function showmultipassvminfo { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
-function multipassdeleteportforward {
+function MultipassDeletePortForward {
   param (
     [string]$name
   )

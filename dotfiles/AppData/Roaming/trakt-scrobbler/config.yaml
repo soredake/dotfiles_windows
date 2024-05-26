@@ -14,7 +14,7 @@ fileinfo:
 players:
   syncplay@mpv:
     ipc_path: \\.\pipe\mpvSyncplaySocket
-  mpv:
-    ipc_path: \\.\pipe\mpvsocket
-  monitored: [syncplay@mpv, mpv, plex]
+  # mpv:
+  #   ipc_path: \\.\pipe\plexshimsocket
+  monitored: [syncplay@mpv, plex]
 version: "1.0"

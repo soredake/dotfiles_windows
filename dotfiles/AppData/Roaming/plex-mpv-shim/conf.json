@@ -36,7 +36,7 @@
     "media_key_seek": false,
     "menu_mouse": true,
     "mpv_ext": true,
-    "mpv_ext_ipc": "mpvsocket",
+    "mpv_ext_ipc": "plexshimsocket",
     "mpv_ext_no_ovr": true,
     "mpv_ext_path": "C:\\Users\\user\\scoop\\apps\\mpv-git\\current\\mpv.exe",
     "mpv_ext_start": true,

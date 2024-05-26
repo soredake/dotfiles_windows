@@ -26,7 +26,7 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), nodejs and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
-scoop install cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
+scoop install 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
 scoop hold ryujinx tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -35,6 +35,11 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim -ItemTyp
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
 pwsh $HOME\git\ff2mpv\install.ps1 firefox
+
+# https://github.com/stax76/run-hidden TODO:request scoop/winget/choco
+# https://github.com/PowerShell/PowerShell/issues/3028#issuecomment-1205088096
+Invoke-WebRequest -Uri "https://github.com/stax76/run-hidden/releases/download/v1.2/run-hidden-v1.2.zip" -OutFile "$HOME/Downloads/run-hidden.zip"
+Expand-Archive -Force "$HOME/Downloads/run-hidden.zip" -DestinationPath "$HOME"
 
 # Downloading sophiscript
 Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
@@ -45,14 +50,14 @@ sudo {
   # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
   # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
   # Get tips and suggestions when using Windows…: WindowsTips -Disable
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable"
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay VMware.WorkstationPro Cloudflare.Warp xp8jrf5sxv03zm
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp xp8jrf5sxv03zm
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
@@ -90,8 +95,9 @@ sudo {
 
   # Winget-AutoUpdate installation
   git clone --depth=1 "https://github.com/Romanitho/Winget-AutoUpdate" "$HOME/Downloads/Winget-AutoUpdate"
-  ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval Weekly -DoNotUpdate -UpdatesAtTime 11AM
+  ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval BiDaily -DoNotUpdate -UpdatesAtTime 11AM
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
+  dploy stow $PSScriptRoot\WAU C:\ProgramData\Winget-AutoUpdate
 
   # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
   Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
@@ -101,10 +107,9 @@ sudo {
   New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$HOME\git\dotfiles_windows\dotfiles\Documents\PowerShell\Profile.ps1"
 
   # Linking dotfiles
-  dploy stow WAU C:\ProgramData\Winget-AutoUpdate
-  dploy stow dotfiles $HOME
+  dploy stow $PSScriptRoot\dotfiles $HOME
   # https://github.com/arecarn/dploy/issues/13
-  dploy stow mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
+  dploy stow $PSScriptRoot\mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
 
   # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
   New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
@@ -114,9 +119,6 @@ sudo {
   sc start tor
 
   # Installing AIMP requires proxy
-  # function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
-  # proxinjector_cli -s -p 127.0.0.1:9050 -e 'choco install -y aimp'
-  # TODO: install/update with proxy
   # TODO: test winget + proxinject / proxychains
   # [net.webrequest]::defaultwebproxy = new-object net.webproxy "http://127.0.0.1:8118"
   # scoop install aimp
@@ -128,11 +130,10 @@ sudo {
   Start-ScheduledTask -TaskName "switch language with right ctrl"
 
   # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
-  # TODO: how to make it start silently, without a window?
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "$HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\run-hidden.exe" -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "$HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\run-hidden.exe" -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Backup task
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
@@ -149,6 +150,9 @@ sudo {
   # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
 
+  # Register mpv-git associations
+  cmd /c $HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat
+
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
@@ -162,6 +166,7 @@ sudo {
   # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
   # --accept-source-agreements
   # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
+  # Note: after removing notepad you no longer can create .txt files, so don't do this
   $packages = @(
     "Clipchamp.Clipchamp_yxz26nhyzhsrt",
     "Microsoft.Todos_8wekyb3d8bbwe",
@@ -175,7 +180,6 @@ sudo {
     "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
     "Microsoft.ZuneMusic_8wekyb3d8bbwe",
     "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
-    "Microsoft.WindowsNotepad_8wekyb3d8bbwe"
     "Microsoft.OfficeDeploymentTool"
   )
   foreach ($package in $packages) {
@@ -194,8 +198,10 @@ winget install vscode --no-upgrade -h --accept-package-agreements --accept-sourc
 
 # Add pipx bin dir to PATH
 pipx ensurepath
+
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
+
 # Installing pipx packages
 pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop" guessit
 # https://github.com/jjjake/internetarchive/pull/621
@@ -258,10 +264,12 @@ New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALA
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
 winsetview.ps1 $PSScriptRoot\explorer-preset.ini
 
-# Register mpv-git associations
-sudo cmd /c $HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat
-
 # Start Visual Studio Code at logon
 # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
 # https://github.com/microsoft/vscode/issues/211583
 New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
+
+# https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
+
+# TODO: autostart plex-mpv-shim

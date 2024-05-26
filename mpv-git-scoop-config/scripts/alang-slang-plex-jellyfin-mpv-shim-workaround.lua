@@ -1,6 +1,16 @@
 -- Import the mpv functions
 local mp = require 'mp'
 
+-- Function to split a comma-separated string into a table
+local function split_string(inputstr, sep)
+    sep = sep or ","
+    local t = {}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
 -- Function to select tracks according to existing 'alang' and 'slang' properties
 local function set_alang_slang_settings()
     -- Print a debug message
@@ -32,9 +42,13 @@ local function set_alang_slang_settings()
         end
     end
 
-    -- Preferred languages (these should match your alang and slang settings)
-    local preferred_audio_langs = {"ja", "jap", "jpn", "ko", "kor", "eng", "en", "english"}
-    local preferred_subtitle_langs = {"en-en", "eng", "en", "uk-uk", "uk", "ru-ru", "rus", "ru"}
+    -- Get alang and slang properties from mpv
+    local alang = mp.get_property("alang")
+    local slang = mp.get_property("slang")
+
+    -- Generate preferred languages list from alang and slang properties
+    local preferred_audio_langs = split_string(alang)
+    local preferred_subtitle_langs = split_string(slang)
 
     -- Select the best audio and subtitle tracks based on preferred languages
     local best_audio_track = select_best_track(audio_tracks, preferred_audio_langs)
@@ -58,8 +72,14 @@ local function delayed_set_alang_slang_settings()
     mp.add_timeout(3, set_alang_slang_settings)
 end
 
--- Register the event handler for playback-restart
-mp.register_event("playback-restart", delayed_set_alang_slang_settings)
+-- Check if the input-ipc-server property is set to plexshimsocket
+local ipc_server = mp.get_property("input-ipc-server")
 
--- Print a debug message
-print("Script has started, waiting for playback-restart event...")
+if ipc_server == "plexshimsocket" then
+    -- Register the event handler for playback-restart
+    mp.register_event("playback-restart", delayed_set_alang_slang_settings)
+    -- Print a debug message
+    print("Script has started, waiting for playback-restart event...")
+else
+    print("input-ipc-server is not set to plexshimsocket, script will not run.")
+end
