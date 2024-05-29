@@ -22,7 +22,7 @@ scoop install gsudo
 sudo config CacheMode Auto
 
 sudo {
-  # Enabling proxy
+  # Enabling proxy support
   winget settings --enable ProxyCommandLineOptions
 
   # https://remontka.pro/enable-developer-mode-windows/

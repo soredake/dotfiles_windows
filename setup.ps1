@@ -26,7 +26,7 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), nodejs and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
-scoop install 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
+scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
 scoop hold ryujinx tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -36,7 +36,7 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim -ItemTyp
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
 pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
-# https://github.com/stax76/run-hidden TODO:request scoop/winget/choco
+# https://github.com/stax76/run-hidden
 # https://github.com/PowerShell/PowerShell/issues/3028#issuecomment-1205088096
 Invoke-WebRequest -Uri "https://github.com/stax76/run-hidden/releases/download/v1.2/run-hidden-v1.2.zip" -OutFile "$HOME/Downloads/run-hidden.zip"
 Expand-Archive -Force "$HOME/Downloads/run-hidden.zip" -DestinationPath "$HOME"
@@ -50,20 +50,21 @@ sudo {
   # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
   # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
   # Get tips and suggestions when using Windows…: WindowsTips -Disable
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Windows10ContextMenu -Enable", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "CastToDeviceContext -Hide", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable"
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp xp8jrf5sxv03zm
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp xp8jrf5sxv03zm
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
 
   # PowerToys is here because I need to remap my broken ESC key to PAUSE
-  winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys
+  # WAU for some reason tries to update OpenJS.NodeJS.LTS in user scope even though it is installed system-wide
+  winget install --scope machine --no-upgrade -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys OpenJS.NodeJS.LTS
   # Windows 11 installer wipes Program Files directories so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
 
@@ -187,9 +188,6 @@ sudo {
   }
 }
 
-# WSL2
-wsl --install --no-launch Ubuntu-22.04
-
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
 
@@ -205,8 +203,8 @@ pipx ensurepath
 # Installing pipx packages
 pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop" guessit
 # https://github.com/jjjake/internetarchive/pull/621
-pipx inject tubeup setuptools
-pipx inject internetarchive setuptools
+#pipx inject tubeup setuptools
+#pipx inject internetarchive setuptools
 # https://github.com/Diaoul/subliminal/issues/1061
 #pipx inject subliminal setuptools
 # https://github.com/guessit-io/guessit/issues/766
@@ -225,7 +223,7 @@ Move-Item -Force "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\
 Remove-Item -Recurse -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu"
 
 # https://github.com/mrxdst/webtorrent-mpv-hook
-New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$HOME\scoop\persist\nodejs-lts\bin\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
+New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
 # https://github.com/CogentRedTester/mpv-sub-select/issues/30
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua"
@@ -237,6 +235,7 @@ if (!$env:vm) {
   multipass set client.gui.autostart=no
   multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount D:\:/mnt/d_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
+  multipass stop
 }
 
 # Misc
@@ -268,8 +267,10 @@ winsetview.ps1 $PSScriptRoot\explorer-preset.ini
 # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
 # https://github.com/microsoft/vscode/issues/211583
 New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
+# TODO: autostart plex-mpv-shim
 
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
 
-# TODO: autostart plex-mpv-shim
+# WSL2
+wsl --install --no-launch Ubuntu-22.04

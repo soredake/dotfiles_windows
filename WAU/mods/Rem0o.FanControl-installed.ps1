@@ -1,1 +1,2 @@
-Start-Process -FilePath "C:\Program Files (x86)\FanControl\FanControl.exe" -WindowStyle Hidden
+# TODO: request starting fancontrol after upgrading
+Start-Process -FilePath "${env:ProgramFiles(x86)}\FanControl\FanControl.exe" -WindowStyle Hidden
