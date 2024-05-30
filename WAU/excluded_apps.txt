@@ -9,12 +9,12 @@ Google.GoogleDrive
 IG.IGClient
 ItchIo.Itch
 LogMeIn.Hamachi
-Microsoft.DevHome
-Microsoft.Edge
-Microsoft.EdgeWebView2Runtime
-Microsoft.Office
-Microsoft.PowerShell
-Microsoft.WindowsTerminal
+#Microsoft.DevHome
+#Microsoft.Edge
+#Microsoft.EdgeWebView2Runtime
+#Microsoft.Office
+#Microsoft.PowerShell
+#Microsoft.WindowsTerminal
 Parsec.Parsec
 #Plex.Plex
 Plex.PlexMediaServer
@@ -26,7 +26,6 @@ Ubisoft.Connect
 SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
-#VMware.WorkstationPro
 Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
@@ -37,12 +36,11 @@ dokan-dev.Dokany
 #Microsoft.VisualStudioCode
 # https://github.com/canonical/multipass/issues/3442
 Canonical.Multipass
-# https://github.com/Romanitho/Winget-AutoUpdate/issues/594
-Retroshare.Retroshare
 # https://github.com/microsoft/winget-cli/issues/4158 https://github.com/microsoft/winget-cli/issues/4290
 Microsoft.DotNet.DesktopRuntime.8
 # https://github.com/qbittorrent/qBittorrent/issues/18115 https://github.com/qbittorrent/qBittorrent/issues/18582
-#qBittorrent.qBittorrent
+# Hold updates until stable 5.0.0 is released https://github.com/qbittorrent/qBittorrent/issues/20305
+qBittorrent.qBittorrent
 # Same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
 Oracle.VirtualBox
 # https://github.com/microsoft/winget-cli/issues?q=is%3Aissue+sort%3Aupdated-desc+Microsoft.DotNet.DesktopRuntime.6+is%3Aopen https://github.com/microsoft/winget-cli/issues/2995

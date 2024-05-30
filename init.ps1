@@ -1,4 +1,4 @@
-$env:r = "$HOME\git\dotfiles_windows"
+$env:repository = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 # https://github.com/ScoopInstaller/Extras/issues/13073
@@ -37,8 +37,8 @@ sudo {
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
 
   # Repository needs to be cloned in this scope in order for git to be in PATH until git installer gains support for per-user non-uac install
-  git clone "https://github.com/soredake/dotfiles_windows" $env:r
+  git clone "https://github.com/soredake/dotfiles_windows" $env:repository
 }
 
 winget install -h --accept-package-agreements 9MZ1SNWT0N5D
-pwsh $env:r\setup.ps1
+pwsh $env:repository\setup.ps1
