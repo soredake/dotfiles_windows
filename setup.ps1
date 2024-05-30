@@ -30,7 +30,7 @@ scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx wins
 scoop hold ryujinx tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim -ItemType Directory
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
@@ -110,7 +110,7 @@ sudo {
   # Linking dotfiles
   dploy stow $PSScriptRoot\dotfiles $HOME
   # https://github.com/arecarn/dploy/issues/13
-  dploy stow $PSScriptRoot\mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
+  #dploy stow $PSScriptRoot\mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
 
   # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
   New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
@@ -215,7 +215,6 @@ Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions
 psc add npm winget scoop
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
-New-Item -Path $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua"
 Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
 Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
