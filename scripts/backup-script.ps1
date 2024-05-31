@@ -2,9 +2,6 @@ $host.ui.RawUI.WindowTitle = "Backup task"
 
 $env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
 
-# Oracle server backup
-#backup-oracle
-
 # Moving unsorted files back to main folder
 Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
   $destFile = "$HOME\Мой диск\$($_.Name)"
@@ -18,7 +15,7 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
 
 # TODO: what files/folders are used by running processes?
 # TODO: add plex
-# TODO: C:\Users\user\AppData\Roaming\AIMP
+# TODO: Add AIMP C:\Users\user\AppData\Roaming\AIMP
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"

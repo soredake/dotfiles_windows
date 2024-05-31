@@ -9,34 +9,37 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Exp
 Write-Output "`e[6 q"
 
 # https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+#Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
 function upgradeall {
   # `wsl` step can run topgrade in WSL
   # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
-  topgrade --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
+  topgrade --no-retry --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
   pipx upgrade-all
   psc update *
 }
 
-# TODO: move this to Task Scheduler and launch them using Start-ScheduledTask to avoid UAC
 function lycheefixon {
-  sudo {
-    Get-NetAdapter | Where-Object { $_.Name -ne "Ethernet 3" } | Disable-NetAdapter -Confirm:$false
-  }
+  Stop-Service -Name Hamachi2Svc
+  Get-NetAdapter | Where-Object { $_.Name -ne "Ethernet 3" } | Disable-NetAdapter -Confirm:$false
 }
 function lycheefixoff {
-  sudo {
-    Get-NetAdapter | Enable-NetAdapter
-  }
+  Start-Service -Name Hamachi2Svc
+  Get-NetAdapter | Enable-NetAdapter
+}
+function StartLycheeFix {
+  Start-ScheduledTask -TaskName "Start lycheefix"
+}
+function StopLycheeFix {
+  Start-ScheduledTask -TaskName "Stop lycheefix"
 }
 
 function checklinks {
-  #lycheefixon
+  #StartLycheeFix
   Set-Location "$HOME\Мой диск\документы\archiveorg"
   lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 *.txt
   lychee --max-concurrency 5 ..\old\linux.txt
-  #lycheefixoff
+  #StopLycheeFix
 }
 
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
@@ -63,9 +66,9 @@ function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 function listallsoftware { winget list --source winget | Sort-Object Name }
 
 # https://github.com/canonical/multipass/issues/3112
-function setdiscardmultipass { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+function MultipassSetDiscard { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
-function showmultipassvminfo { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
+function MultipassShowVmInfo { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
 function MultipassDeletePortForward {
   param (
     [string]$name

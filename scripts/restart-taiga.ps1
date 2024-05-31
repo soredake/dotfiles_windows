@@ -1,4 +1,4 @@
 $host.ui.RawUI.WindowTitle = "Restarting Taiga"
 taskkill /im taiga.exe
-Start-Sleep -Seconds 60
-Start-Process $env:APPDATA\Taiga\Taiga.exe
+Start-Sleep -Seconds 10
+Start-Process -FilePath "$env:APPDATA\Taiga\Taiga.exe" -WorkingDirectory "$env:APPDATA\Taiga\data\db"

@@ -27,6 +27,7 @@ SteelSeries.GG
 TomWatson.BreakTimer
 TorProject.TorBrowser
 Valve.Steam
+RamenSoftware.Windhawk
 ViGEm.HidHide
 ViGEm.ViGEmBus
 Viber.Viber

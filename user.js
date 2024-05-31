@@ -4,16 +4,15 @@ user_pref("browser.theme.dark-private-windows", false);
 
 // TODO: Add ui option to disable built-in extensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1230656
-// https://www.neowin.net/news/microsoft-edge-will-soon-let-you-remove-some-of-its-unnecessary-features/
 user_pref("extensions.pocket.enabled", false);
 
 // https://www.ghacks.net/2024/02/22/how-to-enable-tab-previews-in-firefox/
 user_pref("browser.tabs.cardPreview.enabled", true);
 
-// DOH by default
+// DNS Over HTTPS by default
 user_pref("network.trr.mode", 2);
 
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1874464
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1852752
 user_pref("network.dns.native_https_query", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
@@ -30,12 +29,12 @@ user_pref("network.predictor.enable-prefetch", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
 // user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
-// fonts are looking better with this
+// Fonts on windows are looking better with this
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
-// old scrollbars
+// Restore old thick scrollbars
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802694
 user_pref("widget.windows.overlay-scrollbars.enabled", false);
 
@@ -64,14 +63,12 @@ user_pref("network.http.max-persistent-connections-per-server", 10); // default=
 user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3
 user_pref("network.http.pacing.requests.enabled", false);
 user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour
-user_pref("network.dns.max_high_priority_threads", 8); // default=5
 user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS token caching (fast reconnects)
 user_pref("layout.css.grid-template-masonry-value.enabled", true);
 user_pref("dom.enable_web_task_scheduling", true);
-user_pref("layout.css.has-selector.enabled", true);
 user_pref("dom.security.sanitizer.enabled", true);
 
-/////////////////////////////////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
 user_pref("apz.overscroll.enabled", true); // DEFAULT NON-LINUX
 user_pref("general.smoothScroll", true); // DEFAULT
 user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 12);
@@ -79,8 +76,8 @@ user_pref("general.smoothScroll.msdPhysics.enabled", true);
 user_pref("general.smoothScroll.msdPhysics.motionBeginSpringConstant", 600);
 user_pref("general.smoothScroll.msdPhysics.regularSpringConstant", 650);
 user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaMS", 25);
-user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", 2.0);
+user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", "2");
 user_pref("general.smoothScroll.msdPhysics.slowdownSpringConstant", 250);
-user_pref("general.smoothScroll.currentVelocityWeighting", 1.0);
-user_pref("general.smoothScroll.stopDecelerationWeighting", 1.0);
+user_pref("general.smoothScroll.currentVelocityWeighting", "1");
+user_pref("general.smoothScroll.stopDecelerationWeighting", "1");
 user_pref("mousewheel.default.delta_multiplier_y", 300); // 250-400; adjust this number to your liking

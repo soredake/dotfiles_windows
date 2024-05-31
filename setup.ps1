@@ -36,11 +36,6 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\s
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
 pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
-# https://github.com/stax76/run-hidden
-# https://github.com/PowerShell/PowerShell/issues/3028#issuecomment-1205088096
-Invoke-WebRequest -Uri "https://github.com/stax76/run-hidden/releases/download/v1.2/run-hidden-v1.2.zip" -OutFile "$HOME/Downloads/run-hidden.zip"
-Expand-Archive -Force "$HOME/Downloads/run-hidden.zip" -DestinationPath "$HOME"
-
 # Downloading sophiscript
 Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
 
@@ -57,7 +52,8 @@ sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant
+  # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
@@ -109,8 +105,6 @@ sudo {
 
   # Linking dotfiles
   dploy stow $PSScriptRoot\dotfiles $HOME
-  # https://github.com/arecarn/dploy/issues/13
-  #dploy stow $PSScriptRoot\mpv-git-scoop-config $HOME\scoop\apps\mpv-git\current\portable_config
 
   # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
   New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
@@ -120,7 +114,6 @@ sudo {
   sc start tor
 
   # Installing AIMP requires proxy
-  # TODO: test winget + proxinject / proxychains
   # [net.webrequest]::defaultwebproxy = new-object net.webproxy "http://127.0.0.1:8118"
   # scoop install aimp
   # TODO: waiting for AIMP pr to be merged
@@ -130,26 +123,30 @@ sudo {
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
   Start-ScheduledTask -TaskName "switch language with right ctrl"
 
+  # Tasks for starting and stopping lycheefix
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixon") -TaskName "Start lycheefix"
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixoff") -TaskName "Stop lycheefix"
+
   # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\run-hidden.exe" -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\run-hidden.exe" -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Backup task
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Hidden -c backup") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
 
   # Upgrade everything with topgrade task
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-c upgradeall") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Hidden -c upgradeall") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
-  reg add 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' /v DisableStartupSound /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableStartupSound /t REG_DWORD /d 1 /f
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://aka.ms/AAnrbky https://aka.ms/AAnrixl
-  reg add 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization' /v NoLockScreen /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f
   # https://www.elevenforum.com/t/change-automatic-maintenance-time-in-windows-11.16687/
-  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v "Activation Boundary" /t REG_SZ /d "2001-01-01T08:00:00" /f
+  reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v "Activation Boundary" /t REG_SZ /d "2001-01-01T08:00:00" /f
   # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
-  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
 
   # Register mpv-git associations
   cmd /c $HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat
@@ -158,7 +155,7 @@ sudo {
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
   # I don't need this file types scanned
-  Add-MpPreference -ExclusionExtension ".cbz", ".jpeg", ".jpg", ".png", ".webp", ".avif", ".jxl", ".gif", ".mp3", ".flac", ".ogg", ".wav", ".mkv", ".avi", ".mp4", ".m4v", ".mpg", ".ts", ".webm", ".parts", ".ass", ".srt", ".vhd", ".vhdx", ".vdi", ".vmdk", ".xci", ".torrents"
+  Add-MpPreference -ExclusionExtension ".cbz", ".cbr", ".jpeg", ".jpg", ".png", ".webp", ".avif", ".jxl", ".gif", ".mp3", ".flac", ".ogg", ".wav", ".mkv", ".avi", ".mp4", ".m4v", ".mpg", ".ts", ".webm", ".parts", ".ass", ".srt", ".vhd", ".vhdx", ".vdi", ".vmdk", ".xci", ".nca", ".nsp", ".torrents"
 
   # I need local manifests
   winget settings --enable LocalManifestFiles
@@ -201,10 +198,7 @@ pipx ensurepath
 . "$HOME/refrenv.ps1"
 
 # Installing pipx packages
-pipx install internetarchive "git+https://github.com/arecarn/dploy.git" tubeup "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop" guessit
-# https://github.com/jjjake/internetarchive/pull/621
-#pipx inject tubeup setuptools
-#pipx inject internetarchive setuptools
+pipx install internetarchive tubeup guessit "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop"
 # https://github.com/Diaoul/subliminal/issues/1061
 #pipx inject subliminal setuptools
 # https://github.com/guessit-io/guessit/issues/766
@@ -212,8 +206,9 @@ pipx inject guessit setuptools
 
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 # CompletionPredictor is breaks PSCompletions https://github.com/PowerShell/CompletionPredictor/issues/37
-Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions
-psc add npm winget scoop
+# PSCompletions is no longer installed as I don't use it and it adds 2-3 seconds to load delay
+Install-Module -Name posh-git, PSAdvancedShortcut
+#psc add npm winget scoop
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua"
 Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
@@ -240,8 +235,8 @@ if (!$env:vm) {
 # Misc
 mkdir $HOME\torrents
 trakts autostart enable
-psc config update 0
-psc config module_update 0
+#psc config update 0
+#psc config module_update 0
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
@@ -272,5 +267,8 @@ New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Nam
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
 
-# WSL2
+# Enabling classic context menu https://www.outsidethebox.ms/22361/#_842
+reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+
+# WSL2 installation
 wsl --install --no-launch Ubuntu-22.04
