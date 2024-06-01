@@ -1,8 +1,8 @@
 // https://www.askvg.com/tip-disable-dark-mode-in-private-browsing-windows-in-firefox/
-// TODO: Report this to mozilla (add option to ui)
+// TODO: Report this to Mozilla (add option to UI)
 user_pref("browser.theme.dark-private-windows", false);
 
-// TODO: Add ui option to disable built-in extensions
+// TODO: Add UI option to disable built-in extensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1230656
 user_pref("extensions.pocket.enabled", false);
 
@@ -45,7 +45,6 @@ user_pref("widget.windows.overlay-scrollbars.enabled", false);
 // Do not show about:config warning message
 user_pref("browser.aboutConfig.showWarning", false);
 
-// TODO: test what settings are synchronized
 // TODO: sync all this settings https://bugzilla.mozilla.org/show_bug.cgi?id=1269548
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js

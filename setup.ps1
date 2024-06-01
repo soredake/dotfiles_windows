@@ -8,7 +8,7 @@ $desktopPath = [Environment]::GetFolderPath('Desktop')
 if (!$env:vm) {
   $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
   sudo {
-    # Set static ip https://stackoverflow.com/a/53991926
+    # Set static IP https://stackoverflow.com/a/53991926
     New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
   }
@@ -24,7 +24,7 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, NodeJS installer uses machine scope https://github.com/nodejs/version-management/issues/16
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
-# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), nodejs and syncthingtray
+# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg tor-browser psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json"
 scoop hold ryujinx tor-browser
@@ -206,7 +206,7 @@ pipx inject guessit setuptools
 
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 # CompletionPredictor is breaks PSCompletions https://github.com/PowerShell/CompletionPredictor/issues/37
-# PSCompletions is no longer installed as I don't use it and it adds 2-3 seconds to load delay
+# PSCompletions is no longer installed as I don't use it, and it adds 2-3 seconds to load delay
 Install-Module -Name posh-git, PSAdvancedShortcut
 #psc add npm winget scoop
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook

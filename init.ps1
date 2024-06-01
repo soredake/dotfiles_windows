@@ -17,7 +17,7 @@ if (-not $?) {
 }
 scoop config use_external_7zip true
 
-# Gsudo installation and configuration
+# gsudo installation and configuration
 scoop install gsudo
 sudo config CacheMode Auto
 
@@ -27,7 +27,7 @@ sudo {
 
   # https://remontka.pro/enable-developer-mode-windows/
   # Developer Mode is needed to create symlinks in winget without admin rights, adding to PATH approach have problems https://github.com/microsoft/winget-cli/issues/4044 https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
-  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 
   # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/549#issuecomment-1675410316 https://github.com/microsoft/winget-cli/issues/222#issuecomment-1675434402
   winget install --no-upgrade -h --accept-source-agreements WingetPathUpdater
