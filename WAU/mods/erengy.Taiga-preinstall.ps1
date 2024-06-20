@@ -1,5 +1,5 @@
 # https://github.com/erengy/taiga/issues/1136
-taskkill /im taiga.exe
+taskkill /T /im taiga.exe
 
 # Wait for taiga to shutdown
-Start-Sleep -Seconds 30
+#Start-Sleep -Seconds 30

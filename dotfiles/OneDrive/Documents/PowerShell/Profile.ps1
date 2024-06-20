@@ -8,15 +8,12 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Exp
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
 
-# https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
-#Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-
 function upgradeall {
-  # `wsl` step can run topgrade in WSL
+  # NOTE: `wsl` step can run topgrade in WSL
   # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
   topgrade --no-retry --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
   pipx upgrade-all
-  psc update *
+  scoop cache rm -a
 }
 
 function lycheefixon {

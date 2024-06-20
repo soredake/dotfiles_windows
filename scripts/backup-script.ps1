@@ -13,15 +13,19 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
   Move-Item $_.FullName $destFile
 }
 
-# TODO: what files/folders are used by running processes?
-# TODO: add plex
-# TODO: Add AIMP C:\Users\user\AppData\Roaming\AIMP
+# Software needs to be stopped to correctly backup it's data
+taskkill /T /f /im plex.exe
+taskkill /T /f /im "Plex Media Server.exe"
+taskkill /T /im Playnite.DesktopApp.exe
+
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
+rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex"
+rclone sync -P $env:APPDATA\AIMP "$HOME\Мой диск\документы\backups\AIMP"
 rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
 rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
-rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local"--delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
+rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
 rclone sync -P "${env:ProgramFiles(x86)}\FanControl\Configurations" "$HOME\Мой диск\документы\backups\fancontrol"
 rclone sync -P $HOME\scoop\persist\rclone "$HOME\Мой диск\документы\backups\rclone"
 rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
@@ -40,7 +44,6 @@ rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ss
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\GoldbergSteamEmuSaves.7z" "$env:APPDATA\Goldberg SteamEmu Saves"
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\ryujinx.7z" "$HOME\scoop\persist\ryujinx\portable\bis\user\save"
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\sudachi.7z" "$HOME\scoop\apps\sudachi\current\user\nand\user\save"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\rpcs3.7z" "$env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata"
 # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
 rclone sync -P $HOME\scoop\apps\sudachi\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\sudachi"
 rclone sync -P $HOME\scoop\persist\ryujinx\portable\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
@@ -49,8 +52,8 @@ rclone sync -P $HOME\scoop\persist\ryujinx\portable\system\Profiles.json "$HOME\
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
 
 # Syncthing(-tray)
-rclone sync -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing"
-rclone sync -P $env:LOCALAPPDATA\Syncthing "$HOME\Мой диск\документы\backups\syncthing\syncthing" --delete-excluded --exclude "LOCK" --exclude "index*/LOG" --exclude "index*/*.log" --exclude "*.tmp.*"
+rclone sync -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing\pc"
+rclone sync -P $env:LOCALAPPDATA\Syncthing "$HOME\Мой диск\документы\backups\syncthing\pc\syncthing" --delete-excluded --exclude "LOCK" --exclude "index*/LOG" --exclude "index*/*.log" --exclude "*.tmp.*"
 
 # Visual Studio Code https://stackoverflow.com/a/49398449/4207635
 code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
@@ -80,3 +83,7 @@ rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --del
 # Deduping clouds
 rclone dedupe -P --dedupe-mode newest mega:/
 rclone dedupe -P --dedupe-mode newest gdrive:/
+
+# Starting killed software back
+Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -WindowStyle Hidden
+Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
