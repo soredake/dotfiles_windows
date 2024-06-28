@@ -10,8 +10,8 @@ Write-Output "`e[6 q"
 
 function upgradeall {
   # NOTE: `wsl` step can run topgrade in WSL
-  # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
   topgrade --no-retry --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
+  # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
   pipx upgrade-all
   scoop cache rm -a
 }
@@ -73,7 +73,7 @@ function MultipassDeletePortForward {
   sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
 }
 function MultipassExportLogsFromLastHour {
-  Get-WinEvent -FilterHashtable @{LogName = 'Application'; ProviderName = 'Multipass'; StartTime = (Get-Date).AddHours(-1) } | Out-File -FilePath $HOME\Export.txt
+  Get-WinEvent -FilterHashtable @{LogName = 'Application'; ProviderName = 'Multipass'; StartTime = (Get-Date).AddHours(-1) } | Out-File -FilePath $HOME\Multipass-logs-from-last-hour.log
 }
 
 

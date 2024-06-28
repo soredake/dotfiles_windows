@@ -14,6 +14,7 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
 }
 
 # Software needs to be stopped to correctly backup it's data
+taskkill /T /im run.exe
 taskkill /T /f /im plex.exe
 taskkill /T /f /im "Plex Media Server.exe"
 taskkill /T /im Playnite.DesktopApp.exe
@@ -21,7 +22,7 @@ taskkill /T /im Playnite.DesktopApp.exe
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
-rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex"
+rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex" --delete-excluded --exclude "cache/updates/"
 rclone sync -P $env:APPDATA\AIMP "$HOME\Мой диск\документы\backups\AIMP"
 rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
 rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
@@ -85,5 +86,10 @@ rclone dedupe -P --dedupe-mode newest mega:/
 rclone dedupe -P --dedupe-mode newest gdrive:/
 
 # Starting killed software back
-Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -WindowStyle Hidden
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
+Start-Sleep -Seconds 30
+Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current
+Start-Sleep -Seconds 30
+Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -WindowStyle Hidden
+# Workaround for https://github.com/iamkroot/trakt-scrobbler/issues/305
+trakts start --restart

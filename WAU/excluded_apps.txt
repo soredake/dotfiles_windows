@@ -1,6 +1,12 @@
+Chocolatey.Chocolatey
+#Plex.Plex
+PointPlanck.FileBot
+Ryochan7.DS4Windows
+Spotify.Spotify
+TomWatson.BreakTimer
+# This software updates itself
 64Gram.64Gram
 AppWork.JDownloader
-Chocolatey.Chocolatey
 Discord.Discord
 ElectronicArts.EADesktop
 EpicGames.EpicGamesLauncher
@@ -10,21 +16,17 @@ IG.IGClient
 ItchIo.Itch
 LogMeIn.Hamachi
 Parsec.Parsec
-#Plex.Plex
 Plex.PlexMediaServer
-PointPlanck.FileBot
-Ryochan7.DS4Windows
 SpecialK.SpecialK
-Spotify.Spotify
 Ubisoft.Connect
 SteelSeries.GG
-TomWatson.BreakTimer
 TorProject.TorBrowser
 Valve.Steam
-RamenSoftware.Windhawk
 ViGEm.HidHide
 ViGEm.ViGEmBus
+RamenSoftware.Windhawk
 Viber.Viber
+Microsoft.OneDrive
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.DevHome
 Microsoft.WindowsTerminal
@@ -32,9 +34,8 @@ Microsoft.PowerShell
 # Edge Updater updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
-# Windows Update updating these https://github.com/microsoft/winget-cli/issues/4546
+# Microsoft Update updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.Office
-Microsoft.OneDrive
 # https://github.com/microsoft/winget-pkgs/pull/151684
 dokan-dev.Dokany
 # WAU updating enabled back until https://github.com/microsoft/vscode/issues/52855 is fixed

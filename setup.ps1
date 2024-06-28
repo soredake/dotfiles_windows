@@ -50,7 +50,7 @@ sudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra SomePythonThings.WingetUIStore xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
@@ -202,9 +202,7 @@ pipx ensurepath
 . "$HOME/refrenv.ps1"
 
 # Installing pipx packages
-pipx install internetarchive tubeup guessit "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git" "git+https://github.com/Diaoul/subliminal@develop"
-# https://github.com/Diaoul/subliminal/issues/1061
-#pipx inject subliminal setuptools
+pipx install internetarchive tubeup guessit subliminal "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 # https://github.com/guessit-io/guessit/issues/766
 pipx inject guessit setuptools
 

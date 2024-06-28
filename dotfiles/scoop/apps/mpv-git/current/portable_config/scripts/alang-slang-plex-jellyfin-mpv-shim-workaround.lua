@@ -69,7 +69,7 @@ end
 
 -- Function to set alang and slang settings after a 3-second delay
 local function delayed_set_alang_slang_settings()
-    mp.add_timeout(3, set_alang_slang_settings)
+    mp.add_timeout(5, set_alang_slang_settings)
 end
 
 -- Check if the input-ipc-server property is set to plexshimsocket
