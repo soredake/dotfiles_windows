@@ -8,6 +8,8 @@
     "directMSI": true,
     "resume": true,
     "configuration03": true,
+    "configureSelfElevate": true,
+    "configureExport": true,
     "indexV2": true,
     "proxy": true
   }

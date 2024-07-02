@@ -2,7 +2,7 @@
 DataDirectory C:\Users\User\AppData\Local\tor
 # http proxy added for downloading aimp
 HTTPTunnelPort 8118
-SocksPort 9050
+SocksPort 9051
 SocksPolicy accept 127.0.0.1
 SocksPolicy reject *
 ExcludeExitNodes {RU},{UA}

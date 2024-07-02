@@ -4,11 +4,6 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # https://github.com/ScoopInstaller/Extras/issues/13073
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
-# Link winget settings early
-# Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-# sideBySide feature currently is bugged: https://github.com/microsoft/winget-cli/issues/4354 https://github.com/microsoft/winget-cli/issues/4357 https://github.com/microsoft/winget-cli/issues/4425
-New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$HOME\git\dotfiles_windows\winget-settings.json"
-
 # https://github.com/ScoopInstaller/Install/issues/70
 # scoop installation and configuration
 where.exe scoop

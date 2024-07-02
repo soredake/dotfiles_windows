@@ -10,9 +10,9 @@ Write-Output "`e[6 q"
 
 function upgradeall {
   # NOTE: `wsl` step can run topgrade in WSL
-  topgrade --no-retry --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update'
-  # 'pipx' https://github.com/topgrade-rs/topgrade/issues/725 TODO: fixed in new version
-  pipx upgrade-all
+  trakts stop
+  topgrade --no-retry --cleanup --only 'powershell' 'node' 'scoop' 'wsl_update' 'pipx'
+  trakts start --restart
   scoop cache rm -a
 }
 

@@ -62,6 +62,7 @@ rclone sync -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\до�
 rclone sync -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
 
 # https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
+# https://aka.ms/AAr5gni
 rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
 
 # https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-taskbar-in-windows-11.3630/ https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-start-menu-in-windows-11.3629/
@@ -92,4 +93,4 @@ Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingD
 Start-Sleep -Seconds 30
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -WindowStyle Hidden
 # Workaround for https://github.com/iamkroot/trakt-scrobbler/issues/305
-trakts start --restart
+#trakts start --restart

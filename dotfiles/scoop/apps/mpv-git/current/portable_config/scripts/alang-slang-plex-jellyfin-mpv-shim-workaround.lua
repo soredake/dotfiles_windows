@@ -67,7 +67,7 @@ local function set_alang_slang_settings()
     end
 end
 
--- Function to set alang and slang settings after a 3-second delay
+-- Function to set alang and slang settings after a 5-second delay
 local function delayed_set_alang_slang_settings()
     mp.add_timeout(5, set_alang_slang_settings)
 end
