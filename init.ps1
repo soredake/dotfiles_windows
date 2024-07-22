@@ -1,6 +1,13 @@
 $env:repository = "$HOME\git\dotfiles_windows"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
+# If repo is already there just update it and run script again
+if (Test-Path $env:repository\setup.ps1) {
+  Set-Location $env:repository
+  git pull
+  pwsh .\setup.ps1
+}
+
 # https://github.com/ScoopInstaller/Extras/issues/13073
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
@@ -40,13 +47,6 @@ sudo {
 # Refresh env so git will be present in PATH
 . "$HOME/refrenv.ps1"
 
-# If repo is already there just update it and run script again
-if (Test-Path $env:repository\setup.ps1) {
-  Set-Location $env:repository
-  git pull
-  pwsh .\setup.ps1
-}
-else {
-  git clone "https://github.com/soredake/dotfiles_windows" $env:repository
-  pwsh $env:repository\setup.ps1
-}
+git clone "https://github.com/soredake/dotfiles_windows" $env:repository
+pwsh $env:repository\setup.ps1
+
