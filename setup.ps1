@@ -27,7 +27,7 @@ scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx wins
 scoop hold ryujinx # tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv

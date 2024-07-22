@@ -40,6 +40,13 @@ sudo {
 # Refresh env so git will be present in PATH
 . "$HOME/refrenv.ps1"
 
-# Clone repository and run my setup script
-git clone "https://github.com/soredake/dotfiles_windows" $env:repository
-pwsh $env:repository\setup.ps1
+# If repo is already there just update it and run script again
+if (Test-Path $env:repository\setup.ps1) {
+  Set-Location $env:repository
+  git pull
+  pwsh .\setup.ps1
+}
+else {
+  git clone "https://github.com/soredake/dotfiles_windows" $env:repository
+  pwsh $env:repository\setup.ps1
+}
