@@ -27,7 +27,7 @@ scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx wins
 scoop hold ryujinx # tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force -Confirm:$false
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
@@ -42,21 +42,17 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
 Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
 
-# NOTE: do not pass too much code to sudo or you will receive this:
-# Program 'sudo.exe' failed to run: The filename or extension is too longAt line:1 char:1
+# NOTE: Invoke-Gsudo is used because of this https://github.com/gerardog/gsudo/issues/364
+Import-Module gsudoModule
 
-# Sophia Script
-sudo {
+Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
   # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
   # https://www.outsidethebox.ms/22048/
   # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
   # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
   # Get tips and suggestions when using Windows…: WindowsTips -Disable
   ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English"
-}
 
-# Software install
-sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
@@ -107,10 +103,7 @@ sudo {
   ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval BiDaily -DoNotUpdate -UpdatesAtTime 11AM
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
   dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
-} -args "$PSScriptRoot"
 
-# Various settings and tasks
-sudo {
   # Start ssh-agent at boot
   Set-Service -Name ssh-agent -StartupType Automatic
   # https://github.com/bcurran3/ChocolateyPackages/issues/48
@@ -210,10 +203,7 @@ sudo {
 
   # Register the scheduled task
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe $HOME\git\dotfiles_windows\scripts\restart-plex-player-and-shim.ps1") -TaskName "Restarting plex for windows and plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger $triggers -Force
-} -args "$PSScriptRoot"
 
-# Cleanup
-sudo {
   # To list all inbox packages:
   # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
   # --accept-source-agreements
