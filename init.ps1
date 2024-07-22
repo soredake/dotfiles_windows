@@ -4,6 +4,9 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 # https://github.com/ScoopInstaller/Extras/issues/13073
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
+# PowerShellCore installation
+winget install -h --accept-package-agreements 9MZ1SNWT0N5D
+
 # https://github.com/ScoopInstaller/Install/issues/70
 # scoop installation and configuration
 where.exe scoop
@@ -19,6 +22,7 @@ sudo config CacheMode Auto
 
 sudo {
   # Enabling proxy support
+  # https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
   winget settings --enable ProxyCommandLineOptions
 
   # https://remontka.pro/enable-developer-mode-windows/
@@ -31,10 +35,11 @@ sudo {
   # Install git with machine scope until their installer will have support for user scope https://github.com/git-for-windows/git/discussions/4399#discussioncomment-5877325 https://github.com/microsoft/winget-cli/issues/3240
   # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
-
-  # Repository needs to be cloned in this scope in order for git to be in PATH until git installer gains support for per-user non-uac install
-  git clone "https://github.com/soredake/dotfiles_windows" $env:repository
 }
 
-winget install -h --accept-package-agreements 9MZ1SNWT0N5D
+# Refresh env so git will be present in PATH
+. "$HOME/refrenv.ps1"
+
+# Clone repository and run my setup script
+git clone "https://github.com/soredake/dotfiles_windows" $env:repository
 pwsh $env:repository\setup.ps1
