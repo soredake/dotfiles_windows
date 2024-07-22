@@ -38,10 +38,6 @@ pwsh $HOME\git\ff2mpv\install.ps1 firefox
 # Do not enable `resume` feature for now https://github.com/microsoft/winget-cli/issues/4584
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$PSScriptRoot\winget-settings.json"
 
-# Downloading Sophia Script
-Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
-Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-
 # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
 # https://www.outsidethebox.ms/22048/
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
