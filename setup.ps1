@@ -42,6 +42,10 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
 Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
 
+# NOTE: do not pass too much code to sudo or you will receive this:
+# Program 'sudo.exe' failed to run: The filename or extension is too longAt line:1 char:1
+
+# Sophia Script
 sudo {
   # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
   # https://www.outsidethebox.ms/22048/
@@ -49,14 +53,16 @@ sudo {
   # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
   # Get tips and suggestions when using Windows…: WindowsTips -Disable
   ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English"
+}
 
+# Software install
+sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  # TODO: test this in vm, winget will ignore some of the packages, report this
   winget install -h --accept-package-agreements --accept-source-agreements HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra SomePythonThings.WingetUIStore Zoom.Zoom.EXE xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
@@ -85,12 +91,6 @@ sudo {
   # This package is unmaintained and now (18.07.2024) is broken, I now update chocolatey packages with topgrade
   # choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
 
-  # https://github.com/bcurran3/ChocolateyPackages/issues/48
-  Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
-
-  # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
-  choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
-
   # Installing Microsoft Office suite
   # https://config.office.com/deploymentsettings
   C:\Program` Files\OfficeDeploymentTool\setup.exe /configure "$($args[0])\Office-365-Config.xml"
@@ -100,7 +100,6 @@ sudo {
 
   # For storing ssh key
   powershell -c 'Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0'
-  Set-Service -Name ssh-agent -StartupType Automatic
 
   # Winget-AutoUpdate installation
   # https://github.com/Romanitho/Winget-AutoUpdate/issues/625
@@ -108,6 +107,17 @@ sudo {
   ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval BiDaily -DoNotUpdate -UpdatesAtTime 11AM
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
   dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
+} -args "$PSScriptRoot"
+
+# Various settings and tasks
+sudo {
+  # Start ssh-agent at boot
+  Set-Service -Name ssh-agent -StartupType Automatic
+  # https://github.com/bcurran3/ChocolateyPackages/issues/48
+  Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
+
+  # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
+  choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
   # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
   # https://github.com/microsoft/terminal/issues/17455
@@ -175,29 +185,6 @@ sudo {
   # I need local manifests
   winget settings --enable LocalManifestFiles
 
-  # To list all inbox packages:
-  # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
-  # --accept-source-agreements
-  # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
-  # Note: after removing notepad you no longer can create .txt files, so don't do this
-  $packages = @(
-    "Clipchamp.Clipchamp_yxz26nhyzhsrt",
-    "Microsoft.Todos_8wekyb3d8bbwe",
-    "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe",
-    "Microsoft.WindowsCamera_8wekyb3d8bbwe",
-    "Microsoft.Windows.Photos_8wekyb3d8bbwe",
-    "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
-    "Microsoft.BingWeather_8wekyb3d8bbwe",
-    "Microsoft.BingNews_8wekyb3d8bbw",
-    "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
-    "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
-    "Microsoft.ZuneMusic_8wekyb3d8bbwe",
-    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe"
-  )
-  foreach ($package in $packages) {
-    winget uninstall -h $package
-  }
-
   # https://stackoverflow.com/a/67123362
   # https://learn.microsoft.com/en-us/answers/questions/794854/run-a-program-every-time-the-computer-comes-out-of
 
@@ -224,6 +211,32 @@ sudo {
   # Register the scheduled task
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe $HOME\git\dotfiles_windows\scripts\restart-plex-player-and-shim.ps1") -TaskName "Restarting plex for windows and plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger $triggers -Force
 } -args "$PSScriptRoot"
+
+# Cleanup
+sudo {
+  # To list all inbox packages:
+  # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
+  # --accept-source-agreements
+  # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
+  # Note: after removing notepad you no longer can create .txt files, so don't do this
+  $packages = @(
+    "Clipchamp.Clipchamp_yxz26nhyzhsrt",
+    "Microsoft.Todos_8wekyb3d8bbwe",
+    "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe",
+    "Microsoft.WindowsCamera_8wekyb3d8bbwe",
+    "Microsoft.Windows.Photos_8wekyb3d8bbwe",
+    "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
+    "Microsoft.BingWeather_8wekyb3d8bbwe",
+    "Microsoft.BingNews_8wekyb3d8bbw",
+    "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
+    "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
+    "Microsoft.ZuneMusic_8wekyb3d8bbwe",
+    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe"
+  )
+  foreach ($package in $packages) {
+    winget uninstall -h $package
+  }
+}
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
