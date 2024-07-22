@@ -1,4 +1,4 @@
 # https://github.com/microsoft/PowerToys/issues/32595
-taskkill /f /im PowerToys.exe
-#Start-Sleep -Seconds 10
+taskkill /T /f /im PowerToys*
+Start-Sleep -Seconds 5
 Start-Process -FilePath "$env:ProgramFiles\PowerToys\PowerToys.exe" -WindowStyle Hidden -Verb RunAs

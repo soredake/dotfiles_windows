@@ -8,5 +8,9 @@
     "alang": ["jpn", "ja"],
     "slang": [ "eng?", "en?", "und" ],
     "blacklist": [ "songs", "signs", "forced" ]
+  },
+  {
+    "alang": "*",
+    "slang": [ "eng?", "en?", "und" ]
   }
 ]

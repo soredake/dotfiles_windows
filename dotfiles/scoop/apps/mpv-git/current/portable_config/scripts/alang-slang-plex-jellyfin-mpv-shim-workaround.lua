@@ -11,6 +11,7 @@ local function split_string(inputstr, sep)
     return t
 end
 
+-- Split script into selecting subs or audio
 -- Function to select tracks according to existing 'alang' and 'slang' properties
 local function set_alang_slang_settings()
     -- Print a debug message
@@ -67,9 +68,15 @@ local function set_alang_slang_settings()
     end
 end
 
+-- https://github.com/CogentRedTester/mpv-sub-select?tab=readme-ov-file#commands
+function trigger_sub_select()
+    mp.command("script-message select-subtitles")
+  end
+
 -- Function to set alang and slang settings after a 5-second delay
 local function delayed_set_alang_slang_settings()
     mp.add_timeout(5, set_alang_slang_settings)
+    mp.add_timeout(6, trigger_sub_select)
 end
 
 -- Check if the input-ipc-server property is set to plexshimsocket

@@ -63,18 +63,32 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "colorScheme": "Tango+Solarized dark",
+                "closeOnExit": "never",
+                "commandline": "pwsh.exe -NoLogo -c ssh -t oracle 'ta'",
+                "cursorShape": "bar",
+                "guid": "{d5726e6a-7454-4b27-953c-6e3f3b7f3c5a}",
+                "historySize": 50000,
+                "name": "Oracle server"
+            },
+            {
                 "commandline": "multipass shell",
                 "cursorShape": "bar",
-                "font": 
-                {
-                    "face": "Hack Nerd Font"
-                },
                 "guid": "{aaaa9e6d-1e09-4be6-b76c-82b4ba1885fb}",
                 "historySize": 50000,
                 "icon": "C:/Program Files/Multipass/bin/multipass_wt.ico",
-                "name": "Multipass",
-                "useAcrylic": false
+                "name": "Multipass"
+            },
+            {
+                "guid": "{e5a83caa-4c73-52b3-ae6b-bc438d721ef9}",
+                "hidden": false,
+                "name": "Ubuntu 22.04.3 LTS",
+                "source": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
+            },
+            {
+                "guid": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
+                "hidden": true,
+                "name": "Ubuntu-22.04",
+                "source": "Windows.Terminal.Wsl"
             },
             {
                 "colorScheme": "Firewatch",
@@ -92,18 +106,6 @@
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "Command Prompt"
-            },
-            {
-                "guid": "{e5a83caa-4c73-52b3-ae6b-bc438d721ef9}",
-                "hidden": false,
-                "name": "Ubuntu 22.04.3 LTS",
-                "source": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
-            },
-            {
-                "guid": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
-                "hidden": true,
-                "name": "Ubuntu-22.04",
-                "source": "Windows.Terminal.Wsl"
             }
         ]
     },

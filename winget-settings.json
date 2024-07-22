@@ -1,16 +1,5 @@
 {
   "$schema": "https://aka.ms/winget-settings.schema.json",
-  "network": {
-    "downloader": "wininet"
-  },
   "experimentalFeatures": {
-    "sideBySide": true,
-    "directMSI": true,
-    "resume": true,
-    "configuration03": true,
-    "configureSelfElevate": true,
-    "configureExport": true,
-    "indexV2": true,
-    "proxy": true
   }
 }
