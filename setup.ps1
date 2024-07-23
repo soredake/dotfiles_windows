@@ -38,30 +38,29 @@ pwsh $HOME\git\ff2mpv\install.ps1 firefox
 # Do not enable `resume` feature for now https://github.com/microsoft/winget-cli/issues/4584
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$PSScriptRoot\winget-settings.json"
 
-# NOTE: Invoke-Gsudo is used because of this https://github.com/gerardog/gsudo/issues/364
-Import-Module gsudoModule
+# NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
+# Downloading and running Sophia Script
 # https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
 # https://www.outsidethebox.ms/22048/
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
 # Get tips and suggestions when using Windows…: WindowsTips -Disable
-# sudo -w -n --close {
-#   # Downloading Sophia Script
-#   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
-#   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-#   pwsh ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English"
-# }
-sudo -n pwsh $PSScriptRoot\sophia-script.ps1
+sudo {
+  Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
+  Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English"
+}
 
-Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
+# Installing software fro winget
+sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install -h --accept-package-agreements --accept-source-agreements HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra SomePythonThings.WingetUIStore Zoom.Zoom.EXE xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install -h --accept-package-agreements --accept-source-agreements yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra SomePythonThings.WingetUIStore Zoom.Zoom.EXE xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -76,7 +75,10 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install -h -l ~\Steam Valve.Steam
+}
 
+# Software installation
+sudo {
   # This requires UAC
   # Traditional installer is not yet created https://github.com/GerbilSoft/rom-properties/issues/108
   scoop install rom-properties-np
@@ -86,8 +88,6 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
-  # This package is unmaintained and now (18.07.2024) is broken, I now update chocolatey packages with topgrade
-  # choco install -y choco-upgrade-all-at --params "'/WEEKLY:yes /DAY:SUN /TIME:10:00'"
 
   # Installing Microsoft Office suite
   # https://config.office.com/deploymentsettings
@@ -100,12 +100,14 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
   powershell -c 'Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0'
 
   # Winget-AutoUpdate installation
-  # https://github.com/Romanitho/Winget-AutoUpdate/issues/625
+  # NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
   git clone --depth=1 "https://github.com/Romanitho/Winget-AutoUpdate" "$HOME/Downloads/Winget-AutoUpdate"
   ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval BiDaily -DoNotUpdate -UpdatesAtTime 11AM
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
-  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
+} -args "$PSScriptRoot"
 
+# Various settings
+sudo {
   # Start ssh-agent at boot
   Set-Service -Name ssh-agent -StartupType Automatic
   # https://github.com/bcurran3/ChocolateyPackages/issues/48
@@ -121,43 +123,7 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
 
   # Linking dotfiles
   dploy stow $($args[0])\dotfiles $HOME
-
-  # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
-  New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
-  # https://serverfault.com/a/983832 https://github.com/PowerShell/PowerShell/issues/21400
-  sc failure tor reset=30 actions=restart/5000
-
-  # Task for enabling language change by pressing right ctrl
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
-  Start-ScheduledTask -TaskName "switch language with right ctrl"
-
-  # Tasks for starting and stopping lycheefix
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixon") -TaskName "Start lycheefix"
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixoff") -TaskName "Stop lycheefix"
-
-  # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
-
-  # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00), (New-ScheduledTaskTrigger -Daily -At 16:00)
-
-  # Night Light is usually not turned off automatically in the morning https://aka.ms/AAqoje8
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
-
-  # Start plex-mpv-shim at logon
-  # https://github.com/iwalton3/plex-mpv-shim/issues/118
-  #Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c Start-Sleep -Seconds 120 && Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current") -TaskName "plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
-
-  # Start Plex For Windows at logon
-  # https://forums.plex.tv/t/add-autostart-on-logon-option-to-plex-for-windows/880558
-  #Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\Plex\Plex\Plex.exe" -WorkingDirectory "$env:ProgramFiles\Plex\Plex") -TaskName "Plex For Windows" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -AtLogon)
-
-  # Backup task
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
-
-  # Upgrade everything with topgrade task
-  # Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Hidden -c upgradeall") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
 
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableStartupSound /t REG_DWORD /d 1 /f
@@ -179,17 +145,48 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
 
   # I need local manifests
   winget settings --enable LocalManifestFiles
+} -args "$PSScriptRoot"
 
+# Band-aid tasks
+sudo {
+  # Tasks for starting and stopping lycheefix
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixon") -TaskName "Start lycheefix"
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixoff") -TaskName "Stop lycheefix"
+
+  # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
+
+  # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00), (New-ScheduledTaskTrigger -Daily -At 16:00)
+
+  # Night Light is usually not turned off automatically in the morning https://aka.ms/AAqoje8
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
+}
+
+# Tasks & services
+sudo {
+  # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
+  New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
+  # https://serverfault.com/a/983832 https://github.com/PowerShell/PowerShell/issues/21400
+  sc failure tor reset=30 actions=restart/5000
+
+  # Task for enabling language change by pressing right ctrl
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
+  Start-ScheduledTask -TaskName "switch language with right ctrl"
+
+  # Backup task
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -At 13:00 -DaysOfWeek 3)
+
+  # Upgrade everything with topgrade task
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+}
+
+# Task for restarting Plex For Windows and plex-mpv-shim after waking pc from sleep or logon
+sudo {
   # https://stackoverflow.com/a/67123362
   # https://learn.microsoft.com/en-us/answers/questions/794854/run-a-program-every-time-the-computer-comes-out-of
-
-  # Define the trigger for the event ID 1 from the Power-Troubleshooter source
-  # $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date)
-  # $trigger | Add-Member -MemberType NoteProperty -Name 'Subscription' -Value '<QueryList><Query Id="0" Path="System"><Select Path="System">*[System[Provider[@Name=''Power-Troubleshooter''] and EventID=1]]</Select></Query></QueryList>'
-
   # Create list of triggers, including AtLogOn and custom event trigger
-  $triggers = @()
-  $triggers += New-ScheduledTaskTrigger -AtLogOn
+  $triggers = @(New-ScheduledTaskTrigger -AtLogOn)
 
   # Define custom event trigger
   $subscription = @"
@@ -204,8 +201,11 @@ Invoke-Gsudo -ArgumentList "$PSScriptRoot" {
   $triggers += $trigger
 
   # Register the scheduled task
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe $HOME\git\dotfiles_windows\scripts\restart-plex-player-and-shim.ps1") -TaskName "Restarting plex for windows and plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger $triggers -Force
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe $HOME\git\dotfiles_windows\scripts\restart-plex-player-and-shim.ps1") -TaskName "Restarting plex for windows and plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger $triggers
+}
 
+# Cleanup
+sudo {
   # To list all inbox packages:
   # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
   # --accept-source-agreements
@@ -308,15 +308,3 @@ wsl --install --no-launch Ubuntu-22.04
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
 winsetview.ps1 $PSScriptRoot\explorer-preset.ini
-
-# yoink installation
-# TODO: to winget
-$archivePath = "$HOME/Downloads/yoink_windows_amd64.zip"
-$desiredFilePath = "$HOME/yoink.exe"
-$tempDir = "$HOME/Downloads/yoink/"
-Invoke-WebRequest -Uri "https://github.com/MrMarble/yoink/releases/download/v0.5.0/yoink_windows_amd64.zip" -OutFile "$HOME/Downloads/yoink_windows_amd64.zip"
-New-Item -ItemType Directory -Path $tempDir -Force
-Expand-Archive -Path $archivePath -DestinationPath $tempDir
-$extractedFilePath = Join-Path -Path $tempDir -ChildPath "yoink.exe"
-Move-Item -Path $extractedFilePath -Destination $desiredFilePath
-Remove-Item -Path $tempDir -Recurse -Force

@@ -5,7 +5,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 if (Test-Path $env:repository\setup.ps1) {
   Set-Location $env:repository
   git pull
-  pwsh .\setup.ps1
+  pwsh -NoProfile .\setup.ps1
 }
 
 # https://github.com/ScoopInstaller/Extras/issues/13073
@@ -48,5 +48,5 @@ sudo {
 . "$HOME/refrenv.ps1"
 
 git clone "https://github.com/soredake/dotfiles_windows" $env:repository
-pwsh $env:repository\setup.ps1
+pwsh -NoProfile $env:repository\setup.ps1
 
