@@ -55,26 +55,27 @@ sudo {
 # Installing software fro winget
 sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
-  winget install --accept-package-agreements --accept-source-agreements Jellyfin.Server
+  winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
+  # TODO: add monikers to all packages
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install -h --accept-package-agreements --accept-source-agreements yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 xpfm5p5kdwf0jp Discord.Discord abbodi1406.vcredist OpenJS.NodeJS.LTS Rem0o.FanControl epicgameslauncher WireGuard.WireGuard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent AdoptOpenJDK.OpenJDK.11 HermannSchinagl.LinkShellExtension Plex.Plex Jellyfin.JellyfinMediaPlayer Ubisoft.Connect actualsolution.VolumeLock Plex.PlexMediaServer Syncplay.Syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight HandBrake.HandBrake HydraLauncher.Hydra SomePythonThings.WingetUIStore Zoom.Zoom.EXE xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard odt Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru doublecmd wiztree Parsec.Parsec hamachi eaapp keepassxc protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher unigetui Zoom.Zoom.EXE yetone.OpenAITranslator xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
-  winget install -h Xanashi.Icaros --source winget
+  winget install --no-upgrade -h Xanashi.Icaros --source winget
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
-  winget install -h -e --id=Canonical.Multipass -v "1.12.2+win"
+  winget install --no-upgrade -h -e multipass -v "1.12.2+win"
 
   # PowerToys is here because I need to remap my broken ESC key to PAUSE
   # WAU for some reason tries to update OpenJS.NodeJS.LTS in user scope even though it is installed system-wide
-  winget install --scope machine -h --accept-package-agreements --accept-source-agreements Microsoft.PowerToys OpenJS.NodeJS.LTS
+  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys nodejs-lts
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
-  winget install -h -l ~\Steam Valve.Steam
+  winget install --no-upgrade -h -l ~\Steam Valve.Steam
 }
 
 # Software installation
@@ -208,7 +209,6 @@ sudo {
 sudo {
   # To list all inbox packages:
   # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
-  # --accept-source-agreements
   # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
   # Note: after removing notepad you no longer can create .txt files, so don't do this
   $packages = @(
@@ -231,10 +231,10 @@ sudo {
 }
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
-winget install -h -e --id TomWatson.BreakTimer -v 1.1.0
+winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
-winget install vscode --no-upgrade -h --accept-package-agreements --accept-source-agreements --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # Add pipx bin dir to PATH
 pipx ensurepath
@@ -277,6 +277,9 @@ mkdir $HOME\torrents
 trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
+
+# This optimization takes time to complete, so it makes sense to enable it at the end
+scoop config use_sqlite_cache true
 
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f

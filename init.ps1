@@ -21,7 +21,6 @@ if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
 scoop config use_external_7zip true
-scoop config use_sqlite_cache true
 
 # gsudo installation and configuration
 scoop install gsudo
