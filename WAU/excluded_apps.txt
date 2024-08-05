@@ -19,7 +19,6 @@ Microsoft.OneDrive
 Parsec.Parsec
 Plex.PlexMediaServer
 Rakuten.Viber
-RamenSoftware.Windhawk
 SpecialK.SpecialK
 SteelSeries.GG
 TorProject.TorBrowser
@@ -27,6 +26,7 @@ Ubisoft.Connect
 Valve.Steam
 ViGEm.HidHide
 ViGEm.ViGEmBus
+Zoom.Zoom.EXE
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.DevHome
 Microsoft.WindowsTerminal
@@ -47,7 +47,3 @@ Canonical.Multipass
 #qBittorrent.qBittorrent
 # Same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
 Oracle.VirtualBox
-# https://github.com/Romanitho/Winget-AutoUpdate/issues/639
-#Microsoft.DotNet.DesktopRuntime.8
-#Microsoft.DotNet.DesktopRuntime.6
-#Microsoft.XNARedist

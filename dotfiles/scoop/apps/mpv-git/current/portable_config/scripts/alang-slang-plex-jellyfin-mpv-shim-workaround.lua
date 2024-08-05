@@ -75,8 +75,8 @@ function trigger_sub_select()
 
 -- Function to set alang and slang settings after a 5-second delay
 local function delayed_set_alang_slang_settings()
-    mp.add_timeout(5, set_alang_slang_settings)
-    mp.add_timeout(6, trigger_sub_select)
+    mp.add_timeout(1, set_alang_slang_settings)
+    mp.add_timeout(2, trigger_sub_select)
 end
 
 -- Check if the input-ipc-server property is set to plexshimsocket

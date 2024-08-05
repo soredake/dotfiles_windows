@@ -14,13 +14,14 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
 }
 
 # Software needs to be stopped to correctly backup it's data
-taskkill /T /f /im run.exe
-taskkill /T /f /im plex.exe
+#taskkill /T /f /im run.exe
+# taskkill /T /f /im plex.exe
 taskkill /T /f /im "Plex Media Server.exe"
 taskkill /T /im Playnite.DesktopApp.exe
 
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
+# TODO: backup windhawk mods
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
 rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex" --delete-excluded --exclude "cache/updates/"
 rclone sync -P $env:APPDATA\AIMP "$HOME\Мой диск\документы\backups\AIMP"
@@ -73,17 +74,14 @@ reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer
 
 if (Test-Path -Path "${env:EHDD}:\") {
   # Backing up my google drive folder to external HDD
-  # TODO: exclude курсы
-  rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\main --delete-excluded --exclude ".tmp.drive*/"
+  rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\main --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\rclone-gdrive-exclude-list.txt"
 
   # Backing up my backups on external HDD to mega cloud
-  # TODO: exclude курсы
   rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups
 }
 
 # Backing up my google drive folder to mega cloud
-# TODO: exclude курсы
-rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-excluded --exclude ".tmp.drive*/"
+rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\rclone-gdrive-exclude-list.txt"
 
 # Deduping clouds
 rclone dedupe -P --dedupe-mode newest mega:/
@@ -93,11 +91,11 @@ rclone dedupe -P --dedupe-mode newest gdrive:/
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
 Start-Sleep -Seconds 30
 Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current
-Start-Sleep -Seconds 30
+#Start-Sleep -Seconds 30
 # NOTE: Plex For Windows cannot started minimized
 # NOTE: Plex For Windows needs to be started as admin to avoid UAC prompt https://www.reddit.com/r/PleX/comments/q8un5s/is_there_any_way_to_stop_plex_from_trying_to/
-Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -Verb RunAs
-Start-Sleep -Seconds 5
-nircmd win min process Plex.exe
+#Start-Process -FilePath "$env:ProgramFiles\Plex\Plex\Plex.exe" -Verb RunAs
+#Start-Sleep -Seconds 5
+#nircmd win min process Plex.exe
 # Workaround for https://github.com/iamkroot/trakt-scrobbler/issues/305
-trakts start --restart
+#trakts start --restart
