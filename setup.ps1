@@ -6,10 +6,10 @@ $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 $desktopPath = [Environment]::GetFolderPath('Desktop')
 
 if (!$env:vm) {
-  $env:interfaceIndex = (Get-NetRoute | Where-Object -FilterScript { $_.DestinationPrefix -eq "0.0.0.0/0" } | Get-NetAdapter).InterfaceIndex
+  $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
   sudo {
     # Set static IP https://stackoverflow.com/a/53991926
-    New-NetIPAddress -InterfaceIndex $env:interfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+    New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
   }
 }
@@ -61,7 +61,7 @@ sudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # TODO: add monikers to all packages
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard odt Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp keepassxc protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher unigetui Zoom.Zoom.EXE Ghisler.TotalCommander xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard odt Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp keepassxc protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher unigetui Zoom.Zoom.EXE tcmd 9pmz94127m4g xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -109,6 +109,11 @@ sudo {
 
 # Various settings
 sudo {
+  # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
+  $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
+  $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
+  powercfg /devicedisablewake $CurrentNetworkAdapterName
+
   # Start ssh-agent at boot
   Set-Service -Name ssh-agent -StartupType Automatic
   # https://github.com/bcurran3/ChocolateyPackages/issues/48
@@ -116,15 +121,6 @@ sudo {
 
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
   choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
-
-  # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
-  # https://github.com/microsoft/terminal/issues/17455
-  Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-  New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-
-  # Linking dotfiles
-  dploy stow $($args[0])\dotfiles $HOME
-  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
 
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableStartupSound /t REG_DWORD /d 1 /f
@@ -147,6 +143,18 @@ sudo {
 
   # Once in a while I need hibernation
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 1 /f
+}
+
+# Dotfiles
+sudo {
+  # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
+  # https://github.com/microsoft/terminal/issues/17455
+  Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+  New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+
+  # Linking dotfiles
+  dploy stow $($args[0])\dotfiles $HOME
+  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
 } -args "$PSScriptRoot"
 
 # Band-aid tasks
@@ -272,7 +280,7 @@ if (!$env:vm) {
   sudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
-  multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount D:\:/mnt/d_host --mount C:\:/mnt/c_host
+  multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount F:\:/mnt/d_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
   multipass stop
 }

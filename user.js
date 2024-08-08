@@ -15,14 +15,14 @@ user_pref("browser.tabs.cardPreview.enabled", true);
 // DNS Over HTTPS is disabled as I use DOH from windows
 user_pref("network.trr.mode", 5);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1852752
-user_pref("network.dns.native_https_query", true);
+// user_pref("network.dns.native_https_query", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // https://www.exploit.media/privacy/firefox-settings/
-user_pref("network.dns.disablePrefetchFromHTTPS", false);
+// user_pref("network.dns.disablePrefetchFromHTTPS", false);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1746396
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1783225
 user_pref("network.predictor.enable-prefetch", true);
