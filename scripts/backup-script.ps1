@@ -18,11 +18,12 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
 # taskkill /T /f /im plex.exe
 taskkill /T /f /im "Plex Media Server.exe"
 taskkill /T /im Playnite.DesktopApp.exe
+taskkill /T /f /im windhawk.exe
 
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
-# TODO: backup windhawk mods
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Windhawk.7z" "C:\ProgramData\Windhawk"
 rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex" --delete-excluded --exclude "cache/updates/"
 rclone sync -P $env:APPDATA\AIMP "$HOME\Мой диск\документы\backups\AIMP"
 rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
@@ -35,6 +36,9 @@ rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы
 rclone sync -P "${env:ProgramFiles(x86)}\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
 rclone sync -P "${env:ProgramFiles(x86)}\RivaTuner Statistics Server\Profiles" "$HOME\Мой диск\документы\backups\rtss"
 rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
+reg export "HKEY_LOCAL_MACHINE\Software\Icaros" "$HOME\Мой диск\документы\backups\xanashi_icaros\xanashi_icaros_HKLM.reg" /y
+reg export "HKEY_CURRENT_USER\Software\Icaros" "$HOME\Мой диск\документы\backups\xanashi_icaros\xanashi_icaros_HKCU.reg" /y
+
 
 # Games and emulators
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Playnite.7z" "$env:APPDATA\Playnite" -xr!'Playnite\library\files\*'
@@ -91,6 +95,7 @@ rclone dedupe -P --dedupe-mode newest gdrive:/
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
 Start-Sleep -Seconds 30
 Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current
+Start-Process -FilePath "$env:ProgramFiles\Windhawk\windhawk.exe" -WorkingDirectory "$env:ProgramFiles\Windhawk"
 #Start-Sleep -Seconds 30
 # NOTE: Plex For Windows cannot started minimized
 # NOTE: Plex For Windows needs to be started as admin to avoid UAC prompt https://www.reddit.com/r/PleX/comments/q8un5s/is_there_any_way_to_stop_plex_from_trying_to/

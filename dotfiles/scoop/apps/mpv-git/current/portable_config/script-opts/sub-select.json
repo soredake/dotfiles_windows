@@ -11,6 +11,7 @@
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ]
+    "slang": [ "eng?", "en?", "und" ],
+    "blacklist": [ "forced" ]
   }
 ]
