@@ -86,7 +86,7 @@ sudo {
   scoop install rom-properties-np
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
+  choco install -y fxsound syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
