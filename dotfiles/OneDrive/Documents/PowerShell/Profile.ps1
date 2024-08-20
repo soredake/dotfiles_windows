@@ -56,9 +56,9 @@ function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 function listallsoftware { winget list --source winget | Sort-Object Name }
 
 # https://github.com/canonical/multipass/issues/3112
-function MultipassSetDiscard { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+function MultipassSetDiscard { sudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
-function MultipassShowVmInfo { sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
+function MultipassShowVmInfo { sudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
 function MultipassDeletePortForward {
   param (
     [string]$name
