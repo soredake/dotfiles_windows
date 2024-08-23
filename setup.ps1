@@ -82,10 +82,11 @@ pipx install autoremove-torrents internetarchive tubeup guessit subliminal "git+
 # https://github.com/guessit-io/guessit/issues/766
 pipx inject guessit setuptools
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Software installation
 sudo {
-  # Refreshing PATH env
-  . "$HOME/refrenv.ps1"
 
   # This requires UAC
   # Traditional installer is not yet created https://github.com/GerbilSoft/rom-properties/issues/108
@@ -111,11 +112,11 @@ sudo {
   Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
 } -args "$PSScriptRoot"
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Various settings
 sudo {
-  # Refreshing PATH env
-  . "$HOME/refrenv.ps1"
-  
   # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
   $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
   $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
@@ -152,10 +153,11 @@ sudo {
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 1 /f
 }
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Dotfiles
 sudo {
-  # Refreshing PATH env
-  . "$HOME/refrenv.ps1"
 
   # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
   # https://github.com/microsoft/terminal/issues/17455
@@ -188,11 +190,11 @@ sudo {
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
 }
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Tasks & services
 sudo {
-  # Refreshing PATH env
-  . "$HOME/refrenv.ps1"
-
   # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
   New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
   # https://serverfault.com/a/983832 https://github.com/PowerShell/PowerShell/issues/21400
