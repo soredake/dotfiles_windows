@@ -39,7 +39,6 @@ rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ss
 reg export "HKEY_LOCAL_MACHINE\Software\Icaros" "$HOME\Мой диск\документы\backups\xanashi_icaros\xanashi_icaros_HKLM.reg" /y
 reg export "HKEY_CURRENT_USER\Software\Icaros" "$HOME\Мой диск\документы\backups\xanashi_icaros\xanashi_icaros_HKCU.reg" /y
 
-
 # Games and emulators
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Playnite.7z" "$env:APPDATA\Playnite" -xr!'Playnite\library\files\*'
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\RPCS3.7z" $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata
@@ -93,9 +92,11 @@ rclone dedupe -P --dedupe-mode newest gdrive:/
 
 # Starting killed software back
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
-Start-Sleep -Seconds 30
-Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current
 Start-Process -FilePath "$env:ProgramFiles\Windhawk\windhawk.exe" -WorkingDirectory "$env:ProgramFiles\Windhawk"
+Start-Sleep -Seconds 5
+nircmd win close title Windhawk
+#Start-Sleep -Seconds 30
+#Start-Process -FilePath $HOME\scoop\apps\plex-mpv-shim\current\run.exe -WorkingDirectory $HOME\scoop\apps\plex-mpv-shim\current
 #Start-Sleep -Seconds 30
 # NOTE: Plex For Windows cannot started minimized
 # NOTE: Plex For Windows needs to be started as admin to avoid UAC prompt https://www.reddit.com/r/PleX/comments/q8un5s/is_there_any_way_to_stop_plex_from_trying_to/
