@@ -20,7 +20,6 @@ where.exe scoop
 if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
-scoop config use_external_7zip true
 
 # gsudo installation and configuration
 scoop install gsudo

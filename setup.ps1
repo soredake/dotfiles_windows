@@ -320,6 +320,8 @@ firefox -CreateProfile alwaysonproxy
 
 # This optimization takes time to complete, so it makes sense to enable it at the end
 scoop config use_sqlite_cache true
+# This needs to be set after 7zip-zstd install is done
+scoop config use_external_7zip true
 
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
