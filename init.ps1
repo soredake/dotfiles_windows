@@ -12,7 +12,7 @@ if (Test-Path $env:repository\setup.ps1) {
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
 # PowerShellCore installation
-winget install -h --accept-package-agreements 9MZ1SNWT0N5D
+winget install -h --accept-package-agreements --accept-source-agreements 9MZ1SNWT0N5D
 
 # https://github.com/ScoopInstaller/Install/issues/70
 # scoop installation and configuration
@@ -36,7 +36,7 @@ sudo {
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 
   # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/549#issuecomment-1675410316 https://github.com/microsoft/winget-cli/issues/222#issuecomment-1675434402
-  winget install --no-upgrade -h --accept-source-agreements WingetPathUpdater
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
 
   # Install git with machine scope until their installer will have support for user scope https://github.com/git-for-windows/git/discussions/4399#discussioncomment-5877325 https://github.com/microsoft/winget-cli/issues/3240
   # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115
