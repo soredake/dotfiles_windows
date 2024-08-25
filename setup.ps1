@@ -195,7 +195,7 @@ sudo {
 }
 
 # Refreshing PATH env
-. "$HOME/refrenv.ps1"
+# . "$HOME/refrenv.ps1"
 
 # Tasks & services
 sudo {
