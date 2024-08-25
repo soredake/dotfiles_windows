@@ -111,7 +111,14 @@ sudo {
 
   # Installing Microsoft Office suite
   # https://config.office.com/deploymentsettings
-  C:\Program` Files\OfficeDeploymentTool\setup.exe /configure "$($args[0])\Office-365-Config.xml"
+  # Run the script to check if Office is installed, and store the result
+  $officeInstalled = & pwsh -File "$HOME\git\dotfiles_windows\scripts\check-if-office-is-installed.ps1"
+
+  # Check if Office is not installed
+  if (-not $officeInstalled) {
+    # Run the Office Deployment Tool setup with the specified configuration file
+    C:\Program` Files\OfficeDeploymentTool\setup.exe /configure "$($args[0])\Office-365-Config.xml"
+  }
 
   # For storing ssh key
   powershell -c 'Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0'
@@ -149,7 +156,7 @@ sudo {
   reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v Recovery /t REG_DWORD /d 1 /f
 
   # Register mpv-git associations
-  cmd /c $HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat
+  cmd /c "$HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat /u"
 
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
@@ -174,8 +181,6 @@ sudo {
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
 } -args "$PSScriptRoot"
-# sudo dploy stow "$PSScriptRoot\dotfiles" $HOME
-# sudo dploy stow "$PSScriptRoot\WAU" C:\ProgramData\Winget-AutoUpdate
 
 # Band-aid tasks
 sudo {
@@ -197,9 +202,6 @@ sudo {
   Unregister-ScheduledTask -TaskName "Turning off the night light in the morning" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
 }
-
-# Refreshing PATH env
-# . "$HOME/refrenv.ps1"
 
 # Tasks & services
 sudo {
