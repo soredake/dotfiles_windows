@@ -15,17 +15,19 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/mai
 winget install -h --accept-package-agreements --accept-source-agreements 9MZ1SNWT0N5D
 
 # https://github.com/ScoopInstaller/Install/issues/70
-# scoop installation and configuration
+# scoop installation
 where.exe scoop
 if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
 
-# gsudo installation and configuration
+# gsudo installation
 scoop install gsudo
-sudo config CacheMode Auto
 
 sudo {
+  # Enable gsudo cache
+  sudo config CacheMode Auto
+
   # Enabling proxy support
   # https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
   winget settings --enable ProxyCommandLineOptions

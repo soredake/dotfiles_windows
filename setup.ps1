@@ -25,7 +25,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
-scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install cleanmgrplus windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 scoop install --independent "https://github.com/srouquette/Extras/raw/master/bucket/regedix.json" # https://github.com/ScoopInstaller/Extras/pull/13801
 #scoop hold tor-browser ryujinx
 
@@ -58,12 +58,12 @@ sudo {
 # Installing software from winget
 sudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
-  winget install --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
+  winget install --interactive --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn multipass msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -78,6 +78,9 @@ sudo {
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
 }
+
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
 
 # Add pipx bin dir to PATH
 pipx ensurepath
@@ -100,6 +103,7 @@ sudo {
   scoop install rom-properties-np
 
   # Chocolatey stuff
+  # TODO: samsung-magician package is broken
   choco install -y fxsound syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
@@ -166,12 +170,12 @@ sudo {
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
-# sudo {
-#   dploy stow $($args[0])\dotfiles $HOME
-#   dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
-# } -args "$PSScriptRoot"
-sudo dploy stow "$PSScriptRoot\dotfiles" $HOME
-sudo dploy stow "$PSScriptRoot\WAU" C:\ProgramData\Winget-AutoUpdate
+sudo {
+  dploy stow $($args[0])\dotfiles $HOME
+  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
+} -args "$PSScriptRoot"
+# sudo dploy stow "$PSScriptRoot\dotfiles" $HOME
+# sudo dploy stow "$PSScriptRoot\WAU" C:\ProgramData\Winget-AutoUpdate
 
 # Band-aid tasks
 sudo {
@@ -289,8 +293,11 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
-Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+# For some reason refrenv.ps1 script incorrectly refreshes `$env:PSModulePath` variable https://github.com/badrelmers/RefrEnv/issues/9, so I do this commands in another pwsh session
+pwsh -c "
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted;
 Install-Module -Name posh-git, PSAdvancedShortcut
+"
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
 # "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua" is no longer needed after https://github.com/mpv-player/mpv/pull/14555
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
@@ -358,6 +365,12 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked
 
 # Enabling classic context menu https://www.outsidethebox.ms/22361/#_842
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+
+# Just because I can do this
+New-Item -Path "$desktopPath\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory
+git clone "https://github.com/ThioJoe/Windows-Super-God-Mode" $HOME\git\Windows-Super-God-Mode
+Push-Location $HOME\git\Windows-Super-God-Mode
+.\Super_God_Mode.ps1 -NoGUI
 
 # WSL2 installation
 wsl --install --no-launch -d Ubuntu-24.04
