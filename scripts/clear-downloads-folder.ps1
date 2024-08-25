@@ -1,7 +1,7 @@
 $downloadsPath = "$env:USERPROFILE\Downloads"
 
 # Define folders to exclude from deletion
-$excludeFolders = @("64Gram Desktop", "TabSessionManager - Backup")
+$excludeFolders = @("64Gram Desktop", "TabSessionManager - Backup", "archive")
 
 # Get all files and directories in the Downloads folder
 Get-ChildItem -Path $downloadsPath -Recurse -Force |

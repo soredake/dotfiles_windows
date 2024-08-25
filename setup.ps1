@@ -24,8 +24,10 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
+# NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 scoop install windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
-scoop hold ryujinx # tor-browser
+scoop install --independent "https://github.com/srouquette/Extras/raw/master/bucket/regedix.json" # https://github.com/ScoopInstaller/Extras/pull/13801
+#scoop hold tor-browser ryujinx
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
@@ -36,7 +38,7 @@ pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
 # Link winget settings
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-# Do not enable `resume` feature for now https://github.com/microsoft/winget-cli/issues/4584
+# NOTE: Do not enable `resume` feature for now https://github.com/microsoft/winget-cli/issues/4584
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$PSScriptRoot\winget-settings.json"
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
@@ -77,6 +79,12 @@ sudo {
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
 }
 
+# Add pipx bin dir to PATH
+pipx ensurepath
+
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Installing pipx packages
 pipx install autoremove-torrents internetarchive tubeup guessit subliminal "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 # https://github.com/guessit-io/guessit/issues/766
@@ -87,7 +95,6 @@ pipx inject guessit setuptools
 
 # Software installation
 sudo {
-
   # This requires UAC
   # Traditional installer is not yet created https://github.com/GerbilSoft/rom-properties/issues/108
   scoop install rom-properties-np
@@ -95,7 +102,7 @@ sudo {
   # Chocolatey stuff
   choco install -y fxsound syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
   choco install -y --forcex86 aimp
-  choco install -y --pin nerd-fonts-hack
+  choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
 
   # Installing Microsoft Office suite
@@ -153,21 +160,18 @@ sudo {
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 1 /f
 }
 
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
-
-# Dotfiles
-sudo {
-
-  # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
-  # https://github.com/microsoft/terminal/issues/17455
-  Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-  New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-
-  # Linking dotfiles
-  dploy stow $($args[0])\dotfiles $HOME
-  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
-} -args "$PSScriptRoot"
+# Dotfiles preparations
+# https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
+# https://github.com/microsoft/terminal/issues/17455
+Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+# Linking dotfiles
+# sudo {
+#   dploy stow $($args[0])\dotfiles $HOME
+#   dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
+# } -args "$PSScriptRoot"
+sudo dploy stow "$PSScriptRoot\dotfiles" $HOME
+sudo dploy stow "$PSScriptRoot\WAU" C:\ProgramData\Winget-AutoUpdate
 
 # Band-aid tasks
 sudo {
@@ -282,9 +286,6 @@ winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
-# Add pipx bin dir to PATH
-pipx ensurepath
-
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
@@ -292,7 +293,11 @@ Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
 # "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua" is no longer needed after https://github.com/mpv-player/mpv/pull/14555
-curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua"
+curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
+
+# Change script keybind
+(Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua"
+
 Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
 Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
 Move-Item -Force "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\*" "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
