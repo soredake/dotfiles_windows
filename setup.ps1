@@ -20,7 +20,7 @@ scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 
 # Installing my scoop packages
-# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222, NodeJS installer uses machine scope https://github.com/nodejs/version-management/issues/16
+# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
@@ -174,8 +174,7 @@ sudo {
 # Dotfiles preparations
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
 # https://github.com/microsoft/terminal/issues/17455
-Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 sudo {
   dploy stow $($args[0])\dotfiles $HOME
@@ -235,30 +234,6 @@ sudo {
   # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
   Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
-}
-
-# Task for restarting Plex For Windows and plex-mpv-shim after waking pc from sleep or logon
-sudo {
-  Unregister-ScheduledTask -TaskName "Restarting plex for windows and plex-mpv-shim" -Confirm:$false
-  # https://stackoverflow.com/a/67123362
-  # https://learn.microsoft.com/en-us/answers/questions/794854/run-a-program-every-time-the-computer-comes-out-of
-  # Create list of triggers, including AtLogOn and custom event trigger
-  $triggers = @(New-ScheduledTaskTrigger -AtLogOn)
-
-  # Define custom event trigger
-  $subscription = @"
-<QueryList><Query Id="0" Path="System"><Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Power-Troubleshooter'] and EventID=1]]</Select></Query></QueryList>
-"@
-
-  # Register the custom event trigger using CIM
-  $CIMTriggerClass = Get-CimClass -ClassName MSFT_TaskEventTrigger -Namespace Root/Microsoft/Windows/TaskScheduler
-  $trigger = New-CimInstance -CimClass $CIMTriggerClass -ClientOnly
-  $trigger.Subscription = $subscription
-  $trigger.Enabled = $true
-  $triggers += $trigger
-
-  # Register the scheduled task
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe $HOME\git\dotfiles_windows\scripts\restart-plex-player-and-shim.ps1") -TaskName "Restarting plex for windows and plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger $triggers
 }
 
 # Cleanup
@@ -372,12 +347,15 @@ reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Inpr
 New-Item -Path "$desktopPath\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory
 git clone "https://github.com/ThioJoe/Windows-Super-God-Mode" $HOME\git\Windows-Super-God-Mode
 Push-Location $HOME\git\Windows-Super-God-Mode
-.\Super_God_Mode.ps1 -NoGUI
+pwsh .\Super_God_Mode.ps1 -NoGUI
 
 # WSL2 installation
 wsl --install --no-launch -d Ubuntu-24.04
 # Update WSL2 to latest pre-release
 sudo { wsl --update --pre-release }
+
+# Temporary fix
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecureBoot\SBAT" /v OptOut /d 1 /t REG_DWORD
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
