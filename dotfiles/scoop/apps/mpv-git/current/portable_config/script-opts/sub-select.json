@@ -7,7 +7,7 @@
   {
     "alang": ["jpn", "ja"],
     "slang": [ "eng?", "en?", "und" ],
-    "blacklist": [ "songs", "signs", "forced" ]
+    "blacklist": [ "songs", "signs", "forced", "forzados" ]
   },
   {
     "alang": "*",

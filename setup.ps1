@@ -257,7 +257,7 @@ sudo {
     "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe"
   )
   foreach ($package in $packages) {
-    winget uninstall -h $package
+    winget uninstall --accept-source-agreements -h $package
   }
 }
 
