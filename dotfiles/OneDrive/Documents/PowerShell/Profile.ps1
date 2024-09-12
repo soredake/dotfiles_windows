@@ -2,7 +2,8 @@
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
-Import-Module gsudoModule
+Import-Module -Name Microsoft.WinGet.CommandNotFound
+Import-Module -Name gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
@@ -85,3 +86,6 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
+
+# https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin

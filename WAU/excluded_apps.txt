@@ -16,6 +16,7 @@ IG.IGClient
 ItchIo.Itch
 LogMeIn.Hamachi
 Microsoft.OneDrive
+Mozilla.Firefox
 Parsec.Parsec
 Plex.PlexMediaServer
 Rakuten.Viber

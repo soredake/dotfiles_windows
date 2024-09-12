@@ -11,8 +11,8 @@ if (Test-Path $env:repository\setup.ps1) {
 # https://github.com/ScoopInstaller/Extras/issues/13073
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
-# PowerShellCore installation
-winget install -h --accept-package-agreements --accept-source-agreements 9MZ1SNWT0N5D
+# PowerShellCore and NanaZip installation
+winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d 9n8g7tscl18r
 
 # https://github.com/ScoopInstaller/Install/issues/70
 # scoop installation
@@ -20,6 +20,9 @@ where.exe scoop
 if (-not $?) {
   Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
+
+# Let scoop use NanaZip binaries
+scoop config use_external_7zip true
 
 # gsudo installation
 scoop install gsudo

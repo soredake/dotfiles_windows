@@ -25,7 +25,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
-scoop install cleanmgrplus windows11-classic-context-menu 7zip-zstd cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install cleanmgrplus windows11-classic-context-menu cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser 7zip-zstd
 scoop install --independent "https://github.com/srouquette/Extras/raw/master/bucket/regedix.json" # https://github.com/ScoopInstaller/Extras/pull/13801
 #scoop hold tor-browser ryujinx
 
@@ -63,7 +63,7 @@ sudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yoink HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp xp8k0hkjfrxgck 9nzvdkpmr9rd 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -103,8 +103,8 @@ sudo {
   scoop install rom-properties-np
 
   # Chocolatey stuff
-  # TODO: samsung-magician package is broken
-  choco install -y fxsound syncthingtray choco-cleaner tor samsung-magician nerd-fonts-hack
+  # samsung-magician is outdated https://github.com/mkevenaar/chocolatey-packages/issues/237
+  choco install -y fxsound syncthingtray choco-cleaner tor
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
@@ -169,6 +169,19 @@ sudo {
 
   # Once in a while I need hibernation
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 1 /f
+
+  # Allow in-place upgrade
+  # https://github.com/InjectedPie/Windows-11-Inplace-Upgrade-unsupported-Hardware/blob/main/Windows11%20Inplace%20Upgrade%20on%20unsupported%20Hardware.reg
+  reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1 /f
+  reg add "HKCU\SOFTWARE\Microsoft\PCHC" /v UpgradeEligibility /t REG_DWORD /d 1 /f
+}
+
+# Various settings continuation
+sudo {
+  # Set hibernation timeout to 10 hours
+  # https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options#change-or-x
+  powercfg /change /hibernate-timeout-ac 600
+  powercfg /change /hibernate-timeout-dc 600
 }
 
 # Dotfiles preparations
@@ -271,9 +284,10 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 . "$HOME/refrenv.ps1"
 
 # For some reason refrenv.ps1 script incorrectly refreshes `$env:PSModulePath` variable https://github.com/badrelmers/RefrEnv/issues/9, so I do this commands in another pwsh session
+# NOTE: https://github.com/microsoft/winget-command-not-found/issues/3
 pwsh -c "
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted;
-Install-Module -Name posh-git, PSAdvancedShortcut
+Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
 "
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
 # "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua" is no longer needed after https://github.com/mpv-player/mpv/pull/14555
@@ -327,8 +341,8 @@ Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USER
 # Shortcuts https://github.com/microsoft/winget-cli/issues/3314
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 Invoke-WebRequest -Uri "https://icon-icons.com/downloadimage.php?id=152991&root=2552/ICO/48/&file=firefox_browser_logo_icon_152991.ico" -OutFile "$HOME\firefox.ico"
-New-Shortcut -Name 'Firefox - LetyShops profile' -Path $desktopPath -Target "$env:LOCALAPPDATA\Microsoft\WindowsApps\firefox.exe" -Arguments "-P letyshops" -IconPath "$HOME\firefox.ico"
-New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $desktopPath -Target "$env:LOCALAPPDATA\Microsoft\WindowsApps\firefox.exe" -Arguments "-P alwaysonproxy" -IconPath "$HOME\firefox.ico"
+New-Shortcut -Name 'Firefox - LetyShops profile' -Path $desktopPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops" -IconPath "$HOME\firefox.ico"
+New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $desktopPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy" -IconPath "$HOME\firefox.ico"
 New-Shortcut -Name 'BreakTimer - disable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
 New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
 
@@ -354,8 +368,10 @@ wsl --install --no-launch -d Ubuntu-24.04
 # Update WSL2 to latest pre-release
 sudo { wsl --update --pre-release }
 
-# Temporary fix
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecureBoot\SBAT" /v OptOut /d 1 /t REG_DWORD
+# PSCompletions setup
+psc config enable_completions_update 0
+psc config enable_module_update 0
+psc add npm winget scoop
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v

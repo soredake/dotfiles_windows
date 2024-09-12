@@ -13,6 +13,21 @@ Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
   Move-Item $_.FullName $destFile
 }
 
+function check_and_clean_mega_remote {
+  # Execute the rclone command and store the output
+  $output = rclone about mega:
+
+  # Check if the output contains "Free:    off"
+  if ($output -match "Free:\s{4}off") {
+    # Perform some actions if "Free:    off" is found
+    Write-Output "Warning: No free space available on MEGA remote!"
+    rclone cleanup --verbose --mega-hard-delete mega:
+  }
+  else {
+    Write-Output "There is free space available on MEGA remote."
+  }
+}
+
 # Software needs to be stopped to correctly backup it's data
 #taskkill /T /f /im run.exe
 # taskkill /T /f /im plex.exe
@@ -81,10 +96,16 @@ if (Test-Path -Path "${env:EHDD}:\") {
 
   # Backing up my backups on external HDD to mega cloud
   rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups
+
+  # Clean mega remote if it's full
+  check_and_clean_mega_remote
 }
 
 # Backing up my google drive folder to mega cloud
 rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\rclone-gdrive-exclude-list.txt"
+
+# Clean mega remote if it's full
+check_and_clean_mega_remote
 
 # Deduping clouds
 rclone dedupe -P --dedupe-mode newest mega:/
