@@ -20,11 +20,11 @@ function check_and_clean_mega_remote {
   # Check if the output contains "Free:    off"
   if ($output -match "Free:\s{4}off") {
     # Perform some actions if "Free:    off" is found
-    Write-Output "Warning: No free space available on MEGA remote!"
+    Write-Output "Warning: No free space available on `MEGA` remote!"
     rclone cleanup --verbose --mega-hard-delete mega:
   }
   else {
-    Write-Output "There is free space available on MEGA remote."
+    Write-Output "There is free space available on `MEGA` remote."
   }
 }
 
@@ -33,19 +33,21 @@ function check_and_clean_mega_remote {
 # taskkill /T /f /im plex.exe
 taskkill /T /f /im "Plex Media Server.exe"
 taskkill /T /im Playnite.DesktopApp.exe
+taskkill /T /im AIMP.exe
 taskkill /T /f /im windhawk.exe
 
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Windhawk.7z" "C:\ProgramData\Windhawk"
-rclone sync -P $env:LOCALAPPDATA\Plex "$HOME\Мой диск\документы\backups\plex" --delete-excluded --exclude "cache/updates/"
-rclone sync -P $env:APPDATA\AIMP "$HOME\Мой диск\документы\backups\AIMP"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\Windhawk.7z" "C:\ProgramData\Windhawk"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\plex.7z" "$env:LOCALAPPDATA\Plex" -xr!'Plex\cache\updates\*'
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\AIMP.7z" "$env:APPDATA\AIMP" -xr!'AIMP\UpdateInstaller.exe'
+#7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=9 "$HOME\Мой диск\документы\backups\64gram.7z" "$env:APPDATA\64Gram Desktop\tdata" -xr!'tdata\user_data\media_cache' -xr!'tdata\user_data#2\media_cache' -xr!'tdata\user_data#3\media_cache'
 rclone sync -P $env:APPDATA\Taiga\data "$HOME\Мой диск\документы\backups\Taiga" --delete-excluded --exclude "db/image/" --exclude "theme/"
 rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
 rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
 rclone sync -P "${env:ProgramFiles(x86)}\FanControl\Configurations" "$HOME\Мой диск\документы\backups\fancontrol"
-rclone sync -P $HOME\scoop\persist\rclone "$HOME\Мой диск\документы\backups\rclone"
+rclone sync -P "$env:APPDATA\rclone\rclone.conf" "$HOME\Мой диск\документы\backups\rclone"
 rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
 rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --delete-excluded --exclude "Logs/"
 rclone sync -P "${env:ProgramFiles(x86)}\MSI Afterburner\Profiles" "$HOME\Мой диск\документы\backups\msi_afterburner"
@@ -55,21 +57,21 @@ reg export "HKEY_LOCAL_MACHINE\Software\Icaros" "$HOME\Мой диск\доку�
 reg export "HKEY_CURRENT_USER\Software\Icaros" "$HOME\Мой диск\документы\backups\xanashi_icaros\xanashi_icaros_HKCU.reg" /y
 
 # Games and emulators
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\Playnite.7z" "$env:APPDATA\Playnite" -xr!'Playnite\library\files\*'
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\RPCS3.7z" $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\EMPRESS.7z" "$env:PUBLIC\Documents\EMPRESS"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\OnlineFix.7z" "$env:PUBLIC\Documents\OnlineFix"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\CODEX.7z" "$env:PUBLIC\Documents\Steam\CODEX"
-# 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\PPSSPP.7z" "$documentsPath\PPSSPP"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\GoldbergSteamEmuSaves.7z" "$env:APPDATA\Goldberg SteamEmu Saves"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\ryujinx.7z" "$HOME\scoop\persist\ryujinx\portable\bis\user\save"
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\saves\sudachi.7z" "$HOME\scoop\apps\sudachi\current\user\nand\user\save"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\Playnite.7z" "$env:APPDATA\Playnite" -xr!'Playnite\library\files\*'
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\RPCS3.7z" $env:ChocolateyToolsLocation\RPCS3\dev_hdd0\home\00000001\savedata
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\EMPRESS.7z" "$env:PUBLIC\Documents\EMPRESS"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\OnlineFix.7z" "$env:PUBLIC\Documents\OnlineFix"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\CODEX.7z" "$env:PUBLIC\Documents\Steam\CODEX"
+# 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\PPSSPP.7z" "$documentsPath\PPSSPP"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\GoldbergSteamEmuSaves.7z" "$env:APPDATA\Goldberg SteamEmu Saves"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\ryujinx.7z" "$HOME\scoop\persist\ryujinx\portable\bis\user\save"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\saves\sudachi.7z" "$HOME\scoop\apps\sudachi\current\user\nand\user\save"
 # https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Yuzu.md https://github.com/Abd-007/Switch-Emulators-Guide/blob/main/Ryujinx.md
 rclone sync -P $HOME\scoop\apps\sudachi\current\user\nand\system\save\8000000000000010\su\avators\profiles.dat "$HOME\Мой диск\документы\backups\sudachi"
 rclone sync -P $HOME\scoop\persist\ryujinx\portable\system\Profiles.json "$HOME\Мой диск\документы\backups\ryujinx"
 
 # Tab Session Manager backups
-7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=on -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
+7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
 
 # Syncthing(-tray)
 rclone sync -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing\pc"
@@ -92,17 +94,24 @@ reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer
 
 if (Test-Path -Path "${env:EHDD}:\") {
   # Backing up my google drive folder to external HDD
-  rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\main --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\rclone-gdrive-exclude-list.txt"
+  rclone sync -P --progress-terminal-title "$HOME\Мой диск" ${env:EHDD}:\main --delete-before --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\configs\rclone-gdrive-exclude-list.txt"
+
+  # Clean mega remote if it's full
+  check_and_clean_mega_remote
 
   # Backing up my backups on external HDD to mega cloud
-  rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups
+  rclone sync -P --progress-terminal-title ${env:EHDD}:\backups mega:backups --delete-before
 
   # Clean mega remote if it's full
   check_and_clean_mega_remote
 }
 
 # Backing up my google drive folder to mega cloud
-rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\rclone-gdrive-exclude-list.txt"
+rclone sync -P --progress-terminal-title "$HOME\Мой диск" mega:main --delete-before --delete-excluded --exclude ".tmp.drive*/" --exclude-from "$HOME\Мой диск\документы\configs\rclone-gdrive-exclude-list.txt"
+
+# Backing up my Documents folder to onedrive and dropbox cloud
+rclone sync -P --progress-terminal-title "$HOME\Мой диск\документы" onedrive:main --delete-before --delete-excluded --exclude-from "$HOME\Мой диск\документы\configs\rclone-onedrive-dropbox-exclude-list.txt"
+rclone sync -P --progress-terminal-title "$HOME\Мой диск\документы" dropbox:main --delete-before --delete-excluded --exclude-from "$HOME\Мой диск\документы\configs\rclone-onedrive-dropbox-exclude-list.txt"
 
 # Clean mega remote if it's full
 check_and_clean_mega_remote
@@ -110,10 +119,13 @@ check_and_clean_mega_remote
 # Deduping clouds
 rclone dedupe -P --dedupe-mode newest mega:/
 rclone dedupe -P --dedupe-mode newest gdrive:/
+rclone dedupe -P --dedupe-mode newest --by-hash onedrive:/main
+rclone dedupe -P --dedupe-mode newest --by-hash dropbox:/main
 
 # Starting killed software back
 Start-Process -FilePath "$env:ProgramFiles\Plex\Plex Media Server\Plex Media Server.exe" -WindowStyle Hidden
 Start-Process -FilePath "$env:ProgramFiles\Windhawk\windhawk.exe" -WorkingDirectory "$env:ProgramFiles\Windhawk"
+Start-Process -FilePath "$env:ProgramFiles\AIMP\AIMP.exe"
 Start-Sleep -Seconds 5
 nircmd win close title Windhawk
 #Start-Sleep -Seconds 30

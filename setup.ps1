@@ -14,6 +14,11 @@ if (!$env:vm) {
   }
 }
 
+# Install powershell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
+# NOTE: https://github.com/microsoft/winget-command-not-found/issues/3
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
+
 # Adding scoop buckets
 'games', 'extras', 'versions', 'sysinternals', 'java', 'nirsoft', 'nonportable' | ForEach-Object { scoop bucket add $_ }
 scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
@@ -25,9 +30,8 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
-scoop install cleanmgrplus windows11-classic-context-menu cheat-engine ryujinx winsetview yt-dlp-master ffmpeg rclone bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser 7zip-zstd
-scoop install --independent "https://github.com/srouquette/Extras/raw/master/bucket/regedix.json" # https://github.com/ScoopInstaller/Extras/pull/13801
-#scoop hold tor-browser ryujinx
+scoop install anydesk regedix jq windows11-classic-context-menu cheat-engine winsetview yt-dlp-master ffmpeg bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+#scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory
@@ -38,7 +42,6 @@ pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
 # Link winget settings
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-# NOTE: Do not enable `resume` feature for now https://github.com/microsoft/winget-cli/issues/4584
 New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$PSScriptRoot\winget-settings.json"
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
@@ -52,7 +55,7 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 sudo {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "Hibernation -Disable", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable"
 }
 
 # Installing software from winget
@@ -63,7 +66,7 @@ sudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Enyium.NightLight handbrake hydralauncher SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -104,7 +107,7 @@ sudo {
 
   # Chocolatey stuff
   # samsung-magician is outdated https://github.com/mkevenaar/chocolatey-packages/issues/237
-  choco install -y fxsound syncthingtray choco-cleaner tor
+  choco install -y syncthingtray choco-cleaner tor
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
@@ -121,14 +124,17 @@ sudo {
   }
 
   # For storing ssh key
-  powershell -c 'Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0'
+  # NOTE: Add-WindowsCapability is not working in pwsh msix https://github.com/PowerShell/PowerShell/issues/24283
+  dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
+}
 
-  # Winget-AutoUpdate installation
-  # NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
-  git clone --depth=1 "https://github.com/Romanitho/Winget-AutoUpdate" "$HOME/Downloads/Winget-AutoUpdate"
-  ~\Downloads\Winget-AutoUpdate\Sources\WAU\Winget-AutoUpdate-Install.ps1 -StartMenuShortcut -Silent -InstallUserContext -NotificationLevel Full -UpdatesInterval BiDaily -DoNotUpdate -UpdatesAtTime 11AM
-  Remove-Item -Path C:\ProgramData\Winget-AutoUpdate\excluded_apps.txt
-} -args "$PSScriptRoot"
+# Winget-AutoUpdate installation
+# NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
+# TODO: change url to `latest` once msi version will be stable
+Push-Location $HOME\Downloads
+curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/tags/v1.22.2-n" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
+sudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
+Pop-Location
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
@@ -178,20 +184,32 @@ sudo {
 
 # Various settings continuation
 sudo {
-  # Set hibernation timeout to 10 hours
+  # https://habr.com/ru/companies/timeweb/articles/845214/
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
+
+  # Edit qbittorrent shortcut to fix https://github.com/qbittorrent/qBittorrent/issues/21423
+  # https://github.com/qbittorrent/qBittorrent/issues/21423#issuecomment-2383875303
+  $shortcutPath = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\qBittorrent\qBittorrent.lnk"
+  $WScriptShell = New-Object -ComObject WScript.Shell
+  $shortcut = $WScriptShell.CreateShortcut($shortcutPath)
+  $shortcut.TargetPath = $shortcut.TargetPath
+  $shortcut.Arguments = "-style WindowsVista"
+  $shortcut.Save()
+
+  # Set hibernation timeout to 13 hours
   # https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options#change-or-x
-  powercfg /change /hibernate-timeout-ac 600
-  powercfg /change /hibernate-timeout-dc 600
+  # NOTE: this is needed only when hypervisor boot is enabled
+  #powercfg /change /hibernate-timeout-ac 780
+  #powercfg /change /hibernate-timeout-dc 780
 }
 
 # Dotfiles preparations
-# https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730
-# https://github.com/microsoft/terminal/issues/17455
+# https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 sudo {
   dploy stow $($args[0])\dotfiles $HOME
-  dploy stow $($args[0])\WAU C:\ProgramData\Winget-AutoUpdate
+  dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
 } -args "$PSScriptRoot"
 
 # Band-aid tasks
@@ -250,9 +268,9 @@ sudo {
 }
 
 # Cleanup
+# https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
 sudo {
-  # To list all inbox packages:
-  # $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List
   # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
   # Note: after removing notepad you no longer can create .txt files, so don't do this
   $packages = @(
@@ -283,12 +301,6 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
-# For some reason refrenv.ps1 script incorrectly refreshes `$env:PSModulePath` variable https://github.com/badrelmers/RefrEnv/issues/9, so I do this commands in another pwsh session
-# NOTE: https://github.com/microsoft/winget-command-not-found/issues/3
-pwsh -c "
-Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted;
-Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
-"
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
 # "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua" is no longer needed after https://github.com/mpv-player/mpv/pull/14555
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
@@ -323,10 +335,8 @@ trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
-# This optimization takes time to complete, so it makes sense to enable it at the end
+# This optimization takes some time to complete, so it makes sense to enable it at the end
 scoop config use_sqlite_cache true
-# This needs to be set after 7zip-zstd install is done
-scoop config use_external_7zip true
 
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
@@ -351,17 +361,25 @@ New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALA
 # https://github.com/microsoft/vscode/issues/211583
 New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
 
-# https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-
 # Enabling classic context menu https://www.outsidethebox.ms/22361/#_842
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
 
 # Just because I can do this
-New-Item -Path "$desktopPath\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory
+#New-Item -Path "$desktopPath\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory
 git clone "https://github.com/ThioJoe/Windows-Super-God-Mode" $HOME\git\Windows-Super-God-Mode
 Push-Location $HOME\git\Windows-Super-God-Mode
 pwsh .\Super_God_Mode.ps1 -NoGUI
+
+# Enable Hyper-V, hypervisor platform and VMP but disable hypervisor boot
+sudo {
+  dism /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
+  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
+  # HypervisorPlatform is needed for VMware Workstation
+  dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
+  # https://stackoverflow.com/a/35812945
+  # Disabling hypervisor boot by default
+  bcdedit /set hypervisorlaunchtype off
+}
 
 # WSL2 installation
 wsl --install --no-launch -d Ubuntu-24.04
