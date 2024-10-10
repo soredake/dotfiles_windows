@@ -2,4 +2,4 @@ $env:FirefoxDefaultProfile = (Get-Content $env:APPDATA\Mozilla\Firefox\profiles.
 $env:FirefoxDefaultProfilePath = "${env:APPDATA}\Mozilla\Firefox\$env:FirefoxDefaultProfile"
 
 Remove-Item -Path $env:FirefoxDefaultProfilePath\user.js
-sudo { New-Item -ItemType SymbolicLink -Path $env:FirefoxDefaultProfilePath\user.js -Target $HOME\git\dotfiles_windows\user.js }
+gsudo { New-Item -ItemType SymbolicLink -Path $env:FirefoxDefaultProfilePath\user.js -Target $HOME\git\dotfiles_windows\user.js }

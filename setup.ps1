@@ -7,7 +7,7 @@ $desktopPath = [Environment]::GetFolderPath('Desktop')
 
 if (!$env:vm) {
   $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
-  sudo {
+  gsudo {
     # Set static IP https://stackoverflow.com/a/53991926
     New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
@@ -52,14 +52,14 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
 # Get tips and suggestions when using Windows…: WindowsTips -Disable
-sudo {
+gsudo {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
   ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable"
 }
 
 # Installing software from winget
-sudo {
+gsudo {
   # Jellyfin.Server cannot be installed silently https://github.com/jellyfin/jellyfin-server-windows/issues/109
   winget install --interactive --no-upgrade --accept-package-agreements --accept-source-agreements Jellyfin.Server
 
@@ -100,7 +100,7 @@ pipx inject guessit setuptools
 . "$HOME/refrenv.ps1"
 
 # Software installation
-sudo {
+gsudo {
   # This requires UAC
   # Traditional installer is not yet created https://github.com/GerbilSoft/rom-properties/issues/108
   scoop install rom-properties-np
@@ -132,15 +132,15 @@ sudo {
 # NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
 # TODO: change url to `latest` once msi version will be stable
 Push-Location $HOME\Downloads
-curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/tags/v1.22.2-n" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
-sudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
+curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/tags/v1.22.5-n" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
+gsudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
 Pop-Location
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
 # Various settings
-sudo {
+gsudo {
   # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
   $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
   $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
@@ -183,7 +183,7 @@ sudo {
 }
 
 # Various settings continuation
-sudo {
+gsudo {
   # https://habr.com/ru/companies/timeweb/articles/845214/
   reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
 
@@ -195,6 +195,8 @@ sudo {
   $shortcut.TargetPath = $shortcut.TargetPath
   $shortcut.Arguments = "-style WindowsVista"
   $shortcut.Save()
+  # And autostart entry
+  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v qBittorrent /t REG_SZ /d '"C:\Program Files\qBittorrent\qbittorrent.exe" "--profile=" "--configuration=" "--style=WindowsVista"' /f
 
   # Set hibernation timeout to 13 hours
   # https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options#change-or-x
@@ -207,13 +209,13 @@ sudo {
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
-sudo {
+gsudo {
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
 } -args "$PSScriptRoot"
 
 # Band-aid tasks
-sudo {
+gsudo {
   # Tasks for starting and stopping lycheefix
   Unregister-ScheduledTask -TaskName "Start lycheefix" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixon") -TaskName "Start lycheefix"
@@ -234,7 +236,7 @@ sudo {
 }
 
 # Tasks & services
-sudo {
+gsudo {
   # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
   New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
   # https://serverfault.com/a/983832 https://github.com/PowerShell/PowerShell/issues/21400
@@ -260,7 +262,7 @@ sudo {
 }
 
 # Task for cleaning Downloads folder
-sudo {
+gsudo {
   # Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
   # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
   Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
@@ -270,7 +272,7 @@ sudo {
 # Cleanup
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-sudo {
+gsudo {
   # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
   # Note: after removing notepad you no longer can create .txt files, so don't do this
   $packages = @(
@@ -321,9 +323,10 @@ New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable
 
 # Multipass setup
 if (!$env:vm) {
-  sudo multipass set local.driver=virtualbox
+  gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
+  # TODO: check if it will use 24.04 image by default https://multipass.run/docs/create-an-instance
   multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount F:\:/mnt/d_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
   multipass stop
@@ -371,7 +374,7 @@ Push-Location $HOME\git\Windows-Super-God-Mode
 pwsh .\Super_God_Mode.ps1 -NoGUI
 
 # Enable Hyper-V, hypervisor platform and VMP but disable hypervisor boot
-sudo {
+gsudo {
   dism /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
   dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
   # HypervisorPlatform is needed for VMware Workstation
@@ -382,9 +385,15 @@ sudo {
 }
 
 # WSL2 installation
+# https://github.com/microsoft/WSL/issues/10386#issuecomment-2268703768
 wsl --install --no-launch -d Ubuntu-24.04
+ubuntu2404 install --root
+wsl -d Ubuntu-24.04 --user root -- /bin/bash $PSScriptRoot/wsl-create-user.sh
+# https://superuser.com/questions/1566022/how-to-set-default-user-for-manually-installed-wsl-distro
+ubuntu2404 config --default-user ubuntu
+wsl -d Ubuntu-24.04 --user ubuntu -- /bin/bash $PSScriptRoot/wsl.sh
 # Update WSL2 to latest pre-release
-sudo { wsl --update --pre-release }
+gsudo { wsl --update --pre-release }
 
 # PSCompletions setup
 psc config enable_completions_update 0

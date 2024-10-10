@@ -7,6 +7,3 @@ swap=5GB
 [experimental]
 autoMemoryReclaim=gradual
 sparseVhd=true
-
-[boot]
-systemd=true

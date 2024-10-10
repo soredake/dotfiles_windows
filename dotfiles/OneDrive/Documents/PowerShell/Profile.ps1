@@ -51,7 +51,7 @@ function download_subtitles { subliminal download -l en -hi $args[0] }
 function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
 function mps { multipass stop }
 function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
-function what_blocks_sleep { sudo { powercfg -requests } }
+function what_blocks_sleep { gsudo { powercfg -requests } }
 function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 
 # https://github.com/microsoft/winget-cli/issues/1653
@@ -60,14 +60,14 @@ function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 function listallsoftware { winget list --source winget | Sort-Object Name }
 
 # https://github.com/canonical/multipass/issues/3112
-function MultipassSetDiscard { sudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+function MultipassSetDiscard {gsudo  { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
-function MultipassShowVmInfo { sudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
+function MultipassShowVmInfo { gsudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
 function MultipassDeletePortForward {
   param (
     [string]$name
   )
-  sudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
+  gsudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
 }
 function MultipassExportLogsFromLastHour {
   Get-WinEvent -FilterHashtable @{LogName = 'Application'; ProviderName = 'Multipass'; StartTime = (Get-Date).AddHours(-1) } | Out-File -FilePath $HOME\Multipass-logs-from-last-hour.log

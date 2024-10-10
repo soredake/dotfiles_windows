@@ -16,6 +16,10 @@
             "keys": "ctrl+v"
         },
         {
+            "command": "find",
+            "keys": "ctrl+shift+f"
+        },
+        {
             "command": 
             {
                 "action": "splitPane",
@@ -23,10 +27,6 @@
                 "splitMode": "duplicate"
             },
             "keys": "alt+shift+d"
-        },
-        {
-            "command": "find",
-            "keys": "ctrl+shift+f"
         }
     ],
     "alwaysShowNotificationIcon": false,
@@ -64,7 +64,7 @@
             },
             {
                 "closeOnExit": "never",
-                "commandline": "pwsh.exe -WorkingDirectory ~ -NoLogo -Command sudo",
+                "commandline": "pwsh.exe -WorkingDirectory ~ -NoLogo -Command gsudo",
                 "cursorShape": "bar",
                 "guid": "{7f74bd31-a1bb-4d3e-9f0a-a8b84b6f07d1}",
                 "icon": "ms-appx:///ProfileIcons/pwsh.png",
@@ -78,24 +78,18 @@
                 "name": "Oracle server"
             },
             {
+                "guid": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
+                "hidden": false,
+                "name": "Ubuntu 24.04.1 LTS",
+                "source": "CanonicalGroupLimited.Ubuntu24.04LTS_79rhkp1fndgsc"
+            },
+            {
                 "commandline": "multipass shell",
                 "cursorShape": "bar",
                 "guid": "{aaaa9e6d-1e09-4be6-b76c-82b4ba1885fb}",
                 "historySize": 50000,
                 "icon": "C:/Program Files/Multipass/bin/multipass_wt.ico",
                 "name": "Multipass"
-            },
-            {
-                "guid": "{e5a83caa-4c73-52b3-ae6b-bc438d721ef9}",
-                "hidden": false,
-                "name": "Ubuntu 22.04.3 LTS",
-                "source": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
-            },
-            {
-                "guid": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
-                "hidden": true,
-                "name": "Ubuntu-22.04",
-                "source": "Windows.Terminal.Wsl"
             },
             {
                 "colorScheme": "Firewatch",
@@ -119,6 +113,12 @@
                 "hidden": false,
                 "name": "Git Bash",
                 "source": "Git"
+            },
+            {
+                "guid": "{963ff2f7-6aed-5ce3-9d91-90d99571f53a}",
+                "hidden": true,
+                "name": "Ubuntu-24.04",
+                "source": "Windows.Terminal.Wsl"
             }
         ]
     },
@@ -440,6 +440,29 @@
             "foreground": "#FFFFFF",
             "green": "#26A269",
             "name": "Ubuntu-22.04-ColorScheme",
+            "purple": "#881798",
+            "red": "#C21A23",
+            "selectionBackground": "#FFFFFF",
+            "white": "#CCCCCC",
+            "yellow": "#A2734C"
+        },
+        {
+            "background": "#300A24",
+            "black": "#171421",
+            "blue": "#0037DA",
+            "brightBlack": "#767676",
+            "brightBlue": "#08458F",
+            "brightCyan": "#2C9FB3",
+            "brightGreen": "#26A269",
+            "brightPurple": "#A347BA",
+            "brightRed": "#C01C28",
+            "brightWhite": "#F2F2F2",
+            "brightYellow": "#A2734C",
+            "cursorColor": "#FFFFFF",
+            "cyan": "#3A96DD",
+            "foreground": "#FFFFFF",
+            "green": "#26A269",
+            "name": "Ubuntu-24.04-ColorScheme",
             "purple": "#881798",
             "red": "#C21A23",
             "selectionBackground": "#FFFFFF",

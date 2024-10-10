@@ -8,7 +8,7 @@ sudo apt update
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn tmux speedtest-cli jq
-curl -fsSL get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+curl -fsSL get.docker.com -o $HOME/get-docker.sh && sudo sh $HOME/get-docker.sh
 mkdir -p ~/.local/bin
 
 # Installing topgrade
@@ -18,9 +18,10 @@ rm topgrade*.tar.gz
 
 pipx ensurepath
 # NOTE: Combine this after updating to >=24.04
-pipx install tubeup
-pipx install https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip
-pipx install internetarchive
+# pipx install tubeup
+# pipx install https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip
+# pipx install internetarchive
+pipx install tubeup https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip internetarchive
 
 # https://unix.stackexchange.com/a/740124
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher pure-fish/pure; set -U fish_features qmark-noglob"
@@ -70,6 +71,12 @@ sudo systemctl daemon-reload
 
 # https://github.com/microsoft/WSL/issues/4071
 if grep -q microsoft /proc/version; then
+  # https://github.com/microsoft/WSL/issues/10510
+  sudo tee /etc/wsl.conf >/dev/null <<EOF
+[boot]
+systemd=true
+EOF
+
   # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
   sudo systemctl enable /usr/share/systemd/tmp.mount
 

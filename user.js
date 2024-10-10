@@ -9,13 +9,8 @@ user_pref("extensions.pocket.enabled", false);
 // I use translation addon
 user_pref("browser.translations.enable", false);
 
-// https://www.ghacks.net/2024/02/22/how-to-enable-tab-previews-in-firefox/
-user_pref("browser.tabs.cardPreview.enabled", true);
-
 // DNS Over HTTPS is disabled as I use DOH from windows
 user_pref("network.trr.mode", 5);
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1852752
-// user_pref("network.dns.native_https_query", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904

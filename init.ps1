@@ -27,9 +27,9 @@ scoop config use_external_7zip true
 # gsudo installation
 scoop install gsudo
 
-sudo {
+gsudo {
   # Enable gsudo cache
-  sudo config CacheMode Auto
+  gsudo config CacheMode Auto
 
   # Enabling proxy support
   # https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
