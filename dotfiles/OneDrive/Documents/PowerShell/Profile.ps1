@@ -33,8 +33,45 @@ function checklinks {
   #StopLycheeFix
 }
 
+# Clean all my clouds
+function CleanAllClouds {
+  rclone cleanup -v mega:
+  rclone cleanup -v gdrive:
+  rclone cleanup -v onedrive:
+  rclone cleanup -v dropbox:
+}
+
 # To list all inbox packages:
-function ListAllAppxPackages { $allPackages = Get-AppxPackage -AllUsers; $startApps = Get-StartApps; $allPackages | % { $pkg = $_; $startApps | ? { $_.AppID -like "*$($pkg.PackageFamilyName)*" } | % { New-Object PSObject -Property @{PackageFamilyName=$pkg.PackageFamilyName; AppName=$_.Name} } } | Format-List}
+function ListAllAppxPackages {
+  gsudo {
+    # Retrieve all installed Appx packages for all users
+    $allPackages = Get-AppxPackage -AllUsers
+
+    # Retrieve the list of start menu applications
+    $startApps = Get-StartApps
+
+    # Iterate through each package in allPackages
+    $allPackages | ForEach-Object {
+      $pkg = $_  # Current package
+
+      # Find matching start menu apps where AppID contains the PackageFamilyName
+      $startApps | Where-Object { 
+        $_.AppID -like "*$($pkg.PackageFamilyName)*" 
+      } | ForEach-Object {
+        # Create a new PSObject for each matched app
+        New-Object PSObject -Property @{
+          PackageFamilyName = $pkg.PackageFamilyName
+          AppName           = $_.Name
+        }
+      }
+    } | Format-List  # Display results in a formatted list
+  }
+}
+
+# https://github.com/microsoft/winget-cli/issues/1653
+# https://github.com/microsoft/winget-cli/issues/1155
+# https://github.com/microsoft/winget-cli/issues/3494
+function ListAllSoftware { winget list --source winget | Sort-Object Name }
 
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
@@ -54,13 +91,9 @@ function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $ar
 function what_blocks_sleep { gsudo { powercfg -requests } }
 function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 
-# https://github.com/microsoft/winget-cli/issues/1653
-# https://github.com/microsoft/winget-cli/issues/1155
-# https://github.com/microsoft/winget-cli/issues/3494
-function listallsoftware { winget list --source winget | Sort-Object Name }
 
 # https://github.com/canonical/multipass/issues/3112
-function MultipassSetDiscard {gsudo  { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+function MultipassSetDiscard { gsudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
 
 function MultipassShowVmInfo { gsudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
 function MultipassDeletePortForward {

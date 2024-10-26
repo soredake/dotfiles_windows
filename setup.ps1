@@ -55,7 +55,7 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 gsudo {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register", "StorageSense -Enable", "StorageSenseTempFiles -Enable"
 }
 
 # Installing software from winget
@@ -66,7 +66,7 @@ gsudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey virtualbox Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -76,7 +76,8 @@ gsudo {
   winget install --no-upgrade -h -e multipass -v "1.12.2+win"
 
   # PowerToys should be ran as admin to be fully functional
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
+  # WAU incorrectly trying to install VirtualBox in user scope
+  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys virtualbox
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
@@ -130,9 +131,8 @@ gsudo {
 
 # Winget-AutoUpdate installation
 # NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
-# TODO: change url to `latest` once msi version will be stable
 Push-Location $HOME\Downloads
-curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/tags/v1.22.5-n" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
+curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/latest" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
 gsudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
 Pop-Location
 
@@ -226,10 +226,6 @@ gsudo {
   Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
-  # Task for restarting qBittorrent every day until https://github.com/qbittorrent/qBittorrent/issues/20305 is fixed
-  Unregister-ScheduledTask -TaskName "Restart qBittorrent every day" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-qbittorrent.ps1") -TaskName "Restart qBittorrent every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00), (New-ScheduledTaskTrigger -Daily -At 16:00)
-
   # Night Light is usually not turned off automatically in the morning https://aka.ms/AAqoje8
   Unregister-ScheduledTask -TaskName "Turning off the night light in the morning" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
@@ -287,7 +283,9 @@ gsudo {
     "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
     "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
     "Microsoft.ZuneMusic_8wekyb3d8bbwe",
-    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe"
+    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+    "MSTeams_8wekyb3d8bbwe",
+    "Microsoft.Copilot_8wekyb3d8bbwe"
   )
   foreach ($package in $packages) {
     winget uninstall --accept-source-agreements -h $package
@@ -297,7 +295,7 @@ gsudo {
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
-# https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519
+# https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519 https://github.com/microsoft/winget-pkgs/pull/106718
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # Refreshing PATH env
@@ -326,8 +324,7 @@ if (!$env:vm) {
   gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
-  # TODO: check if it will use 24.04 image by default https://multipass.run/docs/create-an-instance
-  multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount F:\:/mnt/d_host --mount C:\:/mnt/c_host
+  multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount F:\:/mnt/f_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
   multipass stop
 }
