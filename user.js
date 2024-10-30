@@ -43,7 +43,7 @@ user_pref("widget.windows.overlay-scrollbars.enabled", false);
 user_pref("browser.aboutConfig.showWarning", false);
 
 // https://github.com/yokoffing/Betterfox/issues/310
-user_pref("dom.ipc.processPriorityManager.backgroundUsesEcoQoS", false);
+//user_pref("dom.ipc.processPriorityManager.backgroundUsesEcoQoS", false);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)

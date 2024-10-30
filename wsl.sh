@@ -17,10 +17,6 @@ tar -xzf topgrade*.tar.gz -C ~/.local/bin/
 rm topgrade*.tar.gz
 
 pipx ensurepath
-# NOTE: Combine this after updating to >=24.04
-# pipx install tubeup
-# pipx install https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip
-# pipx install internetarchive
 pipx install tubeup https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip internetarchive
 
 # https://unix.stackexchange.com/a/740124
@@ -55,10 +51,6 @@ grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc
 mkdir ~/.ia
 ln -sfv ~/.config/internetarchive/ia.ini ~/.config/ia.ini
 ln -sfv ~/.config/internetarchive/ia.ini ~/.ia/ia.ini
-
-# curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
-# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# brew install lychee
 
 # https://wiki.archlinux.org/title/Systemd/Journal#Journal_size_limit
 # https://github.com/systemd/systemd/issues/17382

@@ -9,28 +9,11 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Exp
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
 
-function lycheefixon {
-  Stop-Service -Name Hamachi2Svc
-  Get-NetAdapter | Where-Object { $_.Name -ne "Ethernet 3" } | Disable-NetAdapter -Confirm:$false
-}
-function lycheefixoff {
-  Start-Service -Name Hamachi2Svc
-  Get-NetAdapter | Enable-NetAdapter
-}
-function StartLycheeFix {
-  Start-ScheduledTask -TaskName "Start lycheefix"
-}
-function StopLycheeFix {
-  Start-ScheduledTask -TaskName "Stop lycheefix"
-}
-
 function checklinks {
-  #StartLycheeFix
-  Push-Location "$HOME\Мой диск\документы\archiveorg"
-  lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 *.txt
-  lychee --max-concurrency 5 ..\old\linux.txt
+  Push-Location "$HOME\Мой диск\документы"
+  lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt
+  lychee --max-concurrency 5 old\linux.txt
   Pop-Location
-  #StopLycheeFix
 }
 
 # Clean all my clouds

@@ -66,7 +66,7 @@ gsudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd FxSoundLLC.FxSound darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -142,6 +142,7 @@ Pop-Location
 # Various settings
 gsudo {
   # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
+  # https://github.com/qbittorrent/qBittorrent/issues/21709
   $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
   $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
   powercfg /devicedisablewake $CurrentNetworkAdapterName
@@ -152,6 +153,7 @@ gsudo {
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
 
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
+  # https://docs.chocolatey.org/en-us/configuration/
   choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
@@ -186,23 +188,6 @@ gsudo {
 gsudo {
   # https://habr.com/ru/companies/timeweb/articles/845214/
   reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
-
-  # Edit qbittorrent shortcut to fix https://github.com/qbittorrent/qBittorrent/issues/21423
-  # https://github.com/qbittorrent/qBittorrent/issues/21423#issuecomment-2383875303
-  $shortcutPath = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\qBittorrent\qBittorrent.lnk"
-  $WScriptShell = New-Object -ComObject WScript.Shell
-  $shortcut = $WScriptShell.CreateShortcut($shortcutPath)
-  $shortcut.TargetPath = $shortcut.TargetPath
-  $shortcut.Arguments = "-style WindowsVista"
-  $shortcut.Save()
-  # And autostart entry
-  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v qBittorrent /t REG_SZ /d '"C:\Program Files\qBittorrent\qbittorrent.exe" "--profile=" "--configuration=" "--style=WindowsVista"' /f
-
-  # Set hibernation timeout to 13 hours
-  # https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options#change-or-x
-  # NOTE: this is needed only when hypervisor boot is enabled
-  #powercfg /change /hibernate-timeout-ac 780
-  #powercfg /change /hibernate-timeout-dc 780
 }
 
 # Dotfiles preparations
@@ -216,12 +201,6 @@ gsudo {
 
 # Band-aid tasks
 gsudo {
-  # Tasks for starting and stopping lycheefix
-  Unregister-ScheduledTask -TaskName "Start lycheefix" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixon") -TaskName "Start lycheefix"
-  Unregister-ScheduledTask -TaskName "Stop lycheefix" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c lycheefixoff") -TaskName "Stop lycheefix"
-
   # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
   Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
@@ -308,6 +287,7 @@ curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\cu
 # Change script keybind
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua"
 
+# TODO: try to extract with nanazip
 Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
 Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
 Move-Item -Force "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\*" "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
@@ -321,10 +301,11 @@ New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable
 
 # Multipass setup
 if (!$env:vm) {
+  $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSD 256gb").DriveLetter
   gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
-  multipass launch --name primary -c 4 -m 4G --mount E:\:/mnt/e_host --mount F:\:/mnt/f_host --mount C:\:/mnt/c_host
+  multipass launch --name primary -c 4 -m 4G --mount ${env:ESSD}:\:/mnt/e_host --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
   multipass stop
 }
@@ -343,10 +324,13 @@ reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 
+# Set `Temp` task to run every week
+Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
+
 # Task for cleaning torrents
 # https://github.com/jerrymakesjelly/autoremove-torrents
 Unregister-ScheduledTask -TaskName "Torrents cleanup" -Confirm:$false
-Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME") -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME") -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 
 # Shortcuts https://github.com/microsoft/winget-cli/issues/3314
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
