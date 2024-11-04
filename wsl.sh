@@ -25,9 +25,7 @@ wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/sored
 
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823
 tee ~/.config/fish/conf.d/config.fish >/dev/null <<EOF
-#eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 fish_add_path \$HOME/.local/bin
-#alias upall 'sudo apt update; sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y; pipx upgrade-all; brew update && brew upgrade && brew cleanup'
 function clean-snaps
   LANG=C snap list --all | while read snapname ver rev trk pub notes
     if string match -q "*disabled*" $notes
@@ -46,11 +44,6 @@ EOF
 
 # https://github.com/canonical/multipass/issues/3033
 grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc
-
-# https://github.com/gdamdam/iagitup/issues/23
-mkdir ~/.ia
-ln -sfv ~/.config/internetarchive/ia.ini ~/.config/ia.ini
-ln -sfv ~/.config/internetarchive/ia.ini ~/.ia/ia.ini
 
 # https://wiki.archlinux.org/title/Systemd/Journal#Journal_size_limit
 # https://github.com/systemd/systemd/issues/17382

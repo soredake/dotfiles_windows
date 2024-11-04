@@ -30,7 +30,8 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: lychee sudachi (only multiplayer), NodeJS and syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
-scoop install anydesk regedix jq windows11-classic-context-menu cheat-engine winsetview yt-dlp-master ffmpeg bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+# TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
+scoop install reshade anydesk regedix jq windows11-classic-context-menu cheat-engine winsetview yt-dlp-master ffmpeg bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -55,7 +56,7 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 gsudo {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register", "StorageSense -Enable", "StorageSenseTempFiles -Enable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
 }
 
 # Installing software from winget
@@ -66,7 +67,7 @@ gsudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh HumbleBundle.HumbleApp lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Microsoft.OfficeDeploymentTool Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln 9ntxgkq8p7n0
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -93,9 +94,7 @@ pipx ensurepath
 . "$HOME/refrenv.ps1"
 
 # Installing pipx packages
-pipx install autoremove-torrents internetarchive tubeup guessit subliminal "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
-# https://github.com/guessit-io/guessit/issues/766
-pipx inject guessit setuptools
+pipx install autoremove-torrents internetarchive tubeup "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
@@ -112,17 +111,6 @@ gsudo {
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
-
-  # Installing Microsoft Office suite
-  # https://config.office.com/deploymentsettings
-  # Run the script to check if Office is installed, and store the result
-  $officeInstalled = & pwsh -File "$HOME\git\dotfiles_windows\scripts\check-if-office-is-installed.ps1"
-
-  # Check if Office is not installed
-  if (-not $officeInstalled) {
-    # Run the Office Deployment Tool setup with the specified configuration file
-    C:\Program` Files\OfficeDeploymentTool\setup.exe /configure "$($args[0])\Office-365-Config.xml"
-  }
 
   # For storing ssh key
   # NOTE: Add-WindowsCapability is not working in pwsh msix https://github.com/PowerShell/PowerShell/issues/24283
@@ -169,9 +157,6 @@ gsudo {
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
-  # I don't need this file types scanned
-  Add-MpPreference -ExclusionExtension ".vhd", ".vhdx", ".vdi", ".vmdk"
-
   # I need local manifests
   winget settings --enable LocalManifestFiles
 
@@ -186,6 +171,22 @@ gsudo {
 
 # Various settings continuation
 gsudo {
+  # I don't need this file types scanned
+  Add-MpPreference -ExclusionExtension ".vhd", ".vhdx", ".vdi", ".vmdk"
+  Add-MpPreference -ExclusionPath "$HOME\VirtualBox VMs"
+  Add-MpPreference -ExclusionPath "$HOME\VMware Virtual Machines"
+  Add-MpPreference -ExclusionPath "$HOME\git\old"
+  # Exclude VirtualBox processes
+  Add-MpPreference -ExclusionProcess "VirtualBox.exe"
+  Add-MpPreference -ExclusionProcess "VirtualBoxVM.exe"
+  Add-MpPreference -ExclusionProcess "VBoxHeadless.exe"
+  Add-MpPreference -ExclusionProcess "VBoxSDS.exe"
+  Add-MpPreference -ExclusionProcess "VBoxSVC.exe"
+  # Exclude VMware processes
+  Add-MpPreference -ExclusionProcess "vmware.exe"
+  Add-MpPreference -ExclusionProcess "mksSandbox.exe"
+  Add-MpPreference -ExclusionProcess "vmware-vmx.exe"
+
   # https://habr.com/ru/companies/timeweb/articles/845214/
   reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
 }
@@ -206,8 +207,14 @@ gsudo {
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Night Light is usually not turned off automatically in the morning https://aka.ms/AAqoje8
+  # TODO: this seems to be fixed in 24H2
   Unregister-ScheduledTask -TaskName "Turning off the night light in the morning" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -c night-light -l switch --off") -TaskName "Turning off the night light in the morning" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 08:00)
+
+  # Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
+  # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
+  Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
 }
 
 # Tasks & services
@@ -236,40 +243,11 @@ gsudo {
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\scoop\apps\plex-mpv-shim\current\run.exe" -WorkingDirectory "$HOME\scoop\apps\plex-mpv-shim\current") -TaskName "plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
 }
 
-# Task for cleaning Downloads folder
-gsudo {
-  # Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
-  # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
-  Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
-}
-
 # Cleanup
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-gsudo {
-  # I converted this to for-each again because of this bug: https://github.com/microsoft/winget-cli/issues/3903
-  # Note: after removing notepad you no longer can create .txt files, so don't do this
-  $packages = @(
-    "Clipchamp.Clipchamp_yxz26nhyzhsrt",
-    "Microsoft.Todos_8wekyb3d8bbwe",
-    "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe",
-    "Microsoft.WindowsCamera_8wekyb3d8bbwe",
-    "Microsoft.Windows.Photos_8wekyb3d8bbwe",
-    "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
-    "Microsoft.BingWeather_8wekyb3d8bbwe",
-    "Microsoft.BingNews_8wekyb3d8bbw",
-    "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
-    "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
-    "Microsoft.ZuneMusic_8wekyb3d8bbwe",
-    "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
-    "MSTeams_8wekyb3d8bbwe",
-    "Microsoft.Copilot_8wekyb3d8bbwe"
-  )
-  foreach ($package in $packages) {
-    winget uninstall --accept-source-agreements -h $package
-  }
-}
+# https://winaero.com/how-to-remove-edit-with-clipchamp-from-context-menu-in-file-explorer/
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{8AB635F8-9A67-4698-AB99-784AD929F3B4}" /t REG_SZ /d "" /f
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
@@ -281,7 +259,6 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 . "$HOME/refrenv.ps1"
 
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
-# "https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua" is no longer needed after https://github.com/mpv-player/mpv/pull/14555
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
 
 # Change script keybind

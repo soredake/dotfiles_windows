@@ -25,7 +25,7 @@ function CleanAllClouds {
 }
 
 # To list all inbox packages:
-function ListAllAppxPackages {
+function ListAllAppxPackagesWithFamilyName {
   gsudo {
     # Retrieve all installed Appx packages for all users
     $allPackages = Get-AppxPackage -AllUsers
@@ -51,10 +51,13 @@ function ListAllAppxPackages {
   }
 }
 
-# https://github.com/microsoft/winget-cli/issues/1653
-# https://github.com/microsoft/winget-cli/issues/1155
-# https://github.com/microsoft/winget-cli/issues/3494
-function ListAllSoftware { winget list --source winget | Sort-Object Name }
+# https://t.me/sterkin_ru/1684
+function ListAllInstalledAppxPackages {
+  gsudo {
+    # NOTE: sadly, `Get-AppxProvisionedPackage -Online` does not work with pwsh installed from microsoft store
+    powershell -c 'Get-AppxProvisionedPackage -Online | Select-Object DisplayName'
+  }
+}
 
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
@@ -62,12 +65,12 @@ function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup 
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args }
 function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
+function backup-spotify-json { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.json" --format=json --dump='liked,playlists' }
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 # https://superuser.com/a/1830291/1506333
 function YoutubeExtractAllUrls { yt-dlp $args --skip-download --no-warning --print webpage_url }
 
-function download_subtitles { subliminal download -l en -hi $args[0] }
 function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
 function mps { multipass stop }
 function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }

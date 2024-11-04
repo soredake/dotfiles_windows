@@ -29,6 +29,12 @@ function check_and_clean_mega_remote {
   }
 }
 
+# Backup spotify
+Push-Location "$HOME\Мой диск\документы\backups\spotify-backup"
+backup-spotify
+backup-spotify-json
+Pop-Location
+
 # https://superuser.com/questions/544336/incremental-backup-with-7zip
 # Software
 pwsh "$HOME\git\dotfiles_windows\scripts\backup-firefox-bookmarks.ps1"
