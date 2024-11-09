@@ -31,7 +31,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
-scoop install reshade anydesk regedix jq windows11-classic-context-menu cheat-engine winsetview yt-dlp-master ffmpeg bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi proxychains process-explorer vivetool mkvtoolnix procmon nircmd autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install reshade regedix jq windows11-classic-context-menu cheat-engine winsetview yt-dlp-master ffmpeg bfg psexec topgrade pipx plex-mpv-shim retroarch regscanner nosleep mpv-git sudachi process-explorer vivetool mkvtoolnix procmon autoruns goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -67,7 +67,7 @@ gsudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee PragmaTwice.proxinject Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Playnite.Playnite Reshade.Setup.AddonsSupport IanWalton.JellyfinMPVShim specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win galaclient RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex jellyfin-media-player ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone Enyium.NightLight handbrake SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -94,7 +94,7 @@ pipx ensurepath
 . "$HOME/refrenv.ps1"
 
 # Installing pipx packages
-pipx install autoremove-torrents internetarchive tubeup "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
+pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
@@ -115,6 +115,12 @@ gsudo {
   # For storing ssh key
   # NOTE: Add-WindowsCapability is not working in pwsh msix https://github.com/PowerShell/PowerShell/issues/24283
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
+
+  # Enable Hyper-V, VMP and hypervisor platform
+  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
+  dism /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
+  # HypervisorPlatform is needed for VMware Workstation
+  dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
 
 # Winget-AutoUpdate installation
@@ -171,7 +177,7 @@ gsudo {
 
 # Various settings continuation
 gsudo {
-  # I don't need this file types scanned
+  # I don't need this file types and folders scanned
   Add-MpPreference -ExclusionExtension ".vhd", ".vhdx", ".vdi", ".vmdk"
   Add-MpPreference -ExclusionPath "$HOME\VirtualBox VMs"
   Add-MpPreference -ExclusionPath "$HOME\VMware Virtual Machines"
@@ -189,6 +195,14 @@ gsudo {
 
   # https://habr.com/ru/companies/timeweb/articles/845214/
   reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
+
+  # Disable hypervisor boot
+  # https://stackoverflow.com/a/35812945
+  bcdedit /set hypervisorlaunchtype off
+
+  # toprgrade uses built-in sudo to run choco upgrade
+  # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
+  gsudo sudo config --enable normal
 }
 
 # Dotfiles preparations
@@ -246,7 +260,7 @@ gsudo {
 # Cleanup
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-# https://winaero.com/how-to-remove-edit-with-clipchamp-from-context-menu-in-file-explorer/
+# https://www.elevenforum.com/t/add-or-remove-edit-with-clipchamp-context-menu-in-windows-11.6882/
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{8AB635F8-9A67-4698-AB99-784AD929F3B4}" /t REG_SZ /d "" /f
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
@@ -293,9 +307,6 @@ trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
-# This optimization takes some time to complete, so it makes sense to enable it at the end
-scoop config use_sqlite_cache true
-
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
@@ -322,7 +333,7 @@ New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALA
 # https://github.com/microsoft/vscode/issues/211583
 New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
 
-# Enabling classic context menu https://www.outsidethebox.ms/22361/#_842
+# Restoring classic context menu https://www.outsidethebox.ms/22361/#_842
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
 
 # Just because I can do this
@@ -330,17 +341,6 @@ reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Inpr
 git clone "https://github.com/ThioJoe/Windows-Super-God-Mode" $HOME\git\Windows-Super-God-Mode
 Push-Location $HOME\git\Windows-Super-God-Mode
 pwsh .\Super_God_Mode.ps1 -NoGUI
-
-# Enable Hyper-V, hypervisor platform and VMP but disable hypervisor boot
-gsudo {
-  dism /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
-  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
-  # HypervisorPlatform is needed for VMware Workstation
-  dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
-  # https://stackoverflow.com/a/35812945
-  # Disabling hypervisor boot by default
-  bcdedit /set hypervisorlaunchtype off
-}
 
 # WSL2 installation
 # https://github.com/microsoft/WSL/issues/10386#issuecomment-2268703768
@@ -357,6 +357,9 @@ gsudo { wsl --update --pre-release }
 psc config enable_completions_update 0
 psc config enable_module_update 0
 psc add npm winget scoop
+
+# This optimization takes some time to complete, so it makes sense to enable it at the end
+scoop config use_sqlite_cache true
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v

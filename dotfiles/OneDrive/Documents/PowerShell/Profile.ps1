@@ -38,8 +38,8 @@ function ListAllAppxPackagesWithFamilyName {
       $pkg = $_  # Current package
 
       # Find matching start menu apps where AppID contains the PackageFamilyName
-      $startApps | Where-Object { 
-        $_.AppID -like "*$($pkg.PackageFamilyName)*" 
+      $startApps | Where-Object {
+        $_.AppID -like "*$($pkg.PackageFamilyName)*"
       } | ForEach-Object {
         # Create a new PSObject for each matched app
         New-Object PSObject -Property @{
@@ -59,6 +59,14 @@ function ListAllInstalledAppxPackages {
   }
 }
 
+function FreeLeechTorrents {
+  pwsh -c $HOME\yoink.exe --config '$HOME\Мой` диск\документы\yoink.yaml'
+}
+
+function CleanTorrents {
+  autoremove-torrents --conf=C:\Users\user\Мой` диск\документы\configs\autoremove-torrents.yaml --log=C:\Users\user\Downloads
+}
+
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
@@ -69,7 +77,7 @@ function backup-spotify-json { python "$HOME\Мой диск\документы\
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 # https://superuser.com/a/1830291/1506333
-function YoutubeExtractAllUrls { yt-dlp $args --skip-download --no-warning --print webpage_url }
+function YoutubeExtractAllUrlsFromPlaylist { yt-dlp $args --skip-download --no-warning --print webpage_url }
 
 function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
 function mps { multipass stop }
