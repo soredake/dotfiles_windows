@@ -7,7 +7,7 @@ sudo apt update
 # https://stackoverflow.com/a/73397970 https://askubuntu.com/a/1424249
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
-sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish openvpn tmux speedtest-cli jq
+sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq
 curl -fsSL get.docker.com -o $HOME/get-docker.sh && sudo sh $HOME/get-docker.sh
 mkdir -p ~/.local/bin
 
@@ -16,8 +16,8 @@ curl -s https://api.github.com/repos/topgrade-rs/topgrade/releases/latest | jq -
 tar -xzf topgrade*.tar.gz -C ~/.local/bin/
 rm topgrade*.tar.gz
 
+# Adding pipx bin dir to PATH
 pipx ensurepath
-pipx install tubeup https://github.com/gdamdam/iagitup/archive/refs/heads/v1.7.zip internetarchive
 
 # https://unix.stackexchange.com/a/740124
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher pure-fish/pure; set -U fish_features qmark-noglob"
@@ -26,14 +26,7 @@ wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/sored
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823
 tee ~/.config/fish/conf.d/config.fish >/dev/null <<EOF
 fish_add_path \$HOME/.local/bin
-function clean-snaps
-  LANG=C snap list --all | while read snapname ver rev trk pub notes
-    if string match -q "*disabled*" $notes
-      sudo snap remove "$snapname" --revision="$rev"
-    end
-  end
-end
-alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_update'; clean-snaps'
+alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_update''
 echo -en "\e[6 q"
 EOF
 

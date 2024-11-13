@@ -1,9 +1,9 @@
 $host.ui.RawUI.WindowTitle = "Backup task"
 
-#$env:EHDD = (Get-Volume -FileSystemLabel "ExternalHDD").DriveLetter
 $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSD 256gb").DriveLetter
 
 # Moving unsorted files back to main folder
+# TODO: try foldersync v2 rename option
 Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
   $destFile = "$HOME\Мой диск\$($_.Name)"
 
@@ -43,7 +43,6 @@ rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\докуме
 rclone sync -P "${env:ProgramFiles(x86)}\FanControl\Configurations" "$HOME\Мой диск\документы\backups\fancontrol"
 rclone sync -P "$env:APPDATA\rclone\rclone.conf" "$HOME\Мой диск\документы\backups\rclone"
 rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
-rclone sync -P $env:APPDATA\DS4Windows "$HOME\Мой диск\документы\backups\ds4windows" --delete-excluded --exclude "Logs/"
 rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
 
 # Tab Session Manager backups

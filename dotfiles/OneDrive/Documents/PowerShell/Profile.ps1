@@ -12,7 +12,38 @@ Write-Output "`e[6 q"
 function checklinks {
   Push-Location "$HOME\Мой диск\документы"
   lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt
-  lychee --max-concurrency 5 old\linux.txt
+  Pop-Location
+}
+
+# Rebase revanced-patched-apks
+function RebaseRevancedPatchedApks {
+  # Change dir to repository
+  Push-Location "$HOME\git\revanced-patched-apks"
+
+  # 1. Copy `config.toml` and `options.json` to $TEMP
+  $sourceFiles = @("config.toml", "options.json")
+  $tempDir = [System.IO.Path]::GetTempPath()
+
+  foreach ($file in $sourceFiles) {
+    Copy-Item -Path $file -Destination $tempDir -Force
+  }
+
+  # 2. Hard reset the current repository to the remote `upstream` branch `main`
+  git fetch upstream
+  git reset --hard upstream/main
+
+  # 3. Copy `config.toml` and `options.json` back from $TEMP to the current directory
+  foreach ($file in $sourceFiles) {
+    Copy-Item -Path (Join-Path -Path $tempDir -ChildPath $file) -Destination . -Force
+  }
+
+  # 4. Create a commit with the name "Adding my config and options"
+  git add config.toml options.json
+  git commit -m "Adding my config and options"
+
+  # 5. Push with --force
+  git push --force
+
   Pop-Location
 }
 
@@ -65,6 +96,15 @@ function FreeLeechTorrents {
 
 function CleanTorrents {
   autoremove-torrents --conf=C:\Users\user\Мой` диск\документы\configs\autoremove-torrents.yaml --log=C:\Users\user\Downloads
+}
+
+function FixSystem {
+  gsudo {
+    sfc /scannow
+    dism /Online /Cleanup-Image /RestoreHealth
+    dism /Online /Cleanup-Image /StartComponentCleanup
+    dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+  }
 }
 
 function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-backup $args }
