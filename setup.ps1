@@ -10,7 +10,7 @@ if (!$env:vm) {
   gsudo {
     # Set static IP https://stackoverflow.com/a/53991926
     New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
+    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 8.8.8.8, 8.8.4.4
   }
 }
 
@@ -54,10 +54,11 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
 # Get tips and suggestions when using Windows…: WindowsTips -Disable
-gsudo {
+# NOTE: sophia script should be run under Windows Powershell to avoid problem https://github.com/farag2/Sophia-Script-for-Windows/issues/554 https://github.com/PowerShell/PowerShell/issues/21295
+gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 1.1.1.1 -SecondaryDNS 1.0.0.1", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
 }
 
 # Installing software from winget
@@ -300,6 +301,7 @@ reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 
 # Set `Temp` task to run every week
+# https://github.com/M2Team/NanaZip/issues/297 https://sourceforge.net/p/sevenzip/bugs/1448/ https://sourceforge.net/p/sevenzip/discussion/45797/thread/e23a6931/
 Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
 
 # Task for cleaning torrents
@@ -341,6 +343,7 @@ wsl -d Ubuntu-24.04 --user ubuntu -- /bin/bash $PSScriptRoot/wsl.sh
 gsudo { wsl --update --pre-release }
 
 # PSCompletions setup
+# TODO: this settings is constantly reset
 psc config enable_completions_update 0
 psc config enable_module_update 0
 psc add npm winget scoop

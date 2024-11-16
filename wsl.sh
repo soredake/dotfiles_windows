@@ -1,14 +1,20 @@
 #!/bin/bash
+# Disable pop-up "Daemons using outdated libraries" by telling needrestart to automatically restart services https://stackoverflow.com/a/73397970
+# Disable "Pending kernel upgrade" message https://askubuntu.com/a/1424249
+sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
+
 # I need newer version https://unix.stackexchange.com/a/740124
 sudo add-apt-repository -yn ppa:fish-shell/release-3
 # https://github.com/microsoft/wslg/issues/40#issuecomment-2037539322
 sudo add-apt-repository -yn ppa:kisak/kisak-mesa
+
+# Installing software
 sudo apt update
-# https://stackoverflow.com/a/73397970 https://askubuntu.com/a/1424249
-sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq
 curl -fsSL get.docker.com -o $HOME/get-docker.sh && sudo sh $HOME/get-docker.sh
+
+# Creating bin dir for user binaries
 mkdir -p ~/.local/bin
 
 # Installing topgrade
@@ -50,10 +56,18 @@ sudo systemctl daemon-reload
 # https://github.com/microsoft/WSL/issues/4071
 if grep -q microsoft /proc/version; then
   # https://github.com/microsoft/WSL/issues/10510
+  # https://github.com/microsoft/WSL/issues/6404
+  # https://github.com/microsoft/WSL/issues/8365
   sudo tee /etc/wsl.conf >/dev/null <<EOF
 [boot]
 systemd=true
+[network]
+generateResolvConf=false
 EOF
+
+  # https://github.com/microsoft/WSL/issues/6404
+  # https://github.com/microsoft/WSL/issues/8365
+  sudo resolvectl dns eth0 1.1.1.1 1.0.0.1
 
   # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
   sudo systemctl enable /usr/share/systemd/tmp.mount
@@ -71,6 +85,20 @@ ExecStart=/bin/ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
 [Install]
 WantedBy=multi-user.target
 EOF
+  # https://github.com/microsoft/WSL/issues/11261#issuecomment-2478574303
+  sudo tee /etc/systemd/user/symlink-wayland-socket.service >/dev/null <<EOF
+[Unit]
+Description=Symlink Wayland socket to XDG_RUNTIME_DIR
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ln -s /mnt/wslg/runtime-dir/wayland-0      $XDG_RUNTIME_DIR
+ExecStart=/usr/bin/ln -s /mnt/wslg/runtime-dir/wayland-0.lock $XDG_RUNTIME_DIR
+
+[Install]
+WantedBy=default.target
+EOF
   sudo systemctl daemon-reload
   sudo systemctl enable x11-symlink.service
+  sudo systemctl --user enable x11-symlink.service
 fi

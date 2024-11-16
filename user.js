@@ -47,8 +47,8 @@ user_pref("browser.aboutConfig.showWarning", false);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
-user_pref("gfx.canvas.accelerated.cache-items", 4096); // default=2048; alt=8192
-user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; alt=1024
+user_pref("gfx.canvas.accelerated.cache-items", 4096); // default=2048; Chrome=4096
+user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512
 user_pref("gfx.content.skia-font-cache-size", 20); // default=5; Chrome=20
 user_pref("browser.cache.jsbc_compression_level", 3);
 user_pref("media.memory_cache_max_size", 65536); // default=8192; AF=65536; alt=131072
@@ -61,9 +61,7 @@ user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); //
 user_pref("network.http.pacing.requests.enabled", false);
 user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour
 user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS token caching (fast reconnects)
-user_pref("layout.css.grid-template-masonry-value.enabled", true);
 user_pref("dom.enable_web_task_scheduling", true);
-user_pref("dom.security.sanitizer.enabled", true);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
 user_pref("apz.overscroll.enabled", true); // DEFAULT NON-LINUX

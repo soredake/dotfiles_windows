@@ -2,7 +2,7 @@
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
-Import-Module -Name Microsoft.WinGet.CommandNotFound
+# Import-Module -Name Microsoft.WinGet.CommandNotFound
 Import-Module -Name gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
