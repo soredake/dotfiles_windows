@@ -31,10 +31,6 @@ gsudo {
   # Enable gsudo cache
   gsudo config CacheMode Auto
 
-  # Enabling proxy support
-  # https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
-  winget settings --enable ProxyCommandLineOptions
-
   # https://remontka.pro/enable-developer-mode-windows/
   # Developer Mode is needed to create symlinks in winget without admin rights, adding to PATH approach have problems https://github.com/microsoft/winget-cli/issues/4044 https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"

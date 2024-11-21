@@ -20,8 +20,7 @@ Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
 
 # Adding scoop buckets
-'games', 'extras', 'versions', 'sysinternals', 'java', 'nirsoft', 'nonportable' | ForEach-Object { scoop bucket add $_ }
-scoop bucket add naderi "https://github.com/naderi/scoop-bucket"
+'games', 'extras', 'versions', 'sysinternals' | ForEach-Object { scoop bucket add $_ }
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 
 # Installing my scoop packages
@@ -32,7 +31,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move ytdownloader to winget https://github.com/aandrew-me/ytDownloader/issues/264
-scoop install adb reshade jq cheat-engine winsetview yt-dlp-master ffmpeg psexec topgrade pipx plex-mpv-shim nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install reshade cheat-engine psexec topgrade pipx plex-mpv-shim nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -58,15 +57,15 @@ New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopA
 gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "CreateRestorePoint", "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
 }
 
-# Installing software from winget
+# Installing software
 gsudo {
   # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko LesFerch.WinSetView yt-dlp.yt-dlp.nightly Google.PlatformTools jqlang.jq 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -81,40 +80,36 @@ gsudo {
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
-}
 
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
+  # Add pipx bin dir to PATH
+  pipx ensurepath
 
-# Add pipx bin dir to PATH
-pipx ensurepath
+  # Refreshing PATH env
+  . "$HOME/refrenv.ps1"
 
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
+  # Installing pipx packages
+  pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
-# Installing pipx packages
-pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
-
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
-
-# Software installation
-gsudo {
   # Chocolatey stuff
   # samsung-magician is outdated https://github.com/mkevenaar/chocolatey-packages/issues/237
   choco install -y syncthingtray choco-cleaner tor
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
+}
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
+# Software installation continuation
+gsudo {
   # For storing ssh key
   # NOTE: Add-WindowsCapability is not working in pwsh msix https://github.com/PowerShell/PowerShell/issues/24283
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
 
-  # Enable Hyper-V, VMP and hypervisor platform
-  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
-  dism /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart
+  # Enable Hyper-V and Hypervisor Platform
   # HypervisorPlatform is needed for VMware Workstation
+  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
   dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
 
@@ -124,9 +119,6 @@ Push-Location $HOME\Downloads
 curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/latest" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
 gsudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
 Pop-Location
-
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
 
 # Various settings
 gsudo {
@@ -147,16 +139,16 @@ gsudo {
   choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableStartupSound /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://aka.ms/AAnrbky https://aka.ms/AAnrixl
-  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
   # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
-  reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v Recovery /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
   # Once in a while I need hibernation
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 1 /f
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v "ShowHibernateOption" /t REG_DWORD /d 1 /f
   # Allow in-place upgrade https://github.com/InjectedPie/Windows-11-Inplace-Upgrade-unsupported-Hardware/blob/main/Windows11%20Inplace%20Upgrade%20on%20unsupported%20Hardware.reg
-  reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1 /f
-  reg add "HKCU\SOFTWARE\Microsoft\PCHC" /v UpgradeEligibility /t REG_DWORD /d 1 /f
+  reg add "HKLM\SYSTEM\Setup\MoSetup" /v "AllowUpgradesWithUnsupportedTPMOrCPU" /t REG_DWORD /d 1 /f
+  reg add "HKCU\SOFTWARE\Microsoft\PCHC" /v "UpgradeEligibility" /t REG_DWORD /d 1 /f
 
   # Register mpv-git associations
   cmd /c "$HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat /u"
@@ -164,8 +156,10 @@ gsudo {
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
 
-  # I need local manifests
+  # winget settings https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
   winget settings --enable LocalManifestFiles
+  winget settings --enable InstallerHashOverride
+  winget settings --enable ProxyCommandLineOptions
 }
 
 # Various settings continuation
@@ -185,9 +179,6 @@ gsudo {
   Add-MpPreference -ExclusionProcess "vmware.exe"
   Add-MpPreference -ExclusionProcess "mksSandbox.exe"
   Add-MpPreference -ExclusionProcess "vmware-vmx.exe"
-
-  # https://habr.com/ru/companies/timeweb/articles/845214/
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\Hotpatch\Environment" /v "AllowRebootlessUpdates" /t REG_DWORD /d 1 /f
 
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
@@ -332,13 +323,7 @@ Push-Location $HOME\git\Windows-Super-God-Mode
 pwsh .\Super_God_Mode.ps1 -NoGUI
 
 # WSL2 installation
-# https://github.com/microsoft/WSL/issues/10386#issuecomment-2268703768
 wsl --install --no-launch -d Ubuntu-24.04
-ubuntu2404 install --root
-wsl -d Ubuntu-24.04 --user root -- /bin/bash $PSScriptRoot/wsl-create-user.sh
-# https://superuser.com/questions/1566022/how-to-set-default-user-for-manually-installed-wsl-distro
-ubuntu2404 config --default-user ubuntu
-wsl -d Ubuntu-24.04 --user ubuntu -- /bin/bash $PSScriptRoot/wsl.sh
 # Update WSL2 to latest pre-release
 gsudo { wsl --update --pre-release }
 
@@ -353,4 +338,4 @@ scoop config use_sqlite_cache true
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
-winsetview.ps1 $PSScriptRoot\explorer-preset.ini
+C:\Program` Files` `(x86`)\WinSetView\WinSetView.ps1 $PSScriptRoot\explorer-preset.ini

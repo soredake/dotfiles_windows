@@ -55,6 +55,9 @@ sudo systemctl daemon-reload
 
 # https://github.com/microsoft/WSL/issues/4071
 if grep -q microsoft /proc/version; then
+  # Disable password for the user
+  sudo passwd -d ubuntu
+
   # https://github.com/microsoft/WSL/issues/10510
   # https://github.com/microsoft/WSL/issues/6404
   # https://github.com/microsoft/WSL/issues/8365
