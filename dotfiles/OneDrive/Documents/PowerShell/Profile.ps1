@@ -15,13 +15,13 @@ function checklinks {
   Pop-Location
 }
 
-# Rebase revanced-patched-apks
+# Rebase revanced-patched-apks repo
 function RebaseRevancedPatchedApks {
   # Change dir to repository
   Push-Location "$HOME\git\revanced-patched-apks"
 
-  # 1. Copy `config.toml` and `options.json` to $TEMP
-  $sourceFiles = @("config.toml", "options.json")
+  # 1. Copy `config.toml` to $TEMP
+  $sourceFiles = @("config.toml")
   $tempDir = [System.IO.Path]::GetTempPath()
 
   foreach ($file in $sourceFiles) {
@@ -32,19 +32,54 @@ function RebaseRevancedPatchedApks {
   git fetch upstream
   git reset --hard upstream/main
 
-  # 3. Copy `config.toml` and `options.json` back from $TEMP to the current directory
+  # 3. Copy `config.toml` back from $TEMP to the current directory
   foreach ($file in $sourceFiles) {
     Copy-Item -Path (Join-Path -Path $tempDir -ChildPath $file) -Destination . -Force
   }
 
-  # 4. Create a commit with the name "Adding my config and options"
-  git add config.toml options.json
-  git commit -m "Adding my config and options"
+  # 4. Create a commit with the name "Adding my config"
+  git add config.toml
+  git commit -m "Adding my config"
 
   # 5. Push with --force
   git push --force
 
+  # 6. Prevent `error: src refspec main matches more than one` error when pushing from vscode
+  git tag -d main
+
   Pop-Location
+}
+
+# Example for another directory: `Invoke-GitGCRecursively -BaseDir "C:\Projects"`
+function Invoke-GitGCRecursively {
+  [CmdletBinding()]
+  param (
+      [string]$BaseDir = "$HOME\git"
+  )
+
+  # Check if the directory exists
+  if (-Not (Test-Path -Path $BaseDir)) {
+      Write-Error "Directory '$BaseDir' does not exist."
+      return
+  }
+
+  # Get all directories containing a '.git' folder
+  $gitRepos = Get-ChildItem -Path $BaseDir -Recurse -Directory | Where-Object {
+      Test-Path -Path (Join-Path $_.FullName ".git")
+  }
+
+  # Perform 'git gc --aggressive' on each repository
+  foreach ($repo in $gitRepos) {
+      Write-Information "Running 'git gc --aggressive' in repository: $($repo.FullName)" -InformationAction Continue
+      Push-Location $repo.FullName
+      try {
+          git gc --aggressive
+      } catch {
+          Write-Warning "Failed to run 'git gc --aggressive' in $($repo.FullName): $_"
+      } finally {
+          Pop-Location
+      }
+  }
 }
 
 # Clean all my clouds

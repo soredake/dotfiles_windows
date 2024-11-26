@@ -1,7 +1,5 @@
 {
   "$schema": "https://aka.ms/winget-settings.schema.json",
-  "experimentalFeatures": {
-  },
   "network": {
     "downloader": "wininet"
   }
