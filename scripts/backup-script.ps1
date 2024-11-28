@@ -1,6 +1,6 @@
 $host.ui.RawUI.WindowTitle = "Backup task"
 
-$env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSD 256gb").DriveLetter
+$env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSDVentoy 256gb").DriveLetter
 
 # Moving unsorted files back to main folder
 # TODO: try foldersync v2 rename option

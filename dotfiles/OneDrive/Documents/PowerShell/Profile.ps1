@@ -10,8 +10,9 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Exp
 Write-Output "`e[6 q"
 
 function checklinks {
+  # https://github.com/lycheeverse/lychee/issues/972
   Push-Location "$HOME\Мой диск\документы"
-  lychee --exclude='vk.com' --exclude='yandex.ru' --exclude='megaten.ru' --max-concurrency 5 archive-org.txt
+  lychee --max-concurrency 5 archive-org.txt
   Pop-Location
 }
 
@@ -50,45 +51,77 @@ function RebaseRevancedPatchedApks {
   Pop-Location
 }
 
+# Toogle for hypervisor boot
+function hypervisorboot_toggle {
+  $currentState = (gsudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype\s+'
+  if ($currentState -eq 'Off') {
+    Write-Output "Enabling Hyper-V..."
+    gsudo bcdedit /set hypervisorlaunchtype auto
+  }
+  else {
+    Write-Output "Disabling Hyper-V..."
+    gsudo bcdedit /set hypervisorlaunchtype off
+  }
+}
+
 # Example for another directory: `Invoke-GitGCRecursively -BaseDir "C:\Projects"`
 function Invoke-GitGCRecursively {
   [CmdletBinding()]
   param (
-      [string]$BaseDir = "$HOME\git"
+    [string]$BaseDir = "$HOME\git"
   )
 
   # Check if the directory exists
   if (-Not (Test-Path -Path $BaseDir)) {
-      Write-Error "Directory '$BaseDir' does not exist."
-      return
+    Write-Error "Directory '$BaseDir' does not exist."
+    return
   }
 
   # Get all directories containing a '.git' folder
   $gitRepos = Get-ChildItem -Path $BaseDir -Recurse -Directory | Where-Object {
-      Test-Path -Path (Join-Path $_.FullName ".git")
+    Test-Path -Path (Join-Path $_.FullName ".git")
   }
 
   # Perform 'git gc --aggressive' on each repository
   foreach ($repo in $gitRepos) {
-      Write-Information "Running 'git gc --aggressive' in repository: $($repo.FullName)" -InformationAction Continue
-      Push-Location $repo.FullName
-      try {
-          git gc --aggressive
-      } catch {
-          Write-Warning "Failed to run 'git gc --aggressive' in $($repo.FullName): $_"
-      } finally {
-          Pop-Location
-      }
+    Write-Information "Running 'git gc --aggressive' in repository: $($repo.FullName)" -InformationAction Continue
+    Push-Location $repo.FullName
+    try {
+      git gc --aggressive
+    }
+    catch {
+      Write-Warning "Failed to run 'git gc --aggressive' in $($repo.FullName): $_"
+    }
+    finally {
+      Pop-Location
+    }
   }
 }
 
 # Clean all my clouds
 function CleanAllClouds {
-  rclone cleanup -v mega:
-  rclone cleanup -v gdrive:
-  rclone cleanup -v onedrive:
-  rclone cleanup -v dropbox:
+  Write-Output "Starting cloud cleanup..."
+
+  try {
+    Write-Output "Cleaning up Mega cloud..."
+    rclone cleanup -v mega:
+
+    Write-Output "Cleaning up Google Drive..."
+    rclone cleanup -v gdrive:
+
+    Write-Output "Cleaning up OneDrive..."
+    rclone cleanup -v onedrive:
+
+    Write-Output "Cleaning up Dropbox..."
+    rclone cleanup -v dropbox:
+
+    Write-Output "Cloud cleanup completed successfully!"
+  }
+  catch {
+    Write-Output "Error during cleanup: $_"
+  }
 }
+
 
 # To list all inbox packages:
 function ListAllAppxPackagesWithFamilyName {
@@ -126,11 +159,11 @@ function ListAllInstalledAppxPackages {
 }
 
 function FreeLeechTorrents {
-  pwsh -c $HOME\yoink.exe --config '$HOME\Мой` диск\документы\yoink.yaml'
+  yoink --config "$HOME\Мой` диск\документы\configs\yoink.yaml"
 }
 
 function CleanTorrents {
-  autoremove-torrents --conf=C:\Users\user\Мой` диск\документы\configs\autoremove-torrents.yaml --log=C:\Users\user\Downloads
+  autoremove-torrents --conf="$HOME\Мой` диск\документы\configs\autoremove-torrents.yaml" --log=$HOME\Downloads
 }
 
 function FixSystem {
@@ -162,18 +195,51 @@ function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 
 
 # https://github.com/canonical/multipass/issues/3112
-function MultipassSetDiscard { gsudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe storageattach primary --storagectl "SATA_0" --port 0 --device 0 --nonrotational on --discard on } }
+# https://gist.github.com/stoneage7/9df39cfac2c28932ed86
+function MultipassSetDiscard {
+  # Enables the 'discard' option on the primary VM's SATA storage controller
+  gsudo {
+    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
+      storageattach primary `
+      --storagectl "SATA_0" `
+      --port 0 `
+      --device 0 `
+      --nonrotational on `
+      --discard on
+  }
+}
 
-function MultipassShowVmInfo { gsudo { psexec -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe showvminfo primary --machinereadable } }
+function MultipassShowVmInfo {
+  # Displays detailed information about the primary VM in machine-readable format
+  gsudo {
+    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
+      showvminfo primary `
+      --machinereadable
+  }
+}
+
 function MultipassDeletePortForward {
   param (
-    [string]$name
+    [string]$name # Name of the port forwarding rule to delete
   )
-  gsudo { psexec.exe -s ${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe modifyvm primary --natpf1 delete $name }
+
+  # Deletes the specified NAT port forwarding rule from the primary VM
+  gsudo {
+    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
+      modifyvm primary `
+      --natpf1 delete $name
+  }
 }
+
 function MultipassExportLogsFromLastHour {
-  Get-WinEvent -FilterHashtable @{LogName = 'Application'; ProviderName = 'Multipass'; StartTime = (Get-Date).AddHours(-1) } | Out-File -FilePath $HOME\Multipass-logs-from-last-hour.log
+  # Exports Multipass-related application logs from the last hour to a file
+  Get-WinEvent -FilterHashtable @{
+    LogName      = 'Application'
+    ProviderName = 'Multipass'
+    StartTime    = (Get-Date).AddHours(-1)
+  } | Out-File -FilePath "$HOME\Multipass-logs-from-last-hour.log"
 }
+
 
 # Loading private powershell profile
 . "$HOME\Мой диск\документы\private_powershell_profile.ps1"

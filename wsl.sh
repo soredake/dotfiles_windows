@@ -11,7 +11,7 @@ sudo add-apt-repository -yn ppa:kisak/kisak-mesa
 # Installing software
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
-sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq
+sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq htop
 curl -fsSL get.docker.com -o $HOME/get-docker.sh && sudo sh $HOME/get-docker.sh
 
 # Creating bin dir for user binaries
@@ -26,7 +26,14 @@ rm topgrade*.tar.gz
 pipx ensurepath
 
 # https://unix.stackexchange.com/a/740124
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher pure-fish/pure; set -U fish_features qmark-noglob"
+fish -c "
+    # Download and source fisher.fish
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source;
+    # Install fisher and pure prompt
+    fisher install jorgebucaran/fisher pure-fish/pure;
+    # Enable the 'qmark-noglob' feature globally
+    set -U fish_features qmark-noglob
+"
 wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/soredake/dotfiles_linux/fedora/home/fish/.config/fish/config.fish
 
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823
@@ -58,19 +65,20 @@ if grep -q microsoft /proc/version; then
   # Disable password for the user
   sudo passwd -d ubuntu
 
+  # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
   # https://github.com/microsoft/WSL/issues/10510
   # https://github.com/microsoft/WSL/issues/6404
   # https://github.com/microsoft/WSL/issues/8365
   sudo tee /etc/wsl.conf >/dev/null <<EOF
-[boot]
-systemd=true
-[network]
-generateResolvConf=false
+  [boot]
+  systemd=true
+  #[network]
+  #generateResolvConf=false
 EOF
 
   # https://github.com/microsoft/WSL/issues/6404
   # https://github.com/microsoft/WSL/issues/8365
-  sudo resolvectl dns eth0 1.1.1.1 1.0.0.1
+  #sudo resolvectl dns eth0 1.1.1.1 1.0.0.1
 
   # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
   sudo systemctl enable /usr/share/systemd/tmp.mount

@@ -1,7 +1,7 @@
 [wsl2]
 memory=4GB
 processors=4
-swap=5GB
+swap=4GB
 # kernel = C:\\Users\\user\\wsl2-xanmod-kernel
 
 [experimental]

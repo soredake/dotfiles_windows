@@ -7,6 +7,7 @@ user_pref("browser.theme.dark-private-windows", false);
 user_pref("extensions.pocket.enabled", false);
 
 // I use translation addon
+// TODO: request simple button to disable built-in translator
 user_pref("browser.translations.enable", false);
 
 // DNS Over HTTPS is disabled as I use DOH from windows
@@ -16,8 +17,6 @@ user_pref("network.trr.mode", 5);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
-// https://www.exploit.media/privacy/firefox-settings/
-// user_pref("network.dns.disablePrefetchFromHTTPS", false);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1746396
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1783225
 user_pref("network.predictor.enable-prefetch", true);

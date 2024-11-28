@@ -31,7 +31,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move ytdownloader to winget https://github.com/aandrew-me/ytDownloader/issues/264
-scoop install reshade cheat-engine psexec topgrade pipx plex-mpv-shim nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install reshade cheat-engine topgrade pipx nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -48,7 +48,6 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
 # Downloading and running Sophia Script
-# https://aka.ms/AAh4e0n https://aka.ms/AAftbsj https://aka.ms/AAd9j9k https://aka.ms/AAoal1u
 # https://www.outsidethebox.ms/22048/
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
@@ -57,15 +56,14 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "ThumbnailCacheRemoval -Disable", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "RegistryBackup -Enable", "TempTask -Register"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register"
 }
 
 # Installing software
 gsudo {
-  # https://aka.ms/AAnr43h https://aka.ms/AAnr43j
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko LesFerch.WinSetView yt-dlp.yt-dlp.nightly Google.PlatformTools jqlang.jq 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly Microsoft.Sysinternals.PsTools Google.PlatformTools jqlang.jq iwalton3.plex-mpv-shim 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -75,8 +73,10 @@ gsudo {
   winget install --no-upgrade -h -e multipass -v "1.12.2+win"
 
   # PowerToys should be ran as admin to be fully functional
-  # WAU incorrectly trying to install VirtualBox in user scope
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys virtualbox
+  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
+
+  # Winget-AutoUpdate installation
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
@@ -104,21 +104,12 @@ gsudo {
 # Software installation continuation
 gsudo {
   # For storing ssh key
-  # NOTE: Add-WindowsCapability is not working in pwsh msix https://github.com/PowerShell/PowerShell/issues/24283
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
 
-  # Enable Hyper-V and Hypervisor Platform
-  # HypervisorPlatform is needed for VMware Workstation
+  # Enable Hyper-V and Hypervisor Platform (needed for VMware Workstation)
   dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
   dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
-
-# Winget-AutoUpdate installation
-# NOTE: https://github.com/Romanitho/Winget-AutoUpdate/issues/625
-Push-Location $HOME\Downloads
-curl -s "https://api.github.com/repos/Romanitho/Winget-AutoUpdate/releases/latest" | jq -r '.assets[] | select(.name | test("WAU.msi")) | .browser_download_url' | ForEach-Object { curl -L $_ -o ($_ -split '/' | Select-Object -Last 1) }
-gsudo { msiexec /i WAU.msi /qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM }
-Pop-Location
 
 # Various settings
 gsudo {
@@ -138,9 +129,9 @@ gsudo {
   # https://docs.chocolatey.org/en-us/configuration/
   choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
 
-  # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound https://aka.ms/AAns3as
+  # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
-  # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://aka.ms/AAnrbky https://aka.ms/AAnrixl
+  # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
   # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
   reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
@@ -233,7 +224,7 @@ gsudo {
   # Start plex-mpv-shim at logon
   # https://github.com/iwalton3/plex-mpv-shim/issues/118
   Unregister-ScheduledTask -TaskName "plex-mpv-shim" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$HOME\scoop\apps\plex-mpv-shim\current\run.exe" -WorkingDirectory "$HOME\scoop\apps\plex-mpv-shim\current") -TaskName "plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "${env:ProgramFiles(x86)}\Plex MPV Shim\run.exe" -WorkingDirectory "${env:ProgramFiles(x86)}\Plex MPV Shim") -TaskName "plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
 }
 
 # Cleanup
@@ -271,7 +262,7 @@ New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable
 
 # Multipass setup
 if (!$env:vm) {
-  $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSD 256gb").DriveLetter
+  $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSDVentoy 256gb").DriveLetter
   gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
@@ -328,7 +319,7 @@ wsl --install --no-launch -d Ubuntu-24.04
 gsudo { wsl --update --pre-release }
 
 # PSCompletions setup
-# TODO: this settings is constantly reset
+# https://github.com/abgox/PSCompletions/issues/56
 psc config enable_completions_update 0
 psc config enable_module_update 0
 psc add npm winget scoop
