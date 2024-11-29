@@ -31,7 +31,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move ytdownloader to winget https://github.com/aandrew-me/ytDownloader/issues/264
-scoop install reshade cheat-engine topgrade pipx nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install windows11-classic-context-menu reshade cheat-engine topgrade pipx nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -56,13 +56,14 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide"
 }
 
 # Installing software
 gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
+  # TODO: adb from Google.PlatformTools is broken in winget https://github.com/microsoft/winget-pkgs/issues/195087
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly Microsoft.Sysinternals.PsTools Google.PlatformTools jqlang.jq iwalton3.plex-mpv-shim 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
@@ -91,8 +92,7 @@ gsudo {
   pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
   # Chocolatey stuff
-  # samsung-magician is outdated https://github.com/mkevenaar/chocolatey-packages/issues/237
-  choco install -y syncthingtray choco-cleaner tor
+  choco install -y syncthingtray choco-cleaner tor samsung-magician
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
   choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
@@ -182,7 +182,8 @@ gsudo {
 
 # Dotfiles preparations
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
-Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 gsudo {
   dploy stow $($args[0])\dotfiles $HOME
@@ -229,9 +230,8 @@ gsudo {
 
 # Cleanup
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
+# https://github.com/farag2/Sophia-Script-for-Windows/discussions/597
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-# https://www.elevenforum.com/t/add-or-remove-edit-with-clipchamp-context-menu-in-windows-11.6882/
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{8AB635F8-9A67-4698-AB99-784AD929F3B4}" /t REG_SZ /d "" /f
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
@@ -278,6 +278,7 @@ firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
+# https://github.com/farag2/Sophia-Script-for-Windows/discussions/553
 reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
