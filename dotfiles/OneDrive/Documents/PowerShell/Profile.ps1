@@ -195,7 +195,13 @@ function Receive-FirefoxAndroidBackup {
 
   # Step 1: Set up port forwarding with adb
   Write-Output "Setting up port forwarding with adb on port $Port..."
-  adb reverse tcp:$Port tcp:$Port
+  # TODO: https://github.com/microsoft/winget-cli/issues/2711#issuecomment-1322541409 https://github.com/microsoft/winget-pkgs/issues/195087 https://github.com/microsoft/winget-cli/issues/4053 https://github.com/microsoft/winget-pkgs/pull/190804#issuecomment-2482537219
+  #adb reverse tcp:$Port tcp:$Port
+  # TODO: test this with adb from choco/scoop
+  where.exe adb | ForEach-Object {
+    $adbPath = (Get-Item $_).Target ?? $_
+    Start-Process $adbPath -ArgumentList "reverse tcp:$Port tcp:$Port" -NoNewWindow -Wait
+  }
 
   # Step 2: Start a listener on localhost and save incoming data to a file
   Write-Output "Starting listener on 127.0.0.1:$Port..."

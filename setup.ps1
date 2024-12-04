@@ -2,8 +2,9 @@
 if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual|VMware") { $env:vm = 1 }
 
 # Documents and Desktop folders are moved to OneDrive
+# https://learn.microsoft.com/en-us/dotnet/api/system.environment.specialfolder?view=net-9.0
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
-$desktopPath = [Environment]::GetFolderPath('Desktop')
+$startMenuPath = [Environment]::GetFolderPath('StartMenu')
 
 if (!$env:vm) {
   $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
@@ -26,12 +27,11 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
-# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: sudachi (only multiplayer), and syncthingtray
+# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
-# TODO: move ytdownloader to winget https://github.com/aandrew-me/ytDownloader/issues/264
-scoop install windows11-classic-context-menu reshade cheat-engine topgrade pipx nosleep mpv-git sudachi vivetool goodbyedpi hatt "https://raw.githubusercontent.com/aandrew-me/ytDownloader/main/ytdownloader.json" # tor-browser
+scoop install windows11-classic-context-menu topgrade pipx nosleep mpv-git vivetool goodbyedpi hatt # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -52,19 +52,19 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
 # Get tips and suggestions when using Windows…: WindowsTips -Disable
-# NOTE: sophia script should be run under Windows Powershell to avoid problem https://github.com/farag2/Sophia-Script-for-Windows/issues/554 https://github.com/PowerShell/PowerShell/issues/21295
+# NOTE: sophia script should be run under Windows Powershell to avoid problems https://github.com/farag2/Sophia-Script-for-Windows/issues/554 https://github.com/PowerShell/PowerShell/issues/21295
+# NOTE: "NetworkAdaptersSavePower -Disable" is workaround for https://github.com/qbittorrent/qBittorrent/issues/21709
 gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide", "StorageSense -Enable", "NetworkAdaptersSavePower -Disable"
 }
 
 # Installing software
 gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  # TODO: adb from Google.PlatformTools is broken in winget https://github.com/microsoft/winget-pkgs/issues/195087
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee Reshade.Setup.AddonsSupport specialk itch.io erengy.Taiga nomacs komac 64gram SteamGridDB.RomManager Haali.WinUtils.lswitch Python.Python.3.12 discord abbodi1406.vcredist Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree Parsec.Parsec hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything AwthWathje.SteaScree PPSSPPTeam.PPSSPP sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts HakuNeko.HakuNeko LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly Microsoft.Sysinternals.PsTools Google.PlatformTools jqlang.jq iwalton3.plex-mpv-shim 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -95,7 +95,6 @@ gsudo {
   choco install -y syncthingtray choco-cleaner tor samsung-magician
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
-  choco install -y --pre pcsx2-dev rpcs3 --params "'/NoAdmin'"
 }
 
 # Refreshing PATH env
@@ -105,23 +104,16 @@ gsudo {
 gsudo {
   # For storing ssh key
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
-
-  # Enable Hyper-V and Hypervisor Platform (needed for VMware Workstation)
-  dism /Online /Enable-Feature /FeatureName:Microsoft-Hyper-V /All /NoRestart
+  # Hypervisor Platform that is needed for VMware Workstation
   dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
 
 # Various settings
 gsudo {
-  # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
-  # https://github.com/qbittorrent/qBittorrent/issues/21709
-  $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
-  $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
-  powercfg /devicedisablewake $CurrentNetworkAdapterName
-
   # Start ssh-agent at boot
   Set-Service -Name ssh-agent -StartupType Automatic
-  # https://github.com/bcurran3/ChocolateyPackages/issues/48
+
+  # choco-cleaner: run task if scheduled run time is missed https://github.com/bcurran3/ChocolateyPackages/issues/48
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
 
   # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
@@ -210,6 +202,7 @@ gsudo {
   sc failure tor reset=30 actions=restart/5000
 
   # Task for enabling language change by pressing right ctrl
+  # https://github.com/microsoft/PowerToys/issues/15817
   Unregister-ScheduledTask -TaskName "switch language with right ctrl" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
   Start-ScheduledTask -TaskName "switch language with right ctrl"
@@ -243,21 +236,18 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 . "$HOME/refrenv.ps1"
 
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
+# mpv plugins installation
+# https://github.com/mrxdst/webtorrent-mpv-hook
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
+New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
+curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
+7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$HOME\scoop\apps\mpv-git\current\portable_config\scripts" -y
 
 # Change script keybind
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua"
 
-# TODO: try to extract with nanazip
-Invoke-WebRequest -Uri "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -OutFile "$HOME/Downloads/mpv-menu-plugin.zip"
-Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
-Move-Item -Force "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu\*" "$HOME\scoop\apps\mpv-git\current\portable_config\scripts"
-Remove-Item -Recurse -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\menu"
-
-# https://github.com/mrxdst/webtorrent-mpv-hook
-New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
-
 # https://github.com/CogentRedTester/mpv-sub-select/issues/30
+# TODO: request enabling support for using `sid=` from mpv.conf without this option by default
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua"
 
 # Multipass setup
@@ -294,30 +284,24 @@ Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USER
 
 # Shortcuts https://github.com/microsoft/winget-cli/issues/3314
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
-Invoke-WebRequest -Uri "https://icon-icons.com/downloadimage.php?id=152991&root=2552/ICO/48/&file=firefox_browser_logo_icon_152991.ico" -OutFile "$HOME\firefox.ico"
-New-Shortcut -Name 'Firefox - LetyShops profile' -Path $desktopPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops" -IconPath "$HOME\firefox.ico"
-New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $desktopPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy" -IconPath "$HOME\firefox.ico"
-New-Shortcut -Name 'BreakTimer - disable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments disable
-New-Shortcut -Name 'BreakTimer - enable' -Path $desktopPath -Target "$env:LOCALAPPDATA\Programs\breaktimer\BreakTimer.exe" -Arguments enable
+New-Shortcut -Name 'Firefox - LetyShops profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops"
+New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy"
 
 # Start Visual Studio Code at logon
 # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
 # https://github.com/microsoft/vscode/issues/211583
-New-ItemProperty -Path "HKCU:Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSCode" -Value '"C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe"'
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "VSCode" /d "`"$env:LOCALAPPDATA\Programs\Microsoft VS Code\Code.exe`"" /f
 
 # Restoring classic context menu https://www.outsidethebox.ms/22361/#_842
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
-
-# Just because I can do this
-#New-Item -Path "$desktopPath\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory
-git clone "https://github.com/ThioJoe/Windows-Super-God-Mode" $HOME\git\Windows-Super-God-Mode
-Push-Location $HOME\git\Windows-Super-God-Mode
-pwsh .\Super_God_Mode.ps1 -NoGUI
 
 # WSL2 installation
 wsl --install --no-launch -d Ubuntu-24.04
 # Update WSL2 to latest pre-release
 gsudo { wsl --update --pre-release }
+
+# https://github.com/SpotX-Official/SpotX
+Invoke-Expression "& { $(Invoke-WebRequest -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
 # PSCompletions setup
 # https://github.com/abgox/PSCompletions/issues/56
