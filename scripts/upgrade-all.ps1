@@ -31,6 +31,6 @@ psc update *
 # TODO: move topgrade to winget to fix this once this https://github.com/topgrade-rs/topgrade/issues/958 is fixed
 scoop update topgrade
 
-# TODO: this is NOT fixed https://github.com/abgox/PSCompletions/issues/56
+# https://github.com/abgox/PSCompletions/issues/56
 # psc config enable_completions_update 0
 # psc config enable_module_update 0

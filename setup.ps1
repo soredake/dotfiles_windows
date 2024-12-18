@@ -31,7 +31,8 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
-scoop install windows11-classic-context-menu topgrade pipx nosleep mpv-git vivetool goodbyedpi hatt # tor-browser
+# TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 is fixed
+scoop install windows11-classic-context-menu topgrade pipx nosleep mpv-git goodbyedpi hatt # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -64,7 +65,7 @@ gsudo powershell {
 gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim thebookisclosed.Vive 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
@@ -92,7 +93,7 @@ gsudo {
   pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner tor samsung-magician
+  choco install -y syncthingtray choco-cleaner tor samsung-magician git-status-cache-posh-client
   choco install -y --forcex86 aimp
   choco install -y --pin nerd-fonts-hack tor-browser
 }
@@ -152,6 +153,7 @@ gsudo {
   Add-MpPreference -ExclusionPath "$HOME\VirtualBox VMs"
   Add-MpPreference -ExclusionPath "$HOME\VMware Virtual Machines"
   Add-MpPreference -ExclusionPath "$HOME\git\old"
+  Add-MpPreference -ExclusionPath "$HOME\git\winget-pkgs"
   # Exclude VirtualBox processes
   Add-MpPreference -ExclusionProcess "VirtualBox.exe"
   Add-MpPreference -ExclusionProcess "VirtualBoxVM.exe"
@@ -174,10 +176,11 @@ gsudo {
 
 # Dotfiles preparations
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
-Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 gsudo {
+  # OneDrive cannot backup symlinks
+  New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$PSScriptRoot\dotfiles\OneDrive\Documents\PowerShell\Profile.ps1"
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
 } -args "$PSScriptRoot"
@@ -190,8 +193,8 @@ gsudo {
 
   # Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
   # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
-  Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
+  #Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
+  #Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
 }
 
 # Tasks & services
@@ -236,6 +239,8 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 . "$HOME/refrenv.ps1"
 
 npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
+# https://github.com/microsoft/inshellisense/issues/304#issuecomment-2537746521
+npm install -g -f @microsoft/inshellisense@latest
 # mpv plugins installation
 # https://github.com/mrxdst/webtorrent-mpv-hook
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"

@@ -2,7 +2,7 @@
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
-# Import-Module -Name Microsoft.WinGet.CommandNotFound
+Import-Module "$env:ChocolateyInstall\lib\git-status-cache-posh-client\tools\git-status-cache-posh-client-1.0.0\GitStatusCachePoshClient.psm1"
 Import-Module -Name gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
@@ -78,13 +78,13 @@ function Invoke-GitGCRecursively {
   }
 
   # Get all directories containing a '.git' folder
-  $gitRepos = Get-ChildItem -Path $BaseDir -Recurse -Directory | Where-Object {
+  $gitRepos = Get-ChildItem -Path $BaseDir -Directory -Depth 1 | Where-Object {
     Test-Path -Path (Join-Path $_.FullName ".git")
   }
 
   # Perform 'git gc --aggressive' on each repository
   foreach ($repo in $gitRepos) {
-    Write-Information "Running 'git gc --aggressive' in repository: $($repo.FullName)" -InformationAction Continue
+    Write-Output "`n`e[33mRunning 'git gc --aggressive' in repository: $($repo.FullName)`n`e[0m"
     Push-Location $repo.FullName
     try {
       git gc --aggressive
@@ -173,6 +173,64 @@ function FixSystem {
   }
 }
 
+
+# Clean all git branches except main|master
+function Remove-GitBranch {
+  [CmdletBinding(SupportsShouldProcess)] # Enables ShouldProcess and WhatIf/Confirm
+  param (
+    [string[]]$KeepBranches = @("main", "master") # List of branches to preserve
+  )
+
+  # Check if the current directory is a Git repository
+  if (-not (Test-Path ".git")) {
+    Write-Error "Not a Git repository."
+    return
+  }
+
+  # Fetch the latest changes and clean up remote tracking references
+  git fetch --all --prune
+
+  # Find the target branch to switch to (prefer "main" over "master")
+  $targetBranch = ($KeepBranches | Where-Object { git branch --list $_ })[0]
+  if (-not $targetBranch) {
+    Write-Error "No 'main' or 'master' branch found."
+    return
+  }
+
+  # Switch to the target branch if not already on it
+  if ((git rev-parse --abbrev-ref HEAD) -ne $targetBranch) {
+    if ($PSCmdlet.ShouldProcess("Switch to branch '$targetBranch'")) {
+      git checkout $targetBranch
+      Write-Verbose "Checked out to branch '$targetBranch'."
+    }
+  }
+
+  # Get the list of all local branches
+  $localBranches = git branch --format "%(refname:short)"
+
+  # Iterate over all local branches and delete those not in the keep list
+  foreach ($branch in $localBranches) {
+    if ($KeepBranches -notcontains $branch) {
+      if ($PSCmdlet.ShouldProcess("Delete branch '$branch'")) {
+        Write-Verbose "Deleting branch: $branch"
+        git branch -D $branch
+      }
+    }
+  }
+
+  # Clean up remote-tracking branches that are fully merged
+  git branch -r --merged origin/$targetBranch | ForEach-Object {
+    $remoteBranch = ($_ -replace "origin/", "").Trim()
+    if ($KeepBranches -notcontains $remoteBranch) {
+      if ($PSCmdlet.ShouldProcess("Delete remote-tracking branch '$remoteBranch'")) {
+        Write-Verbose "Deleting remote-tracking branch: $remoteBranch"
+        git push origin --delete $remoteBranch
+      }
+    }
+  }
+}
+
+
 <#
     This function is designed to receive a backup file from Firefox on Android using port forwarding via adb.
     Repository: https://github.com/Rob--W/firefox-android-backup-restore
@@ -195,13 +253,7 @@ function Receive-FirefoxAndroidBackup {
 
   # Step 1: Set up port forwarding with adb
   Write-Output "Setting up port forwarding with adb on port $Port..."
-  # TODO: https://github.com/microsoft/winget-cli/issues/2711#issuecomment-1322541409 https://github.com/microsoft/winget-pkgs/issues/195087 https://github.com/microsoft/winget-cli/issues/4053 https://github.com/microsoft/winget-pkgs/pull/190804#issuecomment-2482537219
-  #adb reverse tcp:$Port tcp:$Port
-  # TODO: test this with adb from choco/scoop
-  where.exe adb | ForEach-Object {
-    $adbPath = (Get-Item $_).Target ?? $_
-    Start-Process $adbPath -ArgumentList "reverse tcp:$Port tcp:$Port" -NoNewWindow -Wait
-  }
+  adb reverse tcp:$Port tcp:$Port
 
   # Step 2: Start a listener on localhost and save incoming data to a file
   Write-Output "Starting listener on 127.0.0.1:$Port..."
@@ -259,7 +311,13 @@ function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-fr
 # https://superuser.com/a/1830291/1506333
 function YoutubeExtractAllUrlsFromPlaylist { yt-dlp $args --skip-download --no-warning --print webpage_url }
 
-function mkd { mkdir $args[0] 2>$null; Set-Location $args[0] }
+function mkd {
+  $newDir = $args[0]
+  if (-not (Test-Path $newDir)) {
+    mkdir $newDir | Out-Null
+  }
+  Set-Location (Join-Path $PWD $newDir)
+}
 function mps { multipass stop }
 function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 function what_blocks_sleep { gsudo { powercfg -requests } }
@@ -332,3 +390,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
 
 # https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+
+# git status in winget-pkgs repo is slow
+# https://github.com/dahlbyk/posh-git?tab=readme-ov-file#customization-variables
+$GitPromptSettings.RepositoriesInWhichToDisableFileStatus += "$HOME\git\winget-pkgs"
