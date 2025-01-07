@@ -32,7 +32,7 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 is fixed
-scoop install windows11-classic-context-menu topgrade pipx nosleep mpv-git goodbyedpi hatt # tor-browser
+scoop install topgrade pipx nosleep mpv-git goodbyedpi hatt # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
@@ -65,13 +65,13 @@ gsudo powershell {
 gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic yoink Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE tcmd darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim thebookisclosed.Vive 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim thebookisclosed.Vive 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
 
   # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
   winget install --no-upgrade -h Xanashi.Icaros --source winget
 
-  # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
+  # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
   winget install --no-upgrade -h -e multipass -v "1.12.2+win"
 
   # PowerToys should be ran as admin to be fully functional
@@ -238,15 +238,15 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
-npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook
+npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook inshellisense
 # https://github.com/microsoft/inshellisense/issues/304#issuecomment-2537746521
-npm install -g -f @microsoft/inshellisense@latest
+#npm install -g -f @microsoft/inshellisense@latest
 # mpv plugins installation
-# https://github.com/mrxdst/webtorrent-mpv-hook
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
-New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$HOME\scoop\apps\mpv-git\current\portable_config\scripts" -y
+# https://github.com/mrxdst/webtorrent-mpv-hook
+New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
 # Change script keybind
 (Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua"
@@ -309,7 +309,6 @@ gsudo { wsl --update --pre-release }
 Invoke-Expression "& { $(Invoke-WebRequest -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
 # PSCompletions setup
-# https://github.com/abgox/PSCompletions/issues/56
 psc config enable_completions_update 0
 psc config enable_module_update 0
 psc add npm winget scoop

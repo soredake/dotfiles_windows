@@ -94,7 +94,6 @@
   sslCAInfo = C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt
 [diff "astextplain"]
   textconv = astextplain
-
 [diff]
   autoRefreshIndex = true
 [filter "lfs"]

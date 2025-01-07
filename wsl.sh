@@ -12,7 +12,7 @@ sudo add-apt-repository -yn ppa:kisak/kisak-mesa
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq htop
-curl -fsSL get.docker.com -o $HOME/get-docker.sh && sudo sh $HOME/get-docker.sh
+curl -fsSL get.docker.com -o "$HOME/get-docker.sh" && sudo sh "$HOME/get-docker.sh"
 
 # Creating bin dir for user binaries
 mkdir -p ~/.local/bin
@@ -111,5 +111,5 @@ WantedBy=default.target
 EOF
   sudo systemctl daemon-reload
   sudo systemctl enable x11-symlink.service
-  sudo systemctl --user enable x11-symlink.service
+  sudo systemctl --user enable symlink-wayland-socket.service
 fi

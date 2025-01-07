@@ -4,6 +4,7 @@ PointPlanck.FileBot
 Ryochan7.DS4Windows
 Spotify.Spotify
 TomWatson.BreakTimer
+Ghisler.TotalCommander
 # This software updates itself
 64Gram.64Gram
 AppWork.JDownloader
