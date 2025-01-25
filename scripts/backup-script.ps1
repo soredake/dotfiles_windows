@@ -3,7 +3,6 @@ $host.ui.RawUI.WindowTitle = "Backup task"
 $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSDVentoy 256gb").DriveLetter
 
 # Moving unsorted files back to main folder
-# TODO: try foldersync v2 rename option
 Get-ChildItem "$HOME\Мой диск\unsorted" -Recurse -File | ForEach-Object {
   $destFile = "$HOME\Мой диск\$($_.Name)"
 
@@ -45,7 +44,6 @@ Write-Output "`n`e[33mStarting software backup...`n`e[0m"
 rclone sync -P $env:APPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_roaming" --delete-excluded --exclude "lockfile"
 rclone sync -P $env:LOCALAPPDATA\qBittorrent "$HOME\Мой диск\документы\backups\qbittorrent_local" --delete-excluded --exclude "logs/" --exclude "rss/articles/*.ico"
 rclone sync -P "${env:ProgramFiles(x86)}\FanControl\Configurations" "$HOME\Мой диск\документы\backups\fancontrol"
-rclone sync -P "$env:APPDATA\rclone\rclone.conf" "$HOME\Мой диск\документы\backups\rclone"
 rclone sync -P $env:APPDATA\syncplay.ini "$HOME\Мой диск\документы\backups\syncplay"
 rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ssh"
 
@@ -63,18 +61,6 @@ Write-Output "`n`e[33mStarting visual studio code backup...`n`e[0m"
 code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
 rclone sync -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
 rclone sync -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
-
-# https://winaero.com/how-to-backup-quick-access-folders-in-windows-10
-# https://aka.ms/AAr5gni
-Write-Output "`e[33mStarting explorer quick access links backup...`n`e[0m"
-rclone sync -P $env:APPDATA\Microsoft\Windows\Recent\AutomaticDestinations "$HOME\Мой диск\документы\backups\explorer_quick_access"
-
-# https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-taskbar-in-windows-11.3630/ https://www.elevenforum.com/t/backup-and-restore-pinned-items-on-start-menu-in-windows-11.3629/
-# https://aka.ms/AAnrixg
-Write-Output "`n`e[33mStarting start menu and tasbar pinned programs backup...`n`e[0m"
-rclone sync -P $env:LOCALAPPDATA\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState "$HOME\Мой диск\документы\backups\taskbar_pinned_items\StartMenu"
-rclone sync -P "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\TaskBar"
-reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "$HOME\Мой диск\документы\backups\taskbar_pinned_items\Taskband.reg" /y
 
 if (Test-Path -Path "${env:ESSD}:\") {
   # Backing up my google drive folder to external SSD
@@ -106,6 +92,6 @@ check_and_clean_mega_remote
 # Deduping clouds
 Write-Output "`n`e[33mStarting dedupe process for all clouds...`n`e[0m"
 rclone dedupe -P --dedupe-mode newest mega:/
-rclone dedupe -P --dedupe-mode newest gdrive:/
+rclone dedupe -P --dedupe-mode newest googledrive:/
 rclone dedupe -P --dedupe-mode newest --by-hash onedrive:/main
 rclone dedupe -P --dedupe-mode newest --by-hash dropbox:/main

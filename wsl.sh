@@ -67,18 +67,10 @@ if grep -q microsoft /proc/version; then
 
   # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
   # https://github.com/microsoft/WSL/issues/10510
-  # https://github.com/microsoft/WSL/issues/6404
-  # https://github.com/microsoft/WSL/issues/8365
   sudo tee /etc/wsl.conf >/dev/null <<EOF
   [boot]
   systemd=true
-  #[network]
-  #generateResolvConf=false
 EOF
-
-  # https://github.com/microsoft/WSL/issues/6404
-  # https://github.com/microsoft/WSL/issues/8365
-  #sudo resolvectl dns eth0 1.1.1.1 1.0.0.1
 
   # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
   sudo systemctl enable /usr/share/systemd/tmp.mount

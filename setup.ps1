@@ -23,6 +23,7 @@ Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPred
 # Adding scoop buckets
 'games', 'extras', 'versions', 'sysinternals' | ForEach-Object { scoop bucket add $_ }
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
+scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222
@@ -32,11 +33,11 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
 # TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 is fixed
-scoop install topgrade pipx nosleep mpv-git goodbyedpi hatt # tor-browser
+scoop install topgrade pipx nosleep mpv-git goodbyedpi hatt onthespot persistent-windows # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force | Out-Null
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $env:LOCALAPPDATA\Plex\scripts, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force | Out-Null
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
@@ -44,7 +45,7 @@ pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
 # Link winget settings
 # Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$PSScriptRoot\winget-settings.json" }
+gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$($args[0])\winget-settings.json" } -args "$PSScriptRoot"
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
@@ -58,7 +59,7 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 gsudo powershell {
   Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
   Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide", "StorageSense -Enable", "NetworkAdaptersSavePower -Disable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store, Outlook", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide", "StorageSense -Enable", "NetworkAdaptersSavePower -Disable"
 }
 
 # Installing software
@@ -78,7 +79,7 @@ gsudo {
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # Winget-AutoUpdate installation
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=Full UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=None UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
 
   # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
   winget install --no-upgrade -h -l ~\Steam Valve.Steam
@@ -105,7 +106,7 @@ gsudo {
 gsudo {
   # For storing ssh key
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
-  # Hypervisor Platform that is needed for VMware Workstation
+  # Hypervisor Platform is needed for VMware Workstation
   dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
 
@@ -169,9 +170,9 @@ gsudo {
   # https://stackoverflow.com/a/35812945
   bcdedit /set hypervisorlaunchtype off
 
-  # toprgrade uses built-in sudo to run choco upgrade
+  # toprgrade uses `sudo` alias to run choco upgrade
   # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
-  gsudo sudo config --enable normal
+  sudo config --enable normal
 }
 
 # Dotfiles preparations
@@ -179,8 +180,10 @@ gsudo {
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 gsudo {
+  # Plex
+  Remove-Item -Path $env:LOCALAPPDATA\Plex\mpv.conf, $env:LOCALAPPDATA\Plex\input.conf
   # OneDrive cannot backup symlinks
-  New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$PSScriptRoot\dotfiles\OneDrive\Documents\PowerShell\Profile.ps1"
+  New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$($args[0])\Profile.ps1"
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
 } -args "$PSScriptRoot"
@@ -238,7 +241,7 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
-npm install --global html-validate gulp-cli create-react-app webtorrent-mpv-hook inshellisense
+npm install --global webtorrent-mpv-hook inshellisense
 # https://github.com/microsoft/inshellisense/issues/304#issuecomment-2537746521
 #npm install -g -f @microsoft/inshellisense@latest
 # mpv plugins installation
@@ -267,10 +270,11 @@ if (!$env:vm) {
 }
 
 # Misc
-mkdir $HOME\torrents
 trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
+# https://github.com/kangyu-california/PersistentWindows
+powershell $HOME\scoop\apps\persistent-windows\current\auto_start_pw_aux.ps1
 
 # https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
 # https://github.com/farag2/Sophia-Script-for-Windows/discussions/553
@@ -296,6 +300,7 @@ New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Targe
 # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
 # https://github.com/microsoft/vscode/issues/211583
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "VSCode" /d "`"$env:LOCALAPPDATA\Programs\Microsoft VS Code\Code.exe`"" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Everything" /d "`"$env:ProgramFiles\Everything\Everything.exe`"" /f
 
 # Restoring classic context menu https://www.outsidethebox.ms/22361/#_842
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
