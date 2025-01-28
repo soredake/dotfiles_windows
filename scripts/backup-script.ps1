@@ -51,16 +51,11 @@ rclone sync -P "$HOME\.ssh" "$HOME\Мой диск\документы\backups\ss
 Write-Output "`n`e[33mStarting tab session managers sessions backup...`n`e[0m"
 7z a -up0q0r2x2y2z1w2 -t7z -m0=lzma2 -mmt=16 -mx=5 "$HOME\Мой диск\документы\backups\TabSessionManager.7z" "$HOME\Downloads\TabSessionManager - Backup"
 
-# Syncthing(-tray)
-Write-Output "`n`e[33mStarting syncthing and syncthingtray backup...`n`e[0m"
-rclone sync -P $env:APPDATA\syncthingtray.ini "$HOME\Мой диск\документы\backups\syncthing\pc"
-rclone sync -P $env:LOCALAPPDATA\Syncthing "$HOME\Мой диск\документы\backups\syncthing\pc\syncthing" --delete-excluded --exclude "LOCK" --exclude "index*/LOG" --exclude "index*/*.log" --exclude "*.tmp.*"
+# Firefox bookmarks backup
+$env:FirefoxDefaultProfile = (Get-Content $env:APPDATA\Mozilla\Firefox\profiles.ini | Select-String -Pattern 'Default=1' -Context 1 | ForEach-Object { $_.Context.PreContext[0] } | Select-String '(Profiles).*').Matches.Value
+$env:FirefoxDefaultProfilePath = "${env:APPDATA}\Mozilla\Firefox\$env:FirefoxDefaultProfile"
+rclone sync -P $env:FirefoxDefaultProfilePath\bookmarkbackups "$HOME\Мой диск\документы\backups\firefox_bookmarks"
 
-# Visual Studio Code https://stackoverflow.com/a/49398449/4207635
-Write-Output "`n`e[33mStarting visual studio code backup...`n`e[0m"
-code --list-extensions > "$HOME\Мой диск\документы\backups\vscode\extensions.txt"
-rclone sync -P $env:APPDATA\Code\User\settings.json "$HOME\Мой диск\документы\backups\vscode"
-rclone sync -P $env:APPDATA\Code\User\keybindings.json "$HOME\Мой диск\документы\backups\vscode"
 
 if (Test-Path -Path "${env:ESSD}:\") {
   # Backing up my google drive folder to external SSD

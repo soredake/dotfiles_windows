@@ -3,6 +3,7 @@ if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual|VMware
 
 # Documents and Desktop folders are moved to OneDrive
 # https://learn.microsoft.com/en-us/dotnet/api/system.environment.specialfolder?view=net-9.0
+$musicPath = [Environment]::GetFolderPath('MyMusic')
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 $startMenuPath = [Environment]::GetFolderPath('StartMenu')
 
@@ -21,12 +22,11 @@ Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
 
 # Adding scoop buckets
-'games', 'extras', 'versions', 'sysinternals' | ForEach-Object { scoop bucket add $_ }
+'extras' | ForEach-Object { scoop bucket add $_ }
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 
 # Installing my scoop packages
-# https://github.com/ScoopInstaller/Scoop/issues/5234 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/222
 # Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
 # https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
@@ -37,15 +37,20 @@ scoop install topgrade pipx nosleep mpv-git goodbyedpi hatt onthespot persistent
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\plex-mpv-shim, $env:LOCALAPPDATA\Plex\scripts, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force | Out-Null
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:LOCALAPPDATA\Plex\scripts, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force | Out-Null
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
 pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
-# Link winget settings
-# Fix for winget downloading speed https://github.com/microsoft/winget-cli/issues/2124
-gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$($args[0])\winget-settings.json" } -args "$PSScriptRoot"
+# winget settings
+gsudo {
+  # Link winget settings to fix download speed https://github.com/microsoft/winget-cli/issues/2124
+  New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$($args[0])\winget-settings.json"
+
+  # Developer Mode is needed to create symlinks in winget without admin rights, adding to PATH approach have problems https://github.com/microsoft/winget-cli/issues/4044 https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
+  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
+} -args "$PSScriptRoot"
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
@@ -54,11 +59,10 @@ gsudo { New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.
 # Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
 # Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
 # Get tips and suggestions when using Windows…: WindowsTips -Disable
-# NOTE: sophia script should be run under Windows Powershell to avoid problems https://github.com/farag2/Sophia-Script-for-Windows/issues/554 https://github.com/PowerShell/PowerShell/issues/21295
 # NOTE: "NetworkAdaptersSavePower -Disable" is workaround for https://github.com/qbittorrent/qBittorrent/issues/21709
-gsudo powershell {
-  Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
-  Invoke-WebRequest script.sophia.team -useb | Invoke-Expression
+Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
+iwr script.sophia.team -useb | iex
+gsudo {
   ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store, Outlook", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide", "StorageSense -Enable", "NetworkAdaptersSavePower -Disable"
 }
 
@@ -66,23 +70,19 @@ gsudo powershell {
 gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Cloudflare.Warp Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore Zoom.Zoom.EXE darkthumbs nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools iwalton3.plex-mpv-shim thebookisclosed.Vive 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
-  # This is needed to display thumbnails for videos with HEVC or cbr/cbz formats
+  # This is needed to display thumbnails for HEVC videos
   # https://github.com/microsoft/winget-cli/issues/2771#issuecomment-2197617810
   winget install --no-upgrade -h Xanashi.Icaros --source winget
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
   winget install --no-upgrade -h -e multipass -v "1.12.2+win"
 
-  # PowerToys should be ran as admin to be fully functional
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
-
   # Winget-AutoUpdate installation
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=None UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
-
-  # Windows 11 installer wipes Program Files directories, so I install Steam to user directory now
-  winget install --no-upgrade -h -l ~\Steam Valve.Steam
 
   # Add pipx bin dir to PATH
   pipx ensurepath
@@ -94,35 +94,20 @@ gsudo {
   pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner tor samsung-magician git-status-cache-posh-client
-  choco install -y --forcex86 aimp
+  choco install -y syncthingtray choco-cleaner git-status-cache-posh-client aimp
   choco install -y --pin nerd-fonts-hack tor-browser
-}
 
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
-
-# Software installation continuation
-gsudo {
   # For storing ssh key
   dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
   # Hypervisor Platform is needed for VMware Workstation
   dism /Online /Enable-Feature /FeatureName:HypervisorPlatform /All /NoRestart
 }
 
+# Refreshing PATH env
+. "$HOME/refrenv.ps1"
+
 # Various settings
 gsudo {
-  # Start ssh-agent at boot
-  Set-Service -Name ssh-agent -StartupType Automatic
-
-  # choco-cleaner: run task if scheduled run time is missed https://github.com/bcurran3/ChocolateyPackages/issues/48
-  Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
-
-  # https://github.com/chocolatey/choco/issues/797#issuecomment-1515603050
-  # https://github.com/chocolatey/choco/issues/1465
-  # https://docs.chocolatey.org/en-us/configuration/
-  choco feature enable -n=useRememberedArgumentsForUpgrades -n=removePackageInformationOnUninstall
-
   # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333
@@ -131,9 +116,6 @@ gsudo {
   reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
   # Once in a while I need hibernation
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v "ShowHibernateOption" /t REG_DWORD /d 1 /f
-  # Allow in-place upgrade https://github.com/InjectedPie/Windows-11-Inplace-Upgrade-unsupported-Hardware/blob/main/Windows11%20Inplace%20Upgrade%20on%20unsupported%20Hardware.reg
-  reg add "HKLM\SYSTEM\Setup\MoSetup" /v "AllowUpgradesWithUnsupportedTPMOrCPU" /t REG_DWORD /d 1 /f
-  reg add "HKCU\SOFTWARE\Microsoft\PCHC" /v "UpgradeEligibility" /t REG_DWORD /d 1 /f
 
   # Register mpv-git associations
   cmd /c "$HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat /u"
@@ -145,26 +127,6 @@ gsudo {
   winget settings --enable LocalManifestFiles
   winget settings --enable InstallerHashOverride
   winget settings --enable ProxyCommandLineOptions
-}
-
-# Various settings continuation
-gsudo {
-  # I don't need this file types and folders scanned
-  Add-MpPreference -ExclusionExtension ".vhd", ".vhdx", ".vdi", ".vmdk"
-  Add-MpPreference -ExclusionPath "$HOME\VirtualBox VMs"
-  Add-MpPreference -ExclusionPath "$HOME\VMware Virtual Machines"
-  Add-MpPreference -ExclusionPath "$HOME\git\old"
-  Add-MpPreference -ExclusionPath "$HOME\git\winget-pkgs"
-  # Exclude VirtualBox processes
-  Add-MpPreference -ExclusionProcess "VirtualBox.exe"
-  Add-MpPreference -ExclusionProcess "VirtualBoxVM.exe"
-  Add-MpPreference -ExclusionProcess "VBoxHeadless.exe"
-  Add-MpPreference -ExclusionProcess "VBoxSDS.exe"
-  Add-MpPreference -ExclusionProcess "VBoxSVC.exe"
-  # Exclude VMware processes
-  Add-MpPreference -ExclusionProcess "vmware.exe"
-  Add-MpPreference -ExclusionProcess "mksSandbox.exe"
-  Add-MpPreference -ExclusionProcess "vmware-vmx.exe"
 
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
@@ -181,7 +143,7 @@ Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8
 # Linking dotfiles
 gsudo {
   # Plex
-  Remove-Item -Path $env:LOCALAPPDATA\Plex\mpv.conf, $env:LOCALAPPDATA\Plex\input.conf
+  Remove-Item -Path $env:LOCALAPPDATA\Plex\mpv.conf
   # OneDrive cannot backup symlinks
   New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$($args[0])\Profile.ps1"
   dploy stow $($args[0])\dotfiles $HOME
@@ -190,60 +152,55 @@ gsudo {
 
 # Band-aid tasks
 gsudo {
-  # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
-  Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
-
   # Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
   # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
   #Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
-  #Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
+  #Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
 }
 
 # Tasks & services
 gsudo {
-  # https://gitlab.torproject.org/tpo/core/tor/-/issues/17145
-  New-Service -Name "tor" -BinaryPathName '"C:\ProgramData\chocolatey\lib\tor\tools\Tor\tor.exe --nt-service -f $HOME\git\dotfiles_windows\torrc"'
-  # https://serverfault.com/a/983832 https://github.com/PowerShell/PowerShell/issues/21400
-  sc failure tor reset=30 actions=restart/5000
+  # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
+  Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
   # Task for enabling language change by pressing right ctrl
-  # https://github.com/microsoft/PowerToys/issues/15817
   Unregister-ScheduledTask -TaskName "switch language with right ctrl" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
   Start-ScheduledTask -TaskName "switch language with right ctrl"
 
   # Backup task
   Unregister-ScheduledTask -TaskName "Backup everything" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00 -DaysInterval 3)
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00 -DaysInterval 3)
 
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 
-  # Start plex-mpv-shim at logon
-  # https://github.com/iwalton3/plex-mpv-shim/issues/118
-  Unregister-ScheduledTask -TaskName "plex-mpv-shim" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "${env:ProgramFiles(x86)}\Plex MPV Shim\run.exe" -WorkingDirectory "${env:ProgramFiles(x86)}\Plex MPV Shim") -TaskName "plex-mpv-shim" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
+  # Run `Temp` task every week, https://github.com/M2Team/NanaZip/issues/297
+  Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
+
+  # Start ssh-agent at boot
+  Set-Service -Name ssh-agent -StartupType Automatic
+
+  # Run task if scheduled run time is missed
+  Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
 }
 
 # Cleanup
 # https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
-# https://github.com/farag2/Sophia-Script-for-Windows/discussions/597
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
-# https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/198519 https://github.com/microsoft/winget-pkgs/pull/106718
+# https://github.com/microsoft/winget-pkgs/issues/106091
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
 npm install --global webtorrent-mpv-hook inshellisense
-# https://github.com/microsoft/inshellisense/issues/304#issuecomment-2537746521
-#npm install -g -f @microsoft/inshellisense@latest
 # mpv plugins installation
 curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
@@ -282,23 +239,21 @@ reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
 reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 
-# Set `Temp` task to run every week
-# https://github.com/M2Team/NanaZip/issues/297 https://sourceforge.net/p/sevenzip/bugs/1448/ https://sourceforge.net/p/sevenzip/discussion/45797/thread/e23a6931/
-Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
+# TODO: fill the issue, onespot should use path to music (in case folder is relocated to onedrive) from env, not hardcode ~/music
+New-Item -ItemType Junction -Path "$HOME\Music" -Target $musicPath
 
 # Task for cleaning torrents
 # https://github.com/jerrymakesjelly/autoremove-torrents
 Unregister-ScheduledTask -TaskName "Torrents cleanup" -Confirm:$false
-Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME") -Action (New-ScheduledTaskAction -Execute "$env:LOCALAPPDATA\Microsoft\WindowsApps\pwsh.exe" -Argument "-WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 
-# Shortcuts https://github.com/microsoft/winget-cli/issues/3314
+# Shortcuts
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops"
 New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy"
 
 # Start Visual Studio Code at logon
 # https://www.medo64.com/2021/09/add-application-to-auto-start-from-powershell/
-# https://github.com/microsoft/vscode/issues/211583
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "VSCode" /d "`"$env:LOCALAPPDATA\Programs\Microsoft VS Code\Code.exe`"" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Everything" /d "`"$env:ProgramFiles\Everything\Everything.exe`"" /f
 
@@ -311,7 +266,7 @@ wsl --install --no-launch -d Ubuntu-24.04
 gsudo { wsl --update --pre-release }
 
 # https://github.com/SpotX-Official/SpotX
-Invoke-Expression "& { $(Invoke-WebRequest -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
+iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
 # PSCompletions setup
 psc config enable_completions_update 0

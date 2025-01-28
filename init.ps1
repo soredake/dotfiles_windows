@@ -12,13 +12,12 @@ if (Test-Path $env:repository\setup.ps1) {
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
 # PowerShellCore and NanaZip installation
-winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d 9n8g7tscl18r
+winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell 9n8g7tscl18r
 
-# https://github.com/ScoopInstaller/Install/issues/70
-# scoop installation
+# scoop installation, https://github.com/ScoopInstaller/Install/issues/70
 where.exe scoop
 if (-not $?) {
-  Invoke-RestMethod get.scoop.sh | Invoke-Expression
+  iwr get.scoop.sh | iex
 }
 
 # Let scoop use NanaZip binaries
@@ -30,13 +29,6 @@ scoop install gsudo
 gsudo {
   # Enable gsudo cache
   gsudo config CacheMode Auto
-
-  # https://remontka.pro/enable-developer-mode-windows/
-  # Developer Mode is needed to create symlinks in winget without admin rights, adding to PATH approach have problems https://github.com/microsoft/winget-cli/issues/4044 https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
-
-  # https://github.com/microsoft/winget-cli/issues/3077 https://github.com/microsoft/winget-cli/issues/549#issuecomment-1675410316 https://github.com/microsoft/winget-cli/issues/222#issuecomment-1675434402
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
 
   # Install git with machine scope until their installer will have support for user scope https://github.com/git-for-windows/git/discussions/4399#discussioncomment-5877325 https://github.com/microsoft/winget-cli/issues/3240
   # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115

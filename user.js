@@ -10,9 +10,6 @@ user_pref("extensions.pocket.enabled", false);
 // TODO: request simple button to disable built-in translator
 user_pref("browser.translations.enable", false);
 
-// DNS Over HTTPS is disabled as I use DOH from windows
-user_pref("network.trr.mode", 5);
-
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
@@ -41,15 +38,11 @@ user_pref("widget.windows.overlay-scrollbars.enabled", false);
 // Do not show about:config warning message
 user_pref("browser.aboutConfig.showWarning", false);
 
-// https://github.com/yokoffing/Betterfox/issues/310
-//user_pref("dom.ipc.processPriorityManager.backgroundUsesEcoQoS", false);
-
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
 user_pref("gfx.canvas.accelerated.cache-items", 4096); // default=2048; Chrome=4096
 user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512
 user_pref("gfx.content.skia-font-cache-size", 20); // default=5; Chrome=20
-user_pref("browser.cache.jsbc_compression_level", 3);
 user_pref("media.memory_cache_max_size", 65536); // default=8192; AF=65536; alt=131072
 user_pref("media.cache_readahead_limit", 7200); // 120 min; default=60; stop reading ahead when our buffered data is this many seconds ahead of the current playback
 user_pref("media.cache_resume_threshold", 3600); // 60 min; default=30; when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold

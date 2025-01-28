@@ -122,7 +122,6 @@ function CleanAllClouds {
   }
 }
 
-
 # To list all inbox packages:
 function ListAllAppxPackagesWithFamilyName {
   gsudo {
@@ -152,14 +151,7 @@ function ListAllAppxPackagesWithFamilyName {
 
 # https://t.me/sterkin_ru/1684
 function ListAllInstalledAppxPackages {
-  gsudo {
-    # NOTE: sadly, `Get-AppxProvisionedPackage -Online` does not work with pwsh installed from microsoft store
-    powershell -c 'Get-AppxProvisionedPackage -Online | Select-Object DisplayName'
-  }
-}
-
-function FreeLeechTorrents {
-  yoink --config "$HOME\Мой` диск\документы\configs\yoink.yaml"
+  gsudo { Get-AppxProvisionedPackage -Online | Select-Object DisplayName }
 }
 
 function CleanTorrents {
@@ -322,7 +314,6 @@ function mps { multipass stop }
 function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 function what_blocks_sleep { gsudo { powercfg -requests } }
 function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
-
 
 # https://github.com/canonical/multipass/issues/3112
 # https://gist.github.com/stoneage7/9df39cfac2c28932ed86
