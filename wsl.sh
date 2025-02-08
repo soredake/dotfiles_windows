@@ -26,13 +26,14 @@ rm topgrade*.tar.gz
 pipx ensurepath
 
 # https://unix.stackexchange.com/a/740124
+# https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
 fish -c "
     # Download and source fisher.fish
     curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source;
     # Install fisher and pure prompt
     fisher install jorgebucaran/fisher pure-fish/pure;
     # Enable the 'qmark-noglob' feature globally
-    set -U fish_features qmark-noglob
+    #set -U fish_features qmark-noglob
 "
 wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/soredake/dotfiles_linux/fedora/home/fish/.config/fish/config.fish
 

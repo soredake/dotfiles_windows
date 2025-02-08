@@ -2,19 +2,11 @@
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
-Import-Module "$env:ChocolateyInstall\lib\git-status-cache-posh-client\tools\git-status-cache-posh-client-1.0.0\GitStatusCachePoshClient.psm1"
 Import-Module -Name gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
 
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
-
-function checklinks {
-  # https://github.com/lycheeverse/lychee/issues/972
-  Push-Location "$HOME\Мой диск\документы"
-  lychee --max-concurrency 5 archive-org.txt
-  Pop-Location
-}
 
 # Rebase revanced-patched-apks repo
 function RebaseRevancedPatchedApks {
@@ -64,40 +56,6 @@ function hypervisorboot_toggle {
   }
 }
 
-# Example for another directory: `Invoke-GitGCRecursively -BaseDir "C:\Projects"`
-function Invoke-GitGCRecursively {
-  [CmdletBinding()]
-  param (
-    [string]$BaseDir = "$HOME\git"
-  )
-
-  # Check if the directory exists
-  if (-Not (Test-Path -Path $BaseDir)) {
-    Write-Error "Directory '$BaseDir' does not exist."
-    return
-  }
-
-  # Get all directories containing a '.git' folder
-  $gitRepos = Get-ChildItem -Path $BaseDir -Directory -Depth 1 | Where-Object {
-    Test-Path -Path (Join-Path $_.FullName ".git")
-  }
-
-  # Perform 'git gc --aggressive' on each repository
-  foreach ($repo in $gitRepos) {
-    Write-Output "`n`e[33mRunning 'git gc --aggressive' in repository: $($repo.FullName)`n`e[0m"
-    Push-Location $repo.FullName
-    try {
-      git gc --aggressive
-    }
-    catch {
-      Write-Warning "Failed to run 'git gc --aggressive' in $($repo.FullName): $_"
-    }
-    finally {
-      Pop-Location
-    }
-  }
-}
-
 # Clean all my clouds
 function CleanAllClouds {
   Write-Output "Starting cloud cleanup..."
@@ -107,7 +65,7 @@ function CleanAllClouds {
     rclone cleanup -v mega:
 
     Write-Output "Cleaning up Google Drive..."
-    rclone cleanup -v gdrive:
+    rclone cleanup -v googledrive:
 
     Write-Output "Cleaning up OneDrive..."
     rclone cleanup -v onedrive:
@@ -121,50 +79,6 @@ function CleanAllClouds {
     Write-Output "Error during cleanup: $_"
   }
 }
-
-# To list all inbox packages:
-function ListAllAppxPackagesWithFamilyName {
-  gsudo {
-    # Retrieve all installed Appx packages for all users
-    $allPackages = Get-AppxPackage -AllUsers
-
-    # Retrieve the list of start menu applications
-    $startApps = Get-StartApps
-
-    # Iterate through each package in allPackages
-    $allPackages | ForEach-Object {
-      $pkg = $_  # Current package
-
-      # Find matching start menu apps where AppID contains the PackageFamilyName
-      $startApps | Where-Object {
-        $_.AppID -like "*$($pkg.PackageFamilyName)*"
-      } | ForEach-Object {
-        # Create a new PSObject for each matched app
-        New-Object PSObject -Property @{
-          PackageFamilyName = $pkg.PackageFamilyName
-          AppName           = $_.Name
-        }
-      }
-    } | Format-List  # Display results in a formatted list
-  }
-}
-
-# https://t.me/sterkin_ru/1684
-function ListAllInstalledAppxPackages {
-  gsudo { Get-AppxProvisionedPackage -Online | Select-Object DisplayName }
-}
-
-function CleanTorrents {
-  autoremove-torrents --conf="$HOME\Мой` диск\документы\configs\autoremove-torrents.yaml" --log=$HOME\Downloads
-}
-
-function FixSystem {
-  gsudo {
-    sfc /scannow
-    dism /Online /Cleanup-Image /RestoreHealth
-  }
-}
-
 
 # Clean all git branches except main|master
 function Remove-GitBranch {
@@ -296,8 +210,6 @@ function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args 
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
 function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args }
-function backup-spotify { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.txt" --dump='liked,playlists' }
-function backup-spotify-json { python "$HOME\Мой диск\документы\backups\spotify-backup\spotify-backup.py" "$HOME\Мой диск\документы\backups\spotify-backup\playlists.json" --format=json --dump='liked,playlists' }
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 # https://superuser.com/a/1830291/1506333
@@ -311,9 +223,7 @@ function mkd {
   Set-Location (Join-Path $PWD $newDir)
 }
 function mps { multipass stop }
-function proxinjector_cli { & "$env:APPDATA\proxinject\proxinjector-cli.exe" $args }
 function what_blocks_sleep { gsudo { powercfg -requests } }
-function backup { pwsh $HOME\git\dotfiles_windows\scripts\backup-script.ps1 }
 
 # https://github.com/canonical/multipass/issues/3112
 # https://gist.github.com/stoneage7/9df39cfac2c28932ed86
@@ -379,9 +289,12 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
 
-# https://github.com/PowerShell/CompletionPredictor?tab=readme-ov-file#use-the-predictor
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-
 # git status in winget-pkgs repo is slow
 # https://github.com/dahlbyk/posh-git?tab=readme-ov-file#customization-variables
 $GitPromptSettings.RepositoriesInWhichToDisableFileStatus += "$HOME\git\winget-pkgs"
+
+# https://github.com/microsoft/inshellisense?tab=readme-ov-file#shell-plugin
+# NOTE: sourcing inshellisense somehow breaks pwsh running as admin
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and (Test-Path '~/.inshellisense/pwsh/init.ps1' -PathType Leaf)) {
+  . ~/.inshellisense/pwsh/init.ps1
+}

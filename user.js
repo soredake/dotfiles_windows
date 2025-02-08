@@ -27,6 +27,16 @@ user_pref("network.predictor.enable-prefetch", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
+// Revert to <=134 fonts
+// https://www.reddit.com/r/firefox/comments/1ii5s71/firefox_135_weird_fonts/
+// https://www.reddit.com/r/firefox/comments/1ii5s71/firefox_135_weird_fonts/mb2w8cw/
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1924346#c2
+user_pref(
+  "gfx.font_rendering.cleartype_params.force_gdi_classic_for_families",
+  "Arial,Consolas,Courier New,Microsoft Sans Serif,Segoe UI,Tahoma,Trebuchet MS,Verdana"
+);
+user_pref("gfx.font_rendering.cleartype_params.force_gdi_classic_max_size", 15);
+
 // Restore old thick scrollbars
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802694
 user_pref("widget.windows.overlay-scrollbars.enabled", false);

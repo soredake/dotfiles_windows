@@ -17,9 +17,8 @@ if (!$env:vm) {
 }
 
 # Install powershell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
-# NOTE: https://github.com/microsoft/winget-command-not-found/issues/3
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-Install-Module -Name posh-git, PSAdvancedShortcut, PSCompletions, CompletionPredictor, Microsoft.WinGet.Client, Microsoft.WinGet.CommandNotFound
+Install-Module -Name posh-git, PSAdvancedShortcut
 
 # Adding scoop buckets
 'extras' | ForEach-Object { scoop bucket add $_ }
@@ -27,17 +26,14 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 
 # Installing my scoop packages
-# Portable apps are migrated to scoop until https://github.com/microsoft/winget-cli/issues/361, https://github.com/microsoft/winget-cli/issues/2299, https://github.com/microsoft/winget-cli/issues/4044, https://github.com/microsoft/winget-cli/issues/4070 and https://github.com/microsoft/winget-pkgs/issues/500 are fixed
-# https://github.com/ScoopInstaller/Scoop/issues/5234 software that cannot be moved to scoop because of firewall/defender annoyance: syncthingtray
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324
-# TODO: move mpv back to chocolatey once new mpv version is released https://community.chocolatey.org/packages/mpvio.install
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 is fixed
-scoop install topgrade pipx nosleep mpv-git goodbyedpi hatt onthespot persistent-windows # tor-browser
+scoop install topgrade pipx nosleep onthespot persistent-windows # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:LOCALAPPDATA\Plex\scripts, $HOME\scoop\apps\mpv-git\current\portable_config\scripts -ItemType Directory -Force | Out-Null
+New-Item -Path $env:APPDATA\trakt-scrobbler, $env:LOCALAPPDATA\Plex\scripts, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
 
 # ff2mpv
 git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
@@ -55,15 +51,11 @@ gsudo {
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
 # Downloading and running Sophia Script
-# https://www.outsidethebox.ms/22048/
-# Suggest ways to get the most out of Windows…: WhatsNewInWindows -Disable
-# Show the Windows welcome experience…: WindowsWelcomeExperience -Hide
-# Get tips and suggestions when using Windows…: WindowsTips -Disable
 # NOTE: "NetworkAdaptersSavePower -Disable" is workaround for https://github.com/qbittorrent/qBittorrent/issues/21709
 Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
 iwr script.sophia.team -useb | iex
 gsudo {
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "TaskbarSearch -Hide", "ControlPanelView -LargeIcons", "FileTransferDialog -Detailed", "ShortcutsSuffix -Disable", "UnpinTaskbarShortcuts -Shortcuts Edge, Store, Outlook", "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "SaveRestartableApps -Enable", "WhatsNewInWindows -Disable", "UpdateMicrosoftProducts -Enable", "InputMethod -English", "TempTask -Register", "EditWithClipchampContext -Hide", "StorageSense -Enable", "NetworkAdaptersSavePower -Disable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register", "EditWithClipchampContext -Hide", "NetworkAdaptersSavePower -Disable"
 }
 
 # Installing software
@@ -94,7 +86,7 @@ gsudo {
   pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
 
   # Chocolatey stuff
-  choco install -y syncthingtray choco-cleaner git-status-cache-posh-client aimp
+  choco install -y syncthingtray choco-cleaner aimp mpvio.install
   choco install -y --pin nerd-fonts-hack tor-browser
 
   # For storing ssh key
@@ -108,17 +100,10 @@ gsudo {
 
 # Various settings
 gsudo {
-  # https://admx.help/?Category=Windows_8.1_2012R2&Policy=Microsoft.Policies.WindowsLogon::DisableStartupSound
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableStartupSound" /t REG_DWORD /d 1 /f
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
   # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
   reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
-  # Once in a while I need hibernation
-  reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v "ShowHibernateOption" /t REG_DWORD /d 1 /f
-
-  # Register mpv-git associations
-  cmd /c "$HOME\scoop\apps\mpv-git\current\installer\mpv-install.bat /u"
 
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
@@ -134,6 +119,8 @@ gsudo {
 
   # toprgrade uses `sudo` alias to run choco upgrade
   # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
+  # TODO: don't require sudo when topgrade is run as admin https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025
+  # https://gerardog.github.io/gsudo/docs/gsudo-vs-sudo#what-if-i-install-both
   sudo config --enable normal
 }
 
@@ -160,7 +147,7 @@ gsudo {
 
 # Tasks & services
 gsudo {
-  # Task for restarting Taiga every day until https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161 is fixed
+  # Workaround for https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161
   Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
 
@@ -171,7 +158,7 @@ gsudo {
 
   # Backup task
   Unregister-ScheduledTask -TaskName "Backup everything" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00 -DaysInterval 3)
+  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00 -DaysInterval 3)
 
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
@@ -185,6 +172,17 @@ gsudo {
 
   # Run task if scheduled run time is missed
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
+
+  # https://github.com/kangyu-california/PersistentWindows
+  ~\scoop\apps\persistent-windows\current\auto_start_pw_aux.ps1
+}
+
+# Tasks & services continuation
+gsudo {
+  # Task for cleaning torrents
+  # https://github.com/jerrymakesjelly/autoremove-torrents
+  Unregister-ScheduledTask -TaskName "Torrents cleanup" -Confirm:$false
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 }
 
 # Cleanup
@@ -202,18 +200,17 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 
 npm install --global webtorrent-mpv-hook inshellisense
 # mpv plugins installation
-curl -L --create-dirs --remote-name-all --output-dir $HOME\scoop\apps\mpv-git\current\portable_config\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
+curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
-7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$HOME\scoop\apps\mpv-git\current\portable_config\scripts" -y
+7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
 # https://github.com/mrxdst/webtorrent-mpv-hook
-New-Item -ItemType SymbolicLink -Path "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
+New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
 # Change script keybind
-(Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\reload.lua"
+(Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
 
 # https://github.com/CogentRedTester/mpv-sub-select/issues/30
-# TODO: request enabling support for using `sid=` from mpv.conf without this option by default
-(Get-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$HOME\scoop\apps\mpv-git\current\portable_config\scripts\sub-select.lua"
+(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
 
 # Multipass setup
 if (!$env:vm) {
@@ -230,22 +227,9 @@ if (!$env:vm) {
 trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
-# https://github.com/kangyu-california/PersistentWindows
-powershell $HOME\scoop\apps\persistent-windows\current\auto_start_pw_aux.ps1
-
-# https://www.elevenforum.com/t/turn-on-or-off-enhance-pointer-precision-in-windows-11.7327/
-# https://github.com/farag2/Sophia-Script-for-Windows/discussions/553
-reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
-reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
-reg add "HKCU\Control Panel\Mouse" /v MouseThreshold2 /t REG_SZ /d 0 /f
 
 # TODO: fill the issue, onespot should use path to music (in case folder is relocated to onedrive) from env, not hardcode ~/music
 New-Item -ItemType Junction -Path "$HOME\Music" -Target $musicPath
-
-# Task for cleaning torrents
-# https://github.com/jerrymakesjelly/autoremove-torrents
-Unregister-ScheduledTask -TaskName "Torrents cleanup" -Confirm:$false
-Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 
 # Shortcuts
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
@@ -268,13 +252,9 @@ gsudo { wsl --update --pre-release }
 # https://github.com/SpotX-Official/SpotX
 iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
-# PSCompletions setup
-psc config enable_completions_update 0
-psc config enable_module_update 0
-psc add npm winget scoop
-
-# This optimization takes some time to complete, so it makes sense to enable it at the end
-scoop config use_sqlite_cache true
+# https://remontka.pro/wake-timers-windows/
+powercfg /SETDCVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
 # https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
