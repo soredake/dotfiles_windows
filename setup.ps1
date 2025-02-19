@@ -63,7 +63,7 @@ gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything sshfs-win RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex ubisoft-connect volumelock plexmediaserver syncplay Motorola.ReadyForAssistant stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools 9pfz3g4d1c9r 9pmz94127m4g xpfm5p5kdwf0jp 9p2b8mcsvpln
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Sandboxie.Classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram Haali.WinUtils.lswitch Python.Python.3.12 discord Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp KeePassXCTeam.KeePassXC protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent adoptopenjdk11 HermannSchinagl.LinkShellExtension Plex.Plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone SomePythonThings.WingetUIStore nodejs-lts LesFerch.WinSetView Oracle.VirtualBox yt-dlp.yt-dlp.nightly advaith.CurrencyConverterPowerToys Microsoft.Sysinternals.PsTools Google.PlatformTools 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # This is needed to display thumbnails for HEVC videos
@@ -102,8 +102,6 @@ gsudo {
 gsudo {
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
-  # https://github.com/winfsp/sshfs-win/issues/194#issuecomment-632281505
-  reg add "HKLM\SOFTWARE\WOW6432Node\WinFsp\Services\sshfs" /v "Recovery" /t REG_DWORD /d 1 /f
 
   # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAh2b88 https://aka.ms/AAh23gr https://aka.ms/AAnrbkw
   Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
@@ -117,7 +115,7 @@ gsudo {
   # https://stackoverflow.com/a/35812945
   bcdedit /set hypervisorlaunchtype off
 
-  # toprgrade uses `sudo` alias to run choco upgrade
+  # topgrade uses `sudo` alias to run choco upgrade
   # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
   # TODO: don't require sudo when topgrade is run as admin https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025
   # https://gerardog.github.io/gsudo/docs/gsudo-vs-sudo#what-if-i-install-both
