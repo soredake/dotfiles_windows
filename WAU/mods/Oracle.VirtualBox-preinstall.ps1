@@ -1,7 +1,7 @@
 # Multipass
 multipass stop --all
-taskkill /T /im multipass.exe
 Stop-Service Multipass -Force
+taskkill /T /im multipass*
 
 # VirtualBox
 $vms = VBoxManage list runningvms | ForEach-Object {
@@ -12,12 +12,12 @@ foreach ($vm in $vms) {
   VBoxManage controlvm $vm savestate
 }
 
+Stop-Service VBoxSDS -Force
+
 taskkill /T /im VirtualBox.exe
 taskkill /T /im VBoxSVC.exe
 taskkill /T /im VBoxHeadless.exe
 taskkill /T /im VirtualBoxVM.exe
-
-Stop-Service VBoxSDS -Force
 
 # List all drivers with names starting with "Vbox"
 $drivers = Get-CimInstance -Query "SELECT * FROM Win32_SystemDriver WHERE Name LIKE 'Vbox%'"

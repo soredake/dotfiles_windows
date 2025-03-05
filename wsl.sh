@@ -4,14 +4,15 @@
 sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
 
 # I need newer version https://unix.stackexchange.com/a/740124
-sudo add-apt-repository -yn ppa:fish-shell/release-3
+# https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
+sudo add-apt-repository -yn ppa:fish-shell/release-4
 # https://github.com/microsoft/wslg/issues/40#issuecomment-2037539322
 sudo add-apt-repository -yn ppa:kisak/kisak-mesa
 
 # Installing software
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
-sudo DEBIAN_FRONTEND=noninteractive apt install -y python3-pip pipx fish tmux jq htop
+sudo DEBIAN_FRONTEND=noninteractive apt install -y pipx fish tmux jq htop
 curl -fsSL get.docker.com -o "$HOME/get-docker.sh" && sudo sh "$HOME/get-docker.sh"
 
 # Creating bin dir for user binaries
@@ -26,15 +27,7 @@ rm topgrade*.tar.gz
 pipx ensurepath
 
 # https://unix.stackexchange.com/a/740124
-# https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
-fish -c "
-    # Download and source fisher.fish
-    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source;
-    # Install fisher and pure prompt
-    fisher install jorgebucaran/fisher pure-fish/pure;
-    # Enable the 'qmark-noglob' feature globally
-    #set -U fish_features qmark-noglob
-"
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher pure-fish/pure"
 wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/soredake/dotfiles_linux/fedora/home/fish/.config/fish/config.fish
 
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823

@@ -1,33 +1,28 @@
 $downloadsPath = "$env:USERPROFILE\Downloads"
 
-# Define folders to exclude from deletion
+# Define folders that should not be deleted entirely but should have their contents cleaned
 $excludeFolders = @("64Gram Desktop", "TabSessionManager - Backup", "archive")
 
-# Get all files and directories in the Downloads folder
+# Filter to delete files and folders older than 31 days, ignoring hidden items
 Get-ChildItem -Path $downloadsPath -Recurse -Force |
 Where-Object {
-  # Exclude specified folders from deletion
-  -not ($_.PSIsContainer -and ($excludeFolders -contains $_.Name)) -and
-  # Delete if older than 31 days
-  ($_.LastWriteTime -lt (Get-Date).AddDays(-31))
+  -not $_.Attributes.HasFlag([System.IO.FileAttributes]::Hidden) -and # Exclude hidden files and folders
+  -not ($_.PSIsContainer -and ($excludeFolders -contains $_.Name)) -and # Exclude specified folders
+  ($_.LastWriteTime -lt (Get-Date).AddDays(-31)) # Filter by date
 } |
 ForEach-Object {
-  if ($_.PSIsContainer) {
-    # Delete the entire folder if it's older than 31 days and not in the exclusion list
-    Remove-Item $_.FullName -Force -Recurse
-  }
-  else {
-    # Delete individual files
-    Remove-Item $_.FullName -Force
-  }
+  Remove-Item $_.FullName -Force -Recurse
 }
 
-# For excluded folders, clean up old contents only
+# Clean up the contents of the excluded folders, ignoring hidden files
 foreach ($folder in $excludeFolders) {
   $folderPath = Join-Path -Path $downloadsPath -ChildPath $folder
   if (Test-Path $folderPath) {
     Get-ChildItem -Path $folderPath -Recurse -Force |
-    Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-31) } |
+    Where-Object {
+      -not $_.Attributes.HasFlag([System.IO.FileAttributes]::Hidden) -and
+      $_.LastWriteTime -lt (Get-Date).AddDays(-31)
+    } |
     Remove-Item -Force -Recurse
   }
 }

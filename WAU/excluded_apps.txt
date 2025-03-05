@@ -31,7 +31,6 @@ ViGEm.HidHide
 ViGEm.ViGEmBus
 Zoom.Zoom.EXE
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
-Microsoft.DevHome
 Microsoft.WindowsTerminal
 Microsoft.PowerShell
 Microsoft.Teams.Free
