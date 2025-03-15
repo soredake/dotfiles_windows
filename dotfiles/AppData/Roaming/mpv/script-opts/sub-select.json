@@ -1,56 +1,128 @@
 [
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'ass'",
-    "whitelist": [ "sdh" ]
+    "whitelist": [
+      "sdh"
+    ]
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'subrip'",
-    "whitelist": [ "sdh" ]
+    "whitelist": [
+      "sdh"
+    ]
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'hdmv_pgs_subtitle'",
-    "whitelist": [ "sdh" ]
+    "whitelist": [
+      "sdh"
+    ]
   },
   {
-    "alang": ["jpn", "ja"],
-    "slang": [ "eng?", "en?", "und" ],
+    "alang": [
+      "jpn",
+      "ja"
+    ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'ass'",
-    "blacklist": [ "songs", "signs", "forced", "forzados" ]
+    "blacklist": [
+      "songs",
+      "signs",
+      "forced",
+      "forzados"
+    ]
   },
   {
-    "alang": ["jpn", "ja"],
-    "slang": [ "eng?", "en?", "und" ],
+    "alang": [
+      "jpn",
+      "ja"
+    ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'subrip'",
-    "blacklist": [ "songs", "signs", "forced", "forzados" ]
+    "blacklist": [
+      "songs",
+      "signs",
+      "forced",
+      "forzados"
+    ]
   },
   {
-    "alang": ["jpn", "ja"],
-    "slang": [ "eng?", "en?", "und" ],
+    "alang": [
+      "jpn",
+      "ja"
+    ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'hdmv_pgs_subtitle'",
-    "blacklist": [ "songs", "signs", "forced", "forzados" ]
+    "blacklist": [
+      "songs",
+      "signs",
+      "forced",
+      "forzados"
+    ]
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'ass'",
-    "blacklist": [ "forced" ]
+    "blacklist": [
+      "forced"
+    ]
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'subrip'",
-    "blacklist": [ "forced" ]
+    "blacklist": [
+      "forced"
+    ]
   },
   {
     "alang": "*",
-    "slang": [ "eng?", "en?", "und" ],
+    "slang": [
+      "eng?",
+      "en?",
+      "und"
+    ],
     "condition": "sub.codec == 'hdmv_pgs_subtitle'",
-    "blacklist": [ "forced" ]
+    "blacklist": [
+      "forced"
+    ]
   }
 ]

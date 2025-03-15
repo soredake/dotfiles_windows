@@ -1,7 +1,7 @@
-[wsl2]
-memory=4GB
-processors=2
-swap=4GB
+# [wsl2]
+# memory=4GB
+# processors=2
+# swap=4GB
 
 [experimental]
 sparseVhd=true

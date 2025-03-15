@@ -302,6 +302,7 @@ $GitPromptSettings.RepositoriesInWhichToDisableFileStatus += "$HOME\git\winget-p
 
 # https://github.com/microsoft/inshellisense?tab=readme-ov-file#shell-plugin
 # NOTE: sourcing inshellisense somehow breaks pwsh running as admin
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and (Test-Path '~/.inshellisense/pwsh/init.ps1' -PathType Leaf)) {
-  . ~/.inshellisense/pwsh/init.ps1
-}
+# NOTE: https://github.com/microsoft/inshellisense/issues/9
+# if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and (Test-Path '~/.inshellisense/pwsh/init.ps1' -PathType Leaf)) {
+#   . ~/.inshellisense/pwsh/init.ps1
+# }

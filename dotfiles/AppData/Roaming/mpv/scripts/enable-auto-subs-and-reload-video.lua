@@ -1,5 +1,5 @@
 -- Define the desired options
-local desired_options = "mark-watched=,cookies-from-browser=firefox,sub-langs=\"en,en-en,uk,uk-uk\",write-auto-subs="
+local desired_options = "ignore-no-formats-error=,mark-watched=,cookies-from-browser=firefox,sub-langs=\"en,en-en,uk,uk-uk\",write-auto-subs="
 
 -- Function to update ytdl-raw-options and reload the video
 function update_and_reload()

@@ -7,7 +7,7 @@ sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s
 # https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
 sudo add-apt-repository -yn ppa:fish-shell/release-4
 # https://github.com/microsoft/wslg/issues/40#issuecomment-2037539322
-sudo add-apt-repository -yn ppa:kisak/kisak-mesa
+#sudo add-apt-repository -yn ppa:kisak/kisak-mesa
 
 # Installing software
 sudo apt update
@@ -42,9 +42,6 @@ tee ~/.tmux.conf >/dev/null <<EOF
 set -g mouse on
 EOF
 
-# https://github.com/canonical/multipass/issues/3033
-grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc
-
 # https://wiki.archlinux.org/title/Systemd/Journal#Journal_size_limit
 # https://github.com/systemd/systemd/issues/17382
 sudo mkdir -p /etc/systemd/journald.conf.d
@@ -66,36 +63,9 @@ if grep -q microsoft /proc/version; then
   systemd=true
 EOF
 
-  # https://github.com/microsoft/WSL/issues/1278#issuecomment-1377893172
-  sudo systemctl enable /usr/share/systemd/tmp.mount
-
-  # https://github.com/microsoft/wslg/issues/1156#issuecomment-1876266025
-  sudo tee /etc/systemd/system/x11-symlink.service >/dev/null <<EOF
-[Unit]
-Description=Setup X11 Symlink
-
-[Service]
-Type=oneshot
-ExecStartPre=/bin/rm -rf /tmp/.X11-unix
-ExecStart=/bin/ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
-
-[Install]
-WantedBy=multi-user.target
-EOF
-  # https://github.com/microsoft/WSL/issues/11261#issuecomment-2478574303
-  sudo tee /etc/systemd/user/symlink-wayland-socket.service >/dev/null <<EOF
-[Unit]
-Description=Symlink Wayland socket to XDG_RUNTIME_DIR
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/ln -s /mnt/wslg/runtime-dir/wayland-0      $XDG_RUNTIME_DIR
-ExecStart=/usr/bin/ln -s /mnt/wslg/runtime-dir/wayland-0.lock $XDG_RUNTIME_DIR
-
-[Install]
-WantedBy=default.target
-EOF
-  sudo systemctl daemon-reload
-  sudo systemctl enable x11-symlink.service
-  sudo systemctl --user enable symlink-wayland-socket.service
+  # Set user shell to fish
+  sudo chsh -s /usr/bin/fish "$USER"
+else
+  # https://github.com/canonical/multipass/issues/3033
+  grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc
 fi

@@ -3,18 +3,17 @@ if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual|VMware
 
 # Documents and Desktop folders are moved to OneDrive
 # https://learn.microsoft.com/en-us/dotnet/api/system.environment.specialfolder?view=net-9.0
-$musicPath = [Environment]::GetFolderPath('MyMusic')
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 $startMenuPath = [Environment]::GetFolderPath('StartMenu')
 
-if (!$env:vm) {
-  $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
-  gsudo {
-    # Set static IP https://stackoverflow.com/a/53991926
-    New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-    Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 8.8.8.8, 8.8.4.4
-  }
-}
+# if (!$env:vm) {
+#   $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
+#   gsudo {
+#     # Set static IP https://stackoverflow.com/a/53991926
+#     New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+#     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 8.8.8.8, 8.8.4.4
+#   }
+# }
 
 # Install powershell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
@@ -28,10 +27,11 @@ scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324, waiting for https://github.com/ScoopInstaller/Extras/pull/14886 to be merged
-# TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 is fixed
+# TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 https://github.com/topgrade-rs/topgrade/pull/1042 is fixed
 # nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-scoop install topgrade pipx nosleep onthespot persistent-windows nircmd # tor-browser
+scoop install topgrade pipx nosleep onthespot persistent-windows nircmd archisteamfarm # tor-browser
 #scoop hold tor-browser
+scoop hold archisteamfarm
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:LOCALAPPDATA\Plex\scripts, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
@@ -64,7 +64,7 @@ gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Xanashi.Icaros sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts LesFerch.WinSetView virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Xanashi.Icaros w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts LesFerch.WinSetView virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
@@ -110,14 +110,15 @@ gsudo {
 
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
+  # https://github.com/microsoft/WSL/issues/9695
   bcdedit /set hypervisorlaunchtype off
 
   # topgrade uses `sudo` alias to run choco upgrade
   # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
-  # TODO: don't require sudo when topgrade is run as admin https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/microsoft/sudo/issues/119
+  # https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/microsoft/sudo/issues/119
   # https://gerardog.github.io/gsudo/docs/gsudo-vs-sudo#what-if-i-install-both
-  # sudo config --enable normal
-  gsudo config PathPrecedence true
+  sudo config --enable normal
+  # gsudo config PathPrecedence true # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390
 }
 
 # Dotfiles preparations
@@ -128,6 +129,7 @@ gsudo {
   # Plex
   Remove-Item -Path $env:LOCALAPPDATA\Plex\mpv.conf
   # OneDrive cannot backup symlinks
+  # https://github.com/PowerShell/PowerShell/issues/25097
   New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$($args[0])\Profile.ps1"
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
@@ -197,18 +199,22 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 
 npm install --global webtorrent-mpv-hook @microsoft/inshellisense
 # mpv plugins installation
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua" "https://github.com/4e6/mpv-reload/raw/master/reload.lua"
+curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua" "https://github.com/mpv-player/mpv/raw/master/TOOLS/lua/acompressor.lua"
+curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
 # https://github.com/mrxdst/webtorrent-mpv-hook
 New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
 # Change script keybind
-(Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
+# (Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
 
-# https://github.com/CogentRedTester/mpv-sub-select/issues/30
-# TODO: ask to load sid= value even without this option enabled
+# https://github.com/CogentRedTester/mpv-sub-select/issues/37
 (Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
+# Stop sub-select from selecting forced subs
+(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'explicit_forced_subs = false', 'explicit_forced_subs = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
+# This probably allows using aid/sid from local mpv.conf but avoids selecting forced audio
+(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'select_audio = false', 'select_audio = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
 
 # Multipass setup
 if (!$env:vm) {
@@ -226,10 +232,8 @@ trakts autostart enable
 firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
-# TODO: fill the issue, onespot should use path to music (in case folder is relocated to onedrive) from env, not hardcode ~/music
-New-Item -ItemType Junction -Path "$HOME\Music" -Target $musicPath
-
 # Shortcuts
+# TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1875644
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops"
 New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy"
@@ -245,7 +249,7 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "SFTP Drive" /d 
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
 
 # WSL2 installation
-wsl --install --no-launch -d Ubuntu-24.04
+wsl --install --no-launch
 # Update WSL2 to latest pre-release
 gsudo { wsl --update --pre-release }
 
