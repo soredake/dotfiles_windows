@@ -20,16 +20,20 @@ Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut
 
 # Adding scoop buckets
-'extras', 'nirsoft' | ForEach-Object { scoop bucket add $_ }
+'extras', 'nirsoft' | % { scoop bucket add $_ }
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324, waiting for https://github.com/ScoopInstaller/Extras/pull/14886 to be merged
+# NOTE: move tor-browser to winget once https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is fixed
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 https://github.com/topgrade-rs/topgrade/pull/1042 is fixed
 # nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-scoop install topgrade pipx nosleep onthespot persistent-windows nircmd archisteamfarm # tor-browser
+# TODO: migrate to UV? https://github.com/microsoft/winget-pkgs/blob/master/manifests/a/astral-sh/uv/0.6.6/astral-sh.uv.installer.yaml
+# TODO: request nircmd in winget
+# pipx
+scoop install topgrade nosleep onthespot persistent-windows nircmd archisteamfarm # tor-browser
 #scoop hold tor-browser
 scoop hold archisteamfarm
 
@@ -64,7 +68,7 @@ gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Xanashi.Icaros w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts LesFerch.WinSetView virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact UnifiedIntents.UnifiedRemote astral-sh.uv Xanashi.Icaros w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts LesFerch.WinSetView virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
@@ -74,16 +78,24 @@ gsudo {
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=None UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
 
   # Add pipx bin dir to PATH
-  pipx ensurepath
+  #pipx ensurepath
+  uv tool update-shell
 
   # Refreshing PATH env
   . "$HOME/refrenv.ps1"
 
-  # Installing pipx packages
-  pipx install autoremove-torrents internetarchive "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
+  # Installing python tools packages
+  #pipx install autoremove-torrents "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
+  # https://github.com/astral-sh/uv/issues/11674
+  'autoremove-torrents', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
+
+  # Workaround for https://github.com/pywinrt/pywinrt/issues/99 https://github.com/samschott/desktop-notifier/issues/216 https://github.com/iamkroot/trakt-scrobbler/issues/324
+  uv tool install --with "winrt-Windows.Foundation==2.3.0" 'git+https://github.com/iamkroot/trakt-scrobbler.git'
 
   # Chocolatey stuff
+  # https://github.com/mpv-player/mpv/pull/15912
   choco install -y syncthingtray choco-cleaner aimp mpvio.install
+  # https://github.com/microsoft/winget-cli/issues/166
   choco install -y --pin nerd-fonts-hack tor-browser
 
   # For storing ssh key
@@ -118,7 +130,7 @@ gsudo {
   # https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/microsoft/sudo/issues/119
   # https://gerardog.github.io/gsudo/docs/gsudo-vs-sudo#what-if-i-install-both
   sudo config --enable normal
-  # gsudo config PathPrecedence true # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390
+  # gsudo config PathPrecedence true # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390 https://github.com/gerardog/gsudo/pull/397
 }
 
 # Dotfiles preparations
@@ -140,8 +152,8 @@ gsudo {
   # OLD: Storage Sense cannot clear Downloads folder as windows defender is modifying last access date when scanning it
   # https://www.reddit.com/r/WindowsHelp/comments/vnt53e/storage_sense_does_not_delete_files_in_my/ https://answers.microsoft.com/en-us/windows/forum/all/storage-sense-does-not-delete-files-in-my/50ee4069-3e67-4379-9e65-e7274f30e104 https://aka.ms/AAral56
   # Storage Sense for some reason just ignores files that are not acceses for more that 14 days
-  # Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
-  # Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
+  Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
+  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
 }
 
 # Tasks & services
@@ -192,6 +204,7 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
 # https://github.com/microsoft/winget-pkgs/issues/106091
+# https://github.com/microsoft/vscode/blob/9d43b0751c91c909eee74ea96f765b1765487d7f/build/win32/code.iss#L81-L88
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # Refreshing PATH env
@@ -206,15 +219,13 @@ curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu
 # https://github.com/mrxdst/webtorrent-mpv-hook
 New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
 
-# Change script keybind
-# (Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
+# Change reload script keybind
+(Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
 
 # https://github.com/CogentRedTester/mpv-sub-select/issues/37
-(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
+# (Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
 # Stop sub-select from selecting forced subs
-(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'explicit_forced_subs = false', 'explicit_forced_subs = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
-# This probably allows using aid/sid from local mpv.conf but avoids selecting forced audio
-(Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'select_audio = false', 'select_audio = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
+# (Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'explicit_forced_subs = false', 'explicit_forced_subs = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
 
 # Multipass setup
 if (!$env:vm) {
@@ -233,7 +244,7 @@ firefox -CreateProfile letyshops
 firefox -CreateProfile alwaysonproxy
 
 # Shortcuts
-# TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1875644
+# TODO: https://bugzilla.mozilla.org/show_bug.cgi?id=1875644 for new profile functionality
 Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops"
 New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy"
@@ -257,7 +268,6 @@ gsudo { wsl --update --pre-release }
 iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
 # https://remontka.pro/wake-timers-windows/
-powercfg /SETDCVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 
 # WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
