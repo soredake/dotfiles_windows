@@ -11,7 +11,6 @@ user_pref("extensions.pocket.enabled", false);
 user_pref("browser.translations.enable", false);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1750904
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1746396

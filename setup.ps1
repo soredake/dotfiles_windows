@@ -30,9 +30,7 @@ scoop bucket add holes "https://github.com/instinctualjealousy/holes"
 # NOTE: move tor-browser to winget once https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is fixed
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 https://github.com/topgrade-rs/topgrade/pull/1042 is fixed
 # nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-# TODO: migrate to UV? https://github.com/microsoft/winget-pkgs/blob/master/manifests/a/astral-sh/uv/0.6.6/astral-sh.uv.installer.yaml
 # TODO: request nircmd in winget
-# pipx
 scoop install topgrade nosleep onthespot persistent-windows nircmd archisteamfarm # tor-browser
 #scoop hold tor-browser
 scoop hold archisteamfarm
@@ -56,11 +54,10 @@ gsudo {
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
 # Downloading and running Sophia Script
-# NOTE: "NetworkAdaptersSavePower -Disable" is workaround for https://github.com/qbittorrent/qBittorrent/issues/21709
 Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
 iwr script.sophia.team -useb | iex
 gsudo {
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register", "EditWithClipchampContext -Hide", "NetworkAdaptersSavePower -Disable"
+  ~\Downloads\Sophia*\Sophia.ps1 -Function "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register"
 }
 
 # Installing software
@@ -68,7 +65,7 @@ gsudo {
   # Some monikers can't be used until https://github.com/microsoft/winget-cli/issues/3547 is fixed
   # run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact UnifiedIntents.UnifiedRemote astral-sh.uv Xanashi.Icaros w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts LesFerch.WinSetView virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact UnifiedIntents.UnifiedRemote astral-sh.uv Xanashi.Icaros w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac 64gram lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp keepassxc protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent temurin-jdk-17 HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Google.PlatformTools XPDC2RH70K22MN 9pfz3g4d1c9r 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
@@ -78,19 +75,14 @@ gsudo {
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=None UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
 
   # Add pipx bin dir to PATH
-  #pipx ensurepath
   uv tool update-shell
 
   # Refreshing PATH env
   . "$HOME/refrenv.ps1"
 
   # Installing python tools packages
-  #pipx install autoremove-torrents "git+https://github.com/arecarn/dploy.git" "git+https://github.com/iamkroot/trakt-scrobbler.git"
   # https://github.com/astral-sh/uv/issues/11674
-  'autoremove-torrents', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
-
-  # Workaround for https://github.com/pywinrt/pywinrt/issues/99 https://github.com/samschott/desktop-notifier/issues/216 https://github.com/iamkroot/trakt-scrobbler/issues/324
-  uv tool install --with "winrt-Windows.Foundation==2.3.0" 'git+https://github.com/iamkroot/trakt-scrobbler.git'
+  'git+https://github.com/iamkroot/trakt-scrobbler.git', 'autoremove-torrents', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
@@ -126,11 +118,12 @@ gsudo {
   bcdedit /set hypervisorlaunchtype off
 
   # topgrade uses `sudo` alias to run choco upgrade
-  # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
-  # https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/topgrade-rs/topgrade/blob/224bb96a98b06f1000106f511012c12963f2e115/src/steps/os/windows.rs#L22-L28 https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/microsoft/sudo/issues/119
+  # https://github.com/topgrade-rs/topgrade/issues/1025 https://github.com/microsoft/sudo/issues/119
   # https://gerardog.github.io/gsudo/docs/gsudo-vs-sudo#what-if-i-install-both
+  # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
   sudo config --enable normal
-  # gsudo config PathPrecedence true # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390 https://github.com/gerardog/gsudo/pull/397
+  # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390 https://github.com/gerardog/gsudo/pull/397
+  # gsudo config PathPrecedence true
 }
 
 # Dotfiles preparations
@@ -196,10 +189,6 @@ gsudo {
   Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
 }
 
-# Cleanup
-# https://www.elevenforum.com/t/add-or-remove-edit-in-notepad-context-menu-in-windows-11.20485/
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /v "{CA6CC9F1-867A-481E-951E-A28C5E4F01EA}" /t REG_SZ /d "" /f
-
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
 winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
@@ -221,11 +210,6 @@ New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -
 
 # Change reload script keybind
 (Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
-
-# https://github.com/CogentRedTester/mpv-sub-select/issues/37
-# (Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'force_prediction = false', 'force_prediction = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
-# Stop sub-select from selecting forced subs
-# (Get-Content "$env:APPDATA\mpv\scripts\sub-select.lua") -replace 'explicit_forced_subs = false', 'explicit_forced_subs = true' | Set-Content "$env:APPDATA\mpv\scripts\sub-select.lua"
 
 # Multipass setup
 if (!$env:vm) {
@@ -262,17 +246,10 @@ reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Inpr
 # WSL2 installation
 wsl --install --no-launch
 # Update WSL2 to latest pre-release
-gsudo { wsl --update --pre-release }
+#gsudo { wsl --update --pre-release }
 
 # https://github.com/SpotX-Official/SpotX
 iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
 
 # https://remontka.pro/wake-timers-windows/
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
-
-# WinSetView is used to make Windows Explorer sort by date modified (from filesystem metadata) rather than sorting by EXIF metadata (which is VERY slow even on NVMe when you have 1000+ photos or videos in folder): https://superuser.com/questions/487647/sorting-by-date-very-slow https://superuser.com/questions/238825/sort-files-by-date-modified-but-folders-always-before-files-in-windows-explorer https://superuser.com/questions/738978/how-to-prevent-windows-explorer-from-slowly-reading-file-content-to-create-metad
-# WinSetView is also used to list folder before files by default https://github.com/LesFerch/WinSetView/issues/67#issuecomment-1817942990
-# https://www.tenforums.com/tutorials/17707-reset-folder-view-settings-default-windows-10-a.html
-# INFO: Apparently Windows Explorer no longer sorts by Date (using EXIF metadata) by default for Photos/Videos folder type after https://www.neowin.net/news/windows-11-24h2-kb5052093-fixes-bugs-with-audio-file-explorer-performance-issues-and-more/
-# https://aka.ms/AAnqwpr https://aka.ms/AAnriyc https://aka.ms/AAnr44v
-#C:\Program` Files` `(x86`)\WinSetView\WinSetView.ps1 $PSScriptRoot\explorer-preset.ini

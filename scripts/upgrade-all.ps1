@@ -3,7 +3,8 @@ Get-InstalledModule | Update-Module
 
 trakts stop
 # 'powershell' https://github.com/topgrade-rs/topgrade/issues/972
-topgrade --no-retry --cleanup --yes --only 'node' 'scoop' 'wsl_update' 'pipx' 'chocolatey' 'pip3' 'uv'
+# 'wsl_update' https://learn.microsoft.com/en-us/windows/wsl/compare-versions#wsl-in-the-microsoft-store
+topgrade --no-retry --cleanup --yes --only 'node' 'scoop' 'chocolatey' 'uv'
 trakts start --restart
 # scoop cannot upgrade topgrade while it was running
 # TODO: move topgrade to winget to fix this once this https://github.com/topgrade-rs/topgrade/issues/958 https://github.com/topgrade-rs/topgrade/pull/1042 is fixed
