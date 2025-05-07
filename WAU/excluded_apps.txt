@@ -8,12 +8,12 @@ Ghisler.TotalCommander
 # This software updates itself
 64Gram.64Gram
 AppWork.JDownloader
+Bitwarden.Bitwarden
 Discord.Discord
 ElectronicArts.EADesktop
 EpicGames.EpicGamesLauncher
 GOG.Galaxy
 Google.GoogleDrive
-IG.IGClient
 ItchIo.Itch
 LogMeIn.Hamachi
 Microsoft.OneDrive
@@ -24,6 +24,7 @@ Plex.PlexMediaServer
 Rakuten.Viber
 SpecialK.SpecialK
 SteelSeries.GG
+Telegram.TelegramDesktop
 TorProject.TorBrowser
 Ubisoft.Connect
 Valve.Steam
@@ -31,17 +32,18 @@ ViGEm.HidHide
 ViGEm.ViGEmBus
 Zoom.Zoom.EXE
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
-Microsoft.WindowsTerminal
-Microsoft.PowerShell
 Microsoft.Teams.Free
+Microsoft.WSL
+Microsoft.WindowsTerminal
 # Edge Updater updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
 # Microsoft Update updating these https://github.com/microsoft/winget-cli/issues/4546
-Microsoft.Office
+#Microsoft.Office
+Microsoft.PowerShell
 # https://github.com/microsoft/winget-pkgs/pull/151684
 dokan-dev.Dokany
 # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
 Canonical.Multipass
 # Same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
-#Oracle.VirtualBox
+Oracle.VirtualBox

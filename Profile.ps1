@@ -220,7 +220,7 @@ function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 # https://superuser.com/a/1830291/1506333
-function YoutubeExtractAllUrlsFromPlaylist { yt-dlp $args --skip-download --cookies-from-browser=firefox --no-warning --print webpage_url 2>$null }
+function YoutubeExtractAllUrlsFromPlaylist { yt-dlp $args --skip-download --no-warning --print webpage_url 2>$null }
 
 function mkd {
   $newDir = $args[0]
@@ -230,7 +230,6 @@ function mkd {
   Set-Location (Join-Path $PWD $newDir)
 }
 function mps { multipass stop }
-function what_blocks_sleep { gsudo { powercfg -requests } }
 
 # https://github.com/canonical/multipass/issues/3112
 # https://gist.github.com/stoneage7/9df39cfac2c28932ed86
@@ -277,10 +276,6 @@ function MultipassExportLogsFromLastHour {
     StartTime    = (Get-Date).AddHours(-1)
   } | Out-File -FilePath "$HOME\Multipass-logs-from-last-hour.log"
 }
-
-
-# Loading private powershell profile
-. "$HOME\Мой диск\документы\private_powershell_profile.ps1"
 
 # Mirroring linux shells bindings and completion menu
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine

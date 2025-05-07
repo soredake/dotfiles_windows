@@ -36,17 +36,6 @@ user_pref(
 );
 user_pref("gfx.font_rendering.cleartype_params.force_gdi_classic_max_size", 15);
 
-// Restore old thick scrollbars
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1802694
-user_pref("widget.windows.overlay-scrollbars.enabled", false);
-
-// https://support.mozilla.org/en-US/questions/1176544
-// removes delay between allowing to save file/making "OK" button clickable
-// user_pref("security.dialog_enable_delay", 0);
-
-// Do not show about:config warning message
-user_pref("browser.aboutConfig.showWarning", false);
-
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
 user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512
