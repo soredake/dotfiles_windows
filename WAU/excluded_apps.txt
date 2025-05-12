@@ -18,7 +18,8 @@ ItchIo.Itch
 LogMeIn.Hamachi
 Microsoft.OneDrive
 Microsoft.VisualStudioCode
-Mozilla.Firefox
+Mozilla.Firefox*
+Nefarius.HidHide
 Parsec.Parsec
 Plex.PlexMediaServer
 Rakuten.Viber
@@ -28,22 +29,22 @@ Telegram.TelegramDesktop
 TorProject.TorBrowser
 Ubisoft.Connect
 Valve.Steam
-ViGEm.HidHide
 ViGEm.ViGEmBus
 Zoom.Zoom.EXE
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
-Microsoft.Teams.Free
+Canonical.Ubuntu*
+Microsoft.Teams*
 Microsoft.WSL
 Microsoft.WindowsTerminal
 # Edge Updater updating these https://github.com/microsoft/winget-cli/issues/4546
 Microsoft.Edge
 Microsoft.EdgeWebView2Runtime
 # Microsoft Update updating these https://github.com/microsoft/winget-cli/issues/4546
-#Microsoft.Office
+Microsoft.Office
 Microsoft.PowerShell
 # https://github.com/microsoft/winget-pkgs/pull/151684
 dokan-dev.Dokany
 # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442 https://github.com/canonical/multipass/issues/104
 Canonical.Multipass
-# Same problem https://github.com/qbittorrent/qBittorrent/issues/18115 https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
+# Same problem https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
 Oracle.VirtualBox

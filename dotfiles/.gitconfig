@@ -1,4 +1,5 @@
 # https://git-scm.com/docs/git-config
+# https://github.com/git-for-windows/git/blob/main/Documentation/config/core.adoc
 [help]
   autocorrect = 1
 [diff]
@@ -52,20 +53,18 @@
   undo = reset --soft HEAD~1
 # Undo push.
   udp = push -f origin HEAD^:master
-[cola]
-  spellcheck = false
 [feature]
   manyFiles = true
   experimental = true
 [core]
-  editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
+  # editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
+  editor = code -w
   sparseCheckout = true
   sparseCheckoutCone = true
   WSLCompat = true
   autocrlf = true
   fscache = true
   fsmonitor = true
-  symlinks = true
   # fix for https://github.com/microsoft/vscode/issues/121231#issuecomment-819438763
   sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
@@ -73,12 +72,13 @@
   email = 5204968+soredake@users.noreply.github.com
 # https://github.com/microsoft/vscode/issues/5770#issuecomment-1188658476
 [merge]
-  tool = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe'
+  # tool = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe'
+  tool = code
 [mergetool]
   writeToTemp = true
-  keepBackup = false
 [mergetool "code"]
-  cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED
+  # cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED
+  cmd = code --wait -m $REMOTE $LOCAL $BASE $MERGED
 [push]
   autoSetupRemote = true
 [init]
@@ -94,8 +94,6 @@
   sslCAInfo = C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt
 [diff "astextplain"]
   textconv = astextplain
-[diff]
-  autoRefreshIndex = true
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f

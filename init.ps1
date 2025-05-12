@@ -15,10 +15,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/mai
 winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell 9n8g7tscl18r
 
 # scoop installation, https://github.com/ScoopInstaller/Install/issues/70
-where.exe scoop
-if (-not $?) {
-  iwr get.scoop.sh | iex
-}
+where scoop 2>$null || iex (iwr get.scoop.sh)
 
 # Let scoop use NanaZip binaries
 scoop config use_external_7zip true

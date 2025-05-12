@@ -37,7 +37,7 @@ user_pref(
 user_pref("gfx.font_rendering.cleartype_params.force_gdi_classic_max_size", 15);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
-user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
+// user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
 user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512
 user_pref("gfx.content.skia-font-cache-size", 20); // default=5; Chrome=20
 user_pref("media.memory_cache_max_size", 65536); // default=8192; AF=65536; alt=131072
@@ -47,13 +47,13 @@ user_pref("image.mem.decode_bytes_at_a_time", 32768); // default=16384; alt=6553
 user_pref("network.http.max-connections", 1800); // default=900
 user_pref("network.http.max-persistent-connections-per-server", 10); // default=6; download connections; anything above 10 is excessive
 user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3
-user_pref("network.http.pacing.requests.enabled", false);
-user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour
+// user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour
 user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS token caching (fast reconnects)
+user_pref("browser.cache.memory.capacity", 131072); // (128 MB)
+user_pref("browser.cache.memory.max_entry_size", 20480); // (20 MB); default=5120 (5 MB)
+// user_pref("browser.sessionhistory.max_total_viewers", 4);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
-user_pref("apz.overscroll.enabled", true); // DEFAULT NON-LINUX
-user_pref("general.smoothScroll", true); // DEFAULT
 user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 12);
 user_pref("general.smoothScroll.msdPhysics.enabled", true);
 user_pref("general.smoothScroll.msdPhysics.motionBeginSpringConstant", 600);

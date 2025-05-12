@@ -62,7 +62,7 @@ gsudo {
 gsudo {
   # run-hidden/nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Telegram.TelegramDesktop UnifiedIntents.UnifiedRemote astral-sh.uv w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Microsoft.Office Google.PlatformTools ente-auth Bitwarden.Bitwarden XPDC2RH70K22MN 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Telegram.TelegramDesktop UnifiedIntents.UnifiedRemote astral-sh.uv w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Microsoft.Office ente-auth Bitwarden.Bitwarden XPDC2RH70K22MN 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
   winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
@@ -78,7 +78,7 @@ gsudo {
   . "$HOME/refrenv.ps1"
 
   # Installing python tools packages
-  'git+https://github.com/iamkroot/trakt-scrobbler.git', 'autoremove-torrents', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
+  'git+https://github.com/iamkroot/trakt-scrobbler.git', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
@@ -97,14 +97,6 @@ gsudo {
 gsudo {
   # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.elevenforum.com/t/enable-or-disable-lock-screen-in-windows-11.1287/
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
-
-  # https://answers.microsoft.com/en-us/xbox/forum/all/xbox-game-bar-fps/4a773b5b-a6aa-4586-b402-a2b8e336b428 https://support.xbox.com/en-US/help/friends-social-activity/share-socialize/xbox-game-bar-performance https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers https://aka.ms/AAnrbkw
-  # Add-LocalGroupMember -Group ((New-Object System.Security.Principal.SecurityIdentifier("S-1-5-32-559")).Translate([System.Security.Principal.NTAccount]).Value.Replace("BUILTIN\", "")) -Member $env:USERNAME
-
-  # winget settings https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/settings/settings.export.schema.0.1.json
-  #winget settings --enable LocalManifestFiles
-  #winget settings --enable InstallerHashOverride
-  #winget settings --enable ProxyCommandLineOptions
 
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
@@ -172,10 +164,7 @@ gsudo {
 
 # Tasks & services continuation
 gsudo {
-  # Task for cleaning torrents
-  # https://github.com/jerrymakesjelly/autoremove-torrents
-  Unregister-ScheduledTask -TaskName "Torrents cleanup" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute "$env:ProgramFiles\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Minimized -c autoremove-torrents --conf=$HOME\Мой`` диск\документы\configs\autoremove-torrents.yaml --log=$HOME\Downloads") -TaskName "Torrents cleanup" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+
 }
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
@@ -202,11 +191,10 @@ New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -
 
 # Multipass setup
 if (!$env:vm) {
-  $env:ESSD = (Get-Volume -FileSystemLabel "ExternalSSDVentoy 256gb").DriveLetter
   gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
   multipass set client.gui.autostart=no
-  multipass launch --name primary -c 4 -m 4G --mount ${env:ESSD}:\:/mnt/e_host --mount C:\:/mnt/c_host
+  multipass launch --name primary -c 4 -m 4G --mount C:\:/mnt/c_host
   multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
   multipass stop
 }
