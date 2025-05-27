@@ -1,12 +1,11 @@
 fileinfo:
   whitelist:
-    - C:\Users\user\shared-unruhe\non-anime
-    - C:/Users/user/shared-unruhe\non-anime
-    - C:\Users\user\shared-unruhe-oracle
-    - C:/Users/user/shared-unruhe-oracle
-    - C:\Users\user\shared-tablet
-    - C:\Users\user\torrents\tv
-    - C:\Users\user\torrents\movies
+    - C:\Users\ruruo\shared-unruhe\non-anime
+    - C:/Users/ruruo/shared-unruhe\non-anime
+    - C:\Users\ruruo\shared-unruhe-oracle
+    - C:/Users/ruruo/shared-unruhe-oracle
+    - C:\Users\ruruo\torrents\tv
+    - C:\Users\ruruo\torrents\movies
 
 players:
   syncplay@mpv:

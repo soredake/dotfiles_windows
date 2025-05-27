@@ -10,7 +10,7 @@ Write-Output "`e[6 q"
 
 function checklinks {
   # https://github.com/lycheeverse/lychee/issues/972
-  Push-Location "$HOME\Мой диск\документы"
+  Push-Location "$HOME\Мій диск"
   lychee --max-concurrency 5 archive-org.txt
   Pop-Location
 }
@@ -165,6 +165,7 @@ function mps { multipass stop }
 # https://github.com/canonical/multipass/issues/3112
 # https://gist.github.com/stoneage7/9df39cfac2c28932ed86
 function MultipassSetDiscard {
+  multipass stop
   # Enables the 'discard' option on the primary VM's SATA storage controller
   gsudo {
     psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
@@ -183,19 +184,6 @@ function MultipassShowVmInfo {
     psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
       showvminfo primary `
       --machinereadable
-  }
-}
-
-function MultipassDeletePortForward {
-  param (
-    [string]$name # Name of the port forwarding rule to delete
-  )
-
-  # Deletes the specified NAT port forwarding rule from the primary VM
-  gsudo {
-    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
-      modifyvm primary `
-      --natpf1 delete $name
   }
 }
 
@@ -221,14 +209,3 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
-
-# git status in winget-pkgs repo is slow
-# https://github.com/dahlbyk/posh-git?tab=readme-ov-file#customization-variables
-$GitPromptSettings.RepositoriesInWhichToDisableFileStatus += "$HOME\git\winget-pkgs"
-
-# https://github.com/microsoft/inshellisense?tab=readme-ov-file#shell-plugin
-# NOTE: sourcing inshellisense somehow breaks pwsh running as admin
-# NOTE: https://github.com/microsoft/inshellisense/issues/9
-# if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and (Test-Path '~/.inshellisense/pwsh/init.ps1' -PathType Leaf)) {
-#   . ~/.inshellisense/pwsh/init.ps1
-# }

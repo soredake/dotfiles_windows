@@ -1,10 +1,10 @@
 // https://www.askvg.com/tip-disable-dark-mode-in-private-browsing-windows-in-firefox/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1901305
-user_pref("browser.theme.dark-private-windows", false);
+// user_pref("browser.theme.dark-private-windows", false);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1901307
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1230656
-user_pref("extensions.pocket.enabled", false);
+// user_pref("extensions.pocket.enabled", false);
 
 // I use translation addon
 // TODO: request simple button to disable built-in translator
@@ -30,11 +30,11 @@ user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 // https://www.reddit.com/r/firefox/comments/1ii5s71/firefox_135_weird_fonts/
 // https://www.reddit.com/r/firefox/comments/1ii5s71/firefox_135_weird_fonts/mb2w8cw/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1924346#c2
-user_pref(
-  "gfx.font_rendering.cleartype_params.force_gdi_classic_for_families",
-  "Arial,Consolas,Courier New,Microsoft Sans Serif,Segoe UI,Tahoma,Trebuchet MS,Verdana"
-);
-user_pref("gfx.font_rendering.cleartype_params.force_gdi_classic_max_size", 15);
+// user_pref(
+//   "gfx.font_rendering.cleartype_params.force_gdi_classic_for_families",
+//   "Arial,Consolas,Courier New,Microsoft Sans Serif,Segoe UI,Tahoma,Trebuchet MS,Verdana"
+// );
+// user_pref("gfx.font_rendering.cleartype_params.force_gdi_classic_max_size", 15);
 
 ///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 // user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)

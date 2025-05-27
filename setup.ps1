@@ -6,15 +6,6 @@ if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual|VMware
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 $startMenuPath = [Environment]::GetFolderPath('StartMenu')
 
-# if (!$env:vm) {
-#   $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
-#   gsudo {
-#     # Set static IP https://stackoverflow.com/a/53991926
-#     New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
-#     Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 8.8.8.8, 8.8.4.4
-#   }
-# }
-
 # Install powershell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git, PSAdvancedShortcut
@@ -23,6 +14,12 @@ Install-Module -Name posh-git, PSAdvancedShortcut
 'extras', 'nirsoft' | % { scoop bucket add $_ }
 scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 
+# Running Sophia Script
+gsudo powershell {
+  $script = Join-Path (Get-ChildItem -Directory -Filter 'Sophia*' "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\TeamSophia.SophiaScript_Microsoft.Winget.Source_8wekyb3d8bbwe").FullName 'Sophia.ps1'
+  & $script -Function "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register"
+}
+
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 # NOTE: tor-browser package is broken as of 25.08.2024 https://github.com/ScoopInstaller/Extras/issues/13324, waiting for https://github.com/ScoopInstaller/Extras/pull/14886 to be merged
@@ -30,15 +27,11 @@ scoop bucket add soredake "https://github.com/soredake/scoop-bucket"
 # TODO: move topgrade to winget once https://github.com/topgrade-rs/topgrade/issues/958 https://github.com/topgrade-rs/topgrade/pull/1042 is fixed
 # nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
 # TODO: request nircmd in winget
-scoop install topgrade nosleep onthespot persistent-windows nircmd windows11-classic-context-menu # tor-browser
+scoop install topgrade nosleep onthespot nircmd # tor-browser
 #scoop hold tor-browser
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:LOCALAPPDATA\Plex\scripts, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
-
-# ff2mpv
-git clone --depth=1 "https://github.com/woodruffw/ff2mpv" $HOME\git\ff2mpv
-pwsh $HOME\git\ff2mpv\install.ps1 firefox
 
 # winget settings
 gsudo {
@@ -51,19 +44,13 @@ gsudo {
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
-# Downloading and running Sophia Script
-Remove-Item -Path "$HOME\Downloads\Sophia*" -Recurse -Force
-iwr script.sophia.team -useb | iex
-gsudo {
-  ~\Downloads\Sophia*\Sophia.ps1 -Function "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register"
-}
-
 # Installing software
 gsudo {
   # run-hidden/nircmd is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
+  # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Telegram.TelegramDesktop UnifiedIntents.UnifiedRemote astral-sh.uv w4po.ExplorerTabUtility sandboxie-classic firefox oh-my-posh lycheeverse.lychee itch.io erengy.Taiga nomacs komac lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension plex volumelock plexmediaserver syncplay stax76.run-hidden Rclone.Rclone unigetui nodejs-lts virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Microsoft.Office ente-auth Bitwarden.Bitwarden XPDC2RH70K22MN 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements --exact powertoys
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact powertoys --scope machine
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Telegram.TelegramDesktop UnifiedIntents.UnifiedRemote astral-sh.uv w4po.ExplorerTabUtility sandboxie-classic Mozilla.Firefox JanDeDobbeleer.OhMyPosh lycheeverse.lychee itch.io erengy.Taiga nomacs komac lswitch python3.12 Rem0o.FanControl epicgameslauncher wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy dupeguru wiztree hamachi eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension Plex.Plex volumelock plexmediaserver Syncplay.Syncplay stax76.run-hidden Rclone.Rclone MartiCliment.UniGetUI nodejs-lts virtualbox yt-dlp-nightly advaith.CurrencyConverterPowerToys pstools Microsoft.Office ente-auth Bitwarden.Bitwarden Mega.MEGASync Dropbox.Dropbox Cloudflare.Warp 9nvjqjbdkn97 9nc73mjwhsww XPDC2RH70K22MN 9pmz94127m4g XP8JRF5SXV03ZM XPDP2QW12DFSFK XPDNX7G06BLH2G xpfm5p5kdwf0jp 9p2b8mcsvpln 9NGHP3DX8HDX
 
   # SSHFS mounts is broken in >=1.13.0 https://github.com/canonical/multipass/issues/3442
   winget install --no-upgrade -h -e multipass -v "1.12.2+win"
@@ -86,8 +73,8 @@ gsudo {
   # https://github.com/microsoft/winget-cli/issues/166
   choco install -y --pin nerd-fonts-hack tor-browser
 
-  # For storing ssh key
-  dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
+  # WSL2 installation
+  wsl --install --no-launch
 }
 
 # Refreshing PATH env
@@ -95,12 +82,11 @@ gsudo {
 
 # Various settings
 gsudo {
-  # Disable slide-away lock screen, https://superuser.com/a/1659652/1506333 https://www.elevenforum.com/t/enable-or-disable-lock-screen-in-windows-11.1287/
-  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreen" /t REG_DWORD /d 1 /f
-
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
   # https://github.com/microsoft/WSL/issues/9695
+  # https://bytejams.com/help/hvci.html
+  # https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=security
   bcdedit /set hypervisorlaunchtype off
 
   # topgrade uses `sudo` alias to run choco upgrade
@@ -109,7 +95,7 @@ gsudo {
   # https://www.elevenforum.com/t/enable-or-disable-sudo-command-in-windows-11.22329/
   sudo config --enable normal
   # https://github.com/gerardog/gsudo/issues/387 https://github.com/gerardog/gsudo/issues/390 https://github.com/gerardog/gsudo/pull/397
-  # gsudo config PathPrecedence true
+  gsudo config PathPrecedence true
 }
 
 # Dotfiles preparations
@@ -117,21 +103,13 @@ gsudo {
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 gsudo {
-  # Plex
-  Remove-Item -Path $env:LOCALAPPDATA\Plex\mpv.conf
   # OneDrive cannot backup symlinks
   # https://github.com/PowerShell/PowerShell/issues/25097
+  Remove-Item -Path "$documentsPath\PowerShell\Profile.ps1"
   New-Item -ItemType HardLink -Path "$documentsPath\PowerShell\Profile.ps1" -Target "$($args[0])\Profile.ps1"
   dploy stow $($args[0])\dotfiles $HOME
   dploy stow $($args[0])\WAU $env:ProgramFiles\Winget-AutoUpdate
 } -args "$PSScriptRoot"
-
-# Band-aid tasks
-gsudo {
-  # Storage Sense for some reason just ignores files that are not acceses for more that 14 days
-  Unregister-ScheduledTask -TaskName "Clear downloads folder" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe run-hidden.exe) -Argument "$env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\clear-downloads-folder.ps1") -TaskName "Clear downloads folder" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 08:00)
-}
 
 # Tasks & services
 gsudo {
@@ -144,10 +122,6 @@ gsudo {
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -LogonType ServiceAccount -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe lswitch) -Argument "163") -TaskName "switch language with right ctrl" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit 0 -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)) -Trigger (New-ScheduledTaskTrigger -AtLogon)
   Start-ScheduledTask -TaskName "switch language with right ctrl"
 
-  # Backup task
-  Unregister-ScheduledTask -TaskName "Backup everything" -Confirm:$false
-  Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe nircmd.exe) -Argument "exec min $env:ProgramFiles\PowerShell\7\pwsh.exe -NoProfile -File $HOME\git\dotfiles_windows\scripts\backup-script.ps1") -TaskName "Backup everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00 -DaysInterval 3)
-
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe nircmd.exe) -Argument "exec min $env:ProgramFiles\PowerShell\7\pwsh.exe $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
@@ -155,16 +129,8 @@ gsudo {
   # Run `Temp` task every week, https://github.com/M2Team/NanaZip/issues/297 https://github.com/M2Team/NanaZip/issues/473
   Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
 
-  # Start ssh-agent at boot
-  Set-Service -Name ssh-agent -StartupType Automatic
-
   # Run task if scheduled run time is missed
   Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
-}
-
-# Tasks & services continuation
-gsudo {
-
 }
 
 # https://github.com/tom-james-watson/breaktimer-app/issues/185
@@ -177,25 +143,18 @@ winget install --no-upgrade -h --accept-package-agreements --accept-source-agree
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
 
-npm install --global webtorrent-mpv-hook @microsoft/inshellisense
+npm install --global @microsoft/inshellisense
 # mpv plugins installation
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://github.com/ekisu/mpv-webm/releases/download/latest/webm.lua" "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
-curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
+curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
-# https://github.com/mrxdst/webtorrent-mpv-hook
-New-Item -ItemType SymbolicLink -Path "$env:APPDATA\mpv\scripts\webtorrent.js" -Target "$env:APPDATA\npm\node_modules\webtorrent-mpv-hook\build\webtorrent.js"
-
-# Change reload script keybind
-(Get-Content "$env:APPDATA\mpv\scripts\reload.lua") -replace 'reload_key_binding\s*=\s*"Ctrl\+r"', 'reload_key_binding = "Ctrl+k"' | Set-Content "$env:APPDATA\mpv\scripts\reload.lua"
 
 # Multipass setup
 if (!$env:vm) {
   gsudo multipass set local.driver=virtualbox
   multipass set local.privileged-mounts=yes
-  multipass set client.gui.autostart=no
-  multipass launch --name primary -c 4 -m 4G --mount C:\:/mnt/c_host
-  multipass exec primary bash /mnt/c_host/Users/$env:USERNAME/git/dotfiles_windows/wsl.sh
+  multipass launch --name primary -c 4 -m 4G
+  multipass exec primary bash /home/ubuntu/Home/git/dotfiles_windows/wsl.sh
   multipass stop
 }
 
@@ -210,11 +169,5 @@ Import-Module -Name $documentsPath\PowerShell\Modules\PSAdvancedShortcut
 New-Shortcut -Name 'Firefox - LetyShops profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P letyshops"
 New-Shortcut -Name 'Firefox - AlwaysOnProxy profile' -Path $startMenuPath -Target "$env:ProgramFiles\Mozilla Firefox\firefox.exe" -Arguments "-P alwaysonproxy"
 
-# WSL2 installation
-wsl --install --no-launch
-
 # https://github.com/SpotX-Official/SpotX
 iex "& { $(iwr -useb 'https://spotx-official.github.io/run.ps1') } -sp-over -sp-uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -canvasHome -podcasts_on -block_update_on -lyrics_stat spotify -cache_limit 5000"
-
-# https://remontka.pro/wake-timers-windows/
-powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
