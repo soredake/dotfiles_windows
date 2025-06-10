@@ -1,1 +1,0 @@
--f (bestvideo[height<=1080][vcodec!~='^vp0?9(\.2)?'])[dynamic_range=SDR][vcodec!*=av01]+bestaudio/best

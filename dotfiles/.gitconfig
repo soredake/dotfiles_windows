@@ -57,7 +57,6 @@
   manyFiles = true
   experimental = true
 [core]
-  # editor = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' -w
   editor = code -w
   sparseCheckout = true
   sparseCheckoutCone = true
@@ -72,12 +71,10 @@
   email = 5204968+soredake@users.noreply.github.com
 # https://github.com/microsoft/vscode/issues/5770#issuecomment-1188658476
 [merge]
-  # tool = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe'
   tool = code
 [mergetool]
   writeToTemp = true
 [mergetool "code"]
-  # cmd = 'C:/Users/User/AppData/Local/Programs/Microsoft VS Code/Code.exe' --wait -m $REMOTE $LOCAL $BASE $MERGED
   cmd = code --wait -m $REMOTE $LOCAL $BASE $MERGED
 [push]
   autoSetupRemote = true

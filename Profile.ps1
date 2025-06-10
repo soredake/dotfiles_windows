@@ -63,30 +63,6 @@ function hypervisorboot_toggle {
   }
 }
 
-# Clean all my clouds
-function CleanAllClouds {
-  Write-Output "Starting cloud cleanup..."
-
-  try {
-    Write-Output "Cleaning up Mega cloud..."
-    rclone cleanup -v mega:
-
-    Write-Output "Cleaning up Google Drive..."
-    rclone cleanup -v googledrive:
-
-    Write-Output "Cleaning up OneDrive..."
-    rclone cleanup -v onedrive:
-
-    Write-Output "Cleaning up Dropbox..."
-    rclone cleanup -v dropbox:
-
-    Write-Output "Cloud cleanup completed successfully!"
-  }
-  catch {
-    Write-Output "Error during cleanup: $_"
-  }
-}
-
 # Clean all git branches except main|master
 function Remove-GitBranch {
   [CmdletBinding(SupportsShouldProcess)] # Enables ShouldProcess and WhatIf/Confirm
@@ -159,41 +135,6 @@ function mkd {
     mkdir $newDir | Out-Null
   }
   Set-Location (Join-Path $PWD $newDir)
-}
-function mps { multipass stop }
-
-# https://github.com/canonical/multipass/issues/3112
-# https://gist.github.com/stoneage7/9df39cfac2c28932ed86
-function MultipassSetDiscard {
-  multipass stop
-  # Enables the 'discard' option on the primary VM's SATA storage controller
-  gsudo {
-    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
-      storageattach primary `
-      --storagectl "SATA_0" `
-      --port 0 `
-      --device 0 `
-      --nonrotational on `
-      --discard on
-  }
-}
-
-function MultipassShowVmInfo {
-  # Displays detailed information about the primary VM in machine-readable format
-  gsudo {
-    psexec -s "${env:ProgramFiles}\Oracle\VirtualBox\VBoxManage.exe" `
-      showvminfo primary `
-      --machinereadable
-  }
-}
-
-function MultipassExportLogsFromLastHour {
-  # Exports Multipass-related application logs from the last hour to a file
-  Get-WinEvent -FilterHashtable @{
-    LogName      = 'Application'
-    ProviderName = 'Multipass'
-    StartTime    = (Get-Date).AddHours(-1)
-  } | Out-File -FilePath "$HOME\Multipass-logs-from-last-hour.log"
 }
 
 # Mirroring linux shells bindings and completion menu
