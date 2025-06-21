@@ -18,7 +18,7 @@ winget install -h --accept-package-agreements --accept-source-agreements 9n8g7ts
 if (-not (gcm scoop -ea 0)) { iex (iwr get.scoop.sh -UseBasicParsing).Content }
 
 # Let scoop use NanaZip binaries
-scoop config use_external_7zip true
+# scoop config use_external_7zip true
 
 # gsudo installation
 scoop install gsudo
@@ -27,9 +27,8 @@ gsudo {
   # Enable gsudo cache
   gsudo config CacheMode Auto
 
-  # Install git with machine scope until their installer will have support for user scope https://github.com/git-for-windows/git/discussions/4399#discussioncomment-5877325 https://github.com/microsoft/winget-cli/issues/3240 https://github.com/git-for-windows/git/issues/4758
   # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
+  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,autoupdate,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
 
   # PowerShellCore and SophiaScript installation
   winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell TeamSophia.SophiaScript

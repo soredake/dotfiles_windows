@@ -1,5 +1,4 @@
 Chocolatey.Chocolatey
-#Plex.Plex
 PointPlanck.FileBot
 Ryochan7.DS4Windows
 Spotify.Spotify
@@ -26,6 +25,7 @@ Microsoft.VisualStudioCode
 Mozilla.Firefox*
 Nefarius.HidHide
 Parsec.Parsec
+Plex.Plex
 Plex.PlexMediaServer
 Rakuten.Viber
 SpecialK.SpecialK
@@ -33,11 +33,13 @@ SteelSeries.GG
 Telegram.TelegramDesktop
 TorProject.TorBrowser
 Ubisoft.Connect
+UnifiedIntents.UnifiedRemote
 Valve.Steam
 ViGEm.ViGEmBus
 Zoom.Zoom.EXE
 # Microsoft Store updating these https://github.com/microsoft/winget-cli/issues/4546
 Canonical.Ubuntu*
+JanDeDobbeleer.OhMyPosh
 Microsoft.Teams*
 Microsoft.WSL
 Microsoft.WindowsTerminal
@@ -53,3 +55,7 @@ dokan-dev.Dokany
 Canonical.Multipass
 # Same problem https://www.virtualbox.org//ticket/21951 https://forums.virtualbox.org/viewtopic.php?t=110876
 Oracle.VirtualBox
+# https://github.com/Rem0o/FanControl.Releases/discussions/2558
+Rem0o.FanControl
+# Installer cannot close git processes running on another user, this should be fixed when there will be fully per-user installer https://github.com/git-for-windows/git/issues/4758 https://github.com/git-for-windows/build-extra/pull/580
+Git.Git

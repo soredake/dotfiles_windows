@@ -55,7 +55,6 @@ if grep -q microsoft /proc/version; then
   sudo passwd -d ubuntu
 
   # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
-  # https://github.com/microsoft/WSL/issues/10510
   sudo tee /etc/wsl.conf >/dev/null <<EOF
   [boot]
   systemd=true
