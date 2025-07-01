@@ -11,14 +11,8 @@ if (Test-Path $env:repository\setup.ps1) {
 # https://github.com/ScoopInstaller/Extras/issues/13073
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
-# NanaZip installation
-winget install -h --accept-package-agreements --accept-source-agreements 9n8g7tscl18r
-
 # scoop installation, https://github.com/ScoopInstaller/Install/issues/70
 if (-not (gcm scoop -ea 0)) { iex (iwr get.scoop.sh -UseBasicParsing).Content }
-
-# Let scoop use NanaZip binaries
-# scoop config use_external_7zip true
 
 # gsudo installation
 scoop install gsudo
@@ -27,11 +21,8 @@ gsudo {
   # Enable gsudo cache
   gsudo config CacheMode Auto
 
-  # https://github.com/git-for-windows/build-extra/blob/fb58c8e26c584fd88369b886e8c9a6454ace61e2/installer/install.iss#L103-L115
-  winget install --no-upgrade --scope machine -h --accept-package-agreements --accept-source-agreements Git.Git --custom '"/COMPONENTS=`"icons,assoc,assoc_sh,,,autoupdate,gitlfs,icons\quicklaunch`" /o:SSHOption=ExternalOpenSSH"'
-
-  # PowerShellCore and SophiaScript installation
-  winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell TeamSophia.SophiaScript
+  # Git, PowerShellCore and SophiaScript installation
+  winget install -h --accept-package-agreements --accept-source-agreements Microsoft.PowerShell TeamSophia.SophiaScript Git.Git
 }
 
 # Refresh env so git will be present in PATH

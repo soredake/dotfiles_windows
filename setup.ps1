@@ -2,9 +2,6 @@
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git
 
-# Adding scoop buckets
-'extras' | % { scoop bucket add $_ }
-
 # Running Sophia Script
 gsudo powershell {
   . $env:LOCALAPPDATA\Microsoft\WinGet\Packages\*SophiaScript*\*\Import-TabCompletion.ps1
@@ -13,16 +10,11 @@ gsudo powershell {
 
 # Installing my scoop packages
 # https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
-scoop install topgrade onthespot
+'extras' | % { scoop bucket add $_ }
+scoop install onthespot
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
-
-# winget settings
-# gsudo {
-#   # Link winget settings to fix download speed https://github.com/microsoft/winget-cli/issues/2124
-#   New-Item -ItemType HardLink -Path "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json" -Target "$($args[0])\winget-settings.json"
-# } -args "$PSScriptRoot"
 
 # NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
@@ -30,14 +22,10 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType 
 gsudo {
   # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree hamachi eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay nodejs-lts advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g
-
-  # Winget-AutoUpdate installation
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements Romanitho.Winget-AutoUpdate --override "/qb STARTMENUSHORTCUT=1 USERCONTEXT=1 NOTIFICATIONLEVEL=None UPDATESINTERVAL=BiDaily UPDATESATTIME=11AM"
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Google.PlayGames.Beta 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay nodejs-lts advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
-  # choco-cleaner
   choco install -y syncthingtray mpvio.install
   # https://github.com/microsoft/winget-cli/issues/166
   choco install -y --pin nerd-fonts-hack aimp
@@ -47,8 +35,7 @@ gsudo {
 }
 
 # Installing software
-# run-hidden is needed because of this https://github.com/PowerShell/PowerShell/issues/3028
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee komac yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs dupeguru Bitwarden.Bitwarden Mega.MEGASync xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp 9nghp3dx8hdx 9nk4t08dhq80 xp89dcgq3k6vld
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact topgrade-rs.topgrade python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee komac yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs dupeguru Bitwarden.Bitwarden Mega.MEGASync 9n8g7tscl18r xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp 9nghp3dx8hdx 9nk4t08dhq80 xp89dcgq3k6vld
 
 # Add uv bin dir to PATH
 uv tool update-shell
@@ -92,7 +79,6 @@ Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8
 # Linking dotfiles
 gsudo {
   dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
-  dploy stow $HOME\git\dotfiles_windows\WAU $env:ProgramFiles\Winget-AutoUpdate
 }
 
 # Tasks & services
@@ -105,15 +91,12 @@ gsudo {
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe pwsh.exe) -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
-
-  # Run task if scheduled run time is missed
-  #Set-ScheduledTask -TaskName choco-cleaner -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable)
 }
 
 npm install --global @microsoft/inshellisense
+
 # mpv plugins installation
-# "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
-curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua"
+curl -L --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
 

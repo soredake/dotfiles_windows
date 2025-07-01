@@ -21,8 +21,9 @@ curl -s https://api.github.com/repos/topgrade-rs/topgrade/releases/latest | jq -
 tar -xzf topgrade*.tar.gz -C ~/.local/bin/
 rm topgrade*.tar.gz
 
-# Adding pipx bin dir to PATH
+# pipx stuff
 pipx ensurepath
+pipx install internetarchive
 
 # https://unix.stackexchange.com/a/740124
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher pure-fish/pure"
@@ -35,7 +36,7 @@ alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_updat
 echo -en "\e[6 q"
 EOF
 
-# https://github.com/microsoft/terminal/issues/4973#issue-583421706
+# https://wiki.archlinux.org/title/Tmux#Other_Settings
 tee ~/.tmux.conf >/dev/null <<EOF
 set -g mouse on
 EOF

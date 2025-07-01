@@ -1,7 +1,3 @@
-// https://www.askvg.com/tip-disable-dark-mode-in-private-browsing-windows-in-firefox/
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1901305
-// user_pref("browser.theme.dark-private-windows", false);
-
 // I use translation addon
 // TODO: request simple button to disable built-in translator
 user_pref("browser.translations.enable", false);
@@ -35,7 +31,7 @@ user_pref("network.http.max-persistent-connections-per-server", 10); // default=
 user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3
 // user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour
 user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS token caching (fast reconnects)
-user_pref("browser.cache.memory.capacity", 131072); // (128 MB)
+// user_pref("browser.cache.memory.capacity", 131072); // (128 MB)
 user_pref("browser.cache.memory.max_entry_size", 20480); // (20 MB); default=5120 (5 MB)
 // user_pref("browser.sessionhistory.max_total_viewers", 4);
 
