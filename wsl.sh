@@ -1,12 +1,8 @@
 #!/bin/bash
-# Disable pop-up "Daemons using outdated libraries" by telling needrestart to automatically restart services https://stackoverflow.com/a/73397970
-# Disable "Pending kernel upgrade" message https://askubuntu.com/a/1424249
-sudo sed -i -e "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" -e "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
-
 # I need newer version https://unix.stackexchange.com/a/740124
 # https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
 # https://repology.org/project/fish/versions
-sudo add-apt-repository -yn ppa:fish-shell/release-4
+sudo add-apt-repository -y ppa:fish-shell/release-4
 
 # Installing software
 sudo apt update
@@ -53,7 +49,7 @@ sudo systemctl daemon-reload
 # https://github.com/microsoft/WSL/issues/4071
 if grep -q microsoft /proc/version; then
   # Disable password for the user
-  sudo passwd -d ubuntu
+  sudo passwd -d "$USER"
 
   # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
   sudo tee /etc/wsl.conf >/dev/null <<EOF
@@ -62,7 +58,7 @@ if grep -q microsoft /proc/version; then
 EOF
 
   # Set user shell to fish
-  sudo chsh -s /usr/bin/fish "$USER"
+  sudo chsh -s "$(which fish)" "$USER"
 else
   # https://github.com/canonical/multipass/issues/3033
   grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc

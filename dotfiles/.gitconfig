@@ -21,8 +21,6 @@
   autoSetupRemote = true
 [pull]
   rebase = true
-#[credential]
-#  helper = manager
 [advice]
   statusUoption = false
 #[safe]
