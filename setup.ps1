@@ -5,13 +5,13 @@ Install-Module -Name posh-git
 # Running Sophia Script
 gsudo powershell {
   . $env:LOCALAPPDATA\Microsoft\WinGet\Packages\*SophiaScript*\*\Import-TabCompletion.ps1
-  Sophia -Functions "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4"
+  Sophia -Functions "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register"
 }
 
 # Installing my scoop packages
-# https://github.com/ScoopInstaller/Scoop/issues/2035 https://github.com/ScoopInstaller/Scoop/issues/5852 software that cannot be moved to scoop because scoop cleanup cannot close running programs: syncthingtray
 'extras' | % { scoop bucket add $_ }
-scoop install onthespot
+scoop bucket add holes "https://github.com/instinctualjealousy/holes"
+scoop install onthespot persistent-windows
 
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
@@ -22,22 +22,26 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType 
 gsudo {
   # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Google.PlayGames.Beta 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay nodejs-lts advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g xpddt99j9gkb5c
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Google.PlayGames.Beta 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
   choco install -y mpvio.install
-  # https://github.com/microsoft/winget-cli/issues/166
-  choco install -y --pin nerd-fonts-hack aimp
 
   # WSL2 installation
+  # NOTE: admin rights only needed to enable VMP feature, if VMP is enabled already (which is the case when you have compatible CPU) admin rights are not needed
   wsl --install --no-launch
   wsl --manage Ubuntu --set-sparse true --allow-unsafe
+
+  # https://github.com/kangyu-california/PersistentWindows
+  ~\scoop\apps\persistent-windows\current\auto_start_pw_aux.ps1
 }
 
+# Installing Hack font
+oh-my-posh font install hack
+
 # Installing software
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact BillStewart.SyncthingWindowsSetup
-LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee komac yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs dupeguru Bitwarden.Bitwarden Mega.MEGASync 9n8g7tscl18r xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp 9nghp3dx8hdx 9nk4t08dhq80 xp89dcgq3k6vld
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden Mega.MEGASync 9n8g7tscl18r xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp 9nk4t08dhq80 xp89dcgq3k6vld 9p4clt2rj1rs 9mz1snwt0n5d
 
 # Add uv bin dir to PATH
 uv tool update-shell
@@ -72,7 +76,7 @@ gsudo {
   bcdedit /set hypervisorlaunchtype off
 
   # https://bitwarden.com/help/ssh-agent/#configure-bitwarden-ssh-agent
-  Set-Service ssh-agent -StartupType Disabled
+  #Set-Service ssh-agent -StartupType Disabled
 }
 
 # Dotfiles preparations
@@ -83,17 +87,14 @@ gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
 
 # Tasks & services
 gsudo {
-  # Workaround for https://github.com/erengy/taiga/issues/1120 and https://github.com/erengy/taiga/issues/1161
-  # https://github.com/nicolonsky/IntuneDriveMapping/issues/58
-  Unregister-ScheduledTask -TaskName "Restart Taiga every day" -Confirm:$false
-  Register-ScheduledTask -Action (New-ScheduledTaskAction -Execute (where.exe conhost.exe) -Argument "--headless $env:ProgramFiles\PowerShell\7\pwsh.exe -File $HOME\git\dotfiles_windows\scripts\restart-taiga.ps1") -TaskName "Restart Taiga every day" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Daily -At 09:00)
-
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe pwsh.exe) -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+
+  # Run `Temp` task every week, https://github.com/M2Team/NanaZip/issues/297 https://github.com/M2Team/NanaZip/issues/473 https://github.com/M2Team/NanaZip/issues/676
+  Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
 }
 
-npm install --global @microsoft/inshellisense
 
 # mpv plugins installation
 curl -L --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"

@@ -1,5 +1,5 @@
 // I use translation addon
-// TODO: request simple button to disable built-in translator
+// TODO: request simple button to disable built-in translator https://bugzilla.mozilla.org/buglist.cgi?classification=Client%20Software&classification=Developer%20Infrastructure&classification=Components&classification=Server%20Software&classification=Other&query_format=advanced&list_id=17617662&resolution=---&component=Translations
 user_pref("browser.translations.enable", false);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007

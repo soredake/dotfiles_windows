@@ -30,4 +30,3 @@ gsudo {
 
 git clone "https://github.com/soredake/dotfiles_windows" $env:repository
 pwsh -NoProfile $env:repository\setup.ps1
-# TODO: switch to plain powershell? https://docs.syncthing.net/users/contrib.html#id1
