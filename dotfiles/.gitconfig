@@ -23,8 +23,3 @@
   rebase = true
 [advice]
   statusUoption = false
-#[safe]
-# Upgrading git fails without this
-# https://stackoverflow.com/a/77467780
-# https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f
-#  directory = *

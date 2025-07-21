@@ -1,19 +1,24 @@
 // I use translation addon
-// TODO: request simple button to disable built-in translator https://bugzilla.mozilla.org/buglist.cgi?classification=Client%20Software&classification=Developer%20Infrastructure&classification=Components&classification=Server%20Software&classification=Other&query_format=advanced&list_id=17617662&resolution=---&component=Translations
+// TODO: request simple button to disable built-in translator in desktop/android versions https://bugzilla.mozilla.org/buglist.cgi?classification=Client%20Software&classification=Developer%20Infrastructure&classification=Components&classification=Server%20Software&classification=Other&query_format=advanced&list_id=17617662&resolution=---&component=Translations
+// TODO: also report it for Component: Settings UI 
 user_pref("browser.translations.enable", false);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
+// TODO: also report it for Component: Settings UI 
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1746396
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1783225
+// TODO: also report it for Component: Settings UI 
 user_pref("network.predictor.enable-prefetch", true);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
+// TODO: also report it for Component: Settings UI 
 // user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // Fonts on windows are looking better with this
+// TODO: also report it for Component: Settings UI 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);

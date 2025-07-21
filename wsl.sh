@@ -23,12 +23,16 @@ pipx install internetarchive
 
 # https://unix.stackexchange.com/a/740124
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher pure-fish/pure"
-wget -4 -N -O ~/.config/fish/config.fish https://raw.githubusercontent.com/soredake/dotfiles_linux/refs/heads/kubuntu/home/fish/.config/fish/config.fish
 
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823
-tee ~/.config/fish/conf.d/config.fish >/dev/null <<EOF
+tee ~/.config/fish/conf.d/main.fish >/dev/null <<EOF
 fish_add_path \$HOME/.local/bin
 alias upall 'topgrade --yes --cleanup --only 'system' 'pipx' 'shell' 'self_update''
+alias iauploadcheckderive 'ia upload --checksum --verify --retries 50 --no-backup'
+alias iauploadfastderive 'ia upload --verify --retries 50 --no-backup'
+alias iauploadcheck 'ia upload --checksum --verify --retries 50 --no-backup --no-derive'
+alias iauploadfast 'ia upload --verify --retries 50 --no-backup --no-derive'
+alias iauploadveryfast 'ia upload --retries 50 --no-backup --no-derive'
 echo -en "\e[6 q"
 EOF
 
@@ -51,15 +55,12 @@ if grep -q microsoft /proc/version; then
   # Disable password for the user
   sudo passwd -d "$USER"
 
-  # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
-  sudo tee /etc/wsl.conf >/dev/null <<EOF
-  [boot]
-  systemd=true
-EOF
-
   # Set user shell to fish
   sudo chsh -s "$(which fish)" "$USER"
 else
   # https://github.com/canonical/multipass/issues/3033
   grep -q "exec fish" ~/.bashrc || echo "exec fish" >>~/.bashrc
 fi
+
+# Shutdown distro
+sudo systemctl poweroff

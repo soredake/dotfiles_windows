@@ -5,7 +5,7 @@ Install-Module -Name posh-git
 # Running Sophia Script
 gsudo powershell {
   . $env:LOCALAPPDATA\Microsoft\WinGet\Packages\*SophiaScript*\*\Import-TabCompletion.ps1
-  Sophia -Functions "DNSoverHTTPS -Enable -PrimaryDNS 8.8.8.8 -SecondaryDNS 8.8.4.4", "TempTask -Register"
+  Sophia -Functions "TempTask -Register"
 }
 
 # Installing my scoop packages
@@ -16,13 +16,13 @@ scoop install onthespot persistent-windows
 # https://github.com/arecarn/dploy/issues/8
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
 
-# NOTE: sudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
+# NOTE: gsudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
 # Installing software
 gsudo {
   # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Google.PlayGames.Beta 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact OpenRGB.OpenRGB Google.PlayGames.Beta 7zip.7zip UnifiedIntents.UnifiedRemote sandboxie-classic Mozilla.Firefox Rem0o.FanControl wireguard Chocolatey.Chocolatey Valve.Steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller voidtools.Everything.Alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys Microsoft.Office ente-auth Cloudflare.Warp xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdnx7g06blh2g
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
@@ -31,6 +31,7 @@ gsudo {
   # WSL2 installation
   # NOTE: admin rights only needed to enable VMP feature, if VMP is enabled already (which is the case when you have compatible CPU) admin rights are not needed
   wsl --install --no-launch
+  wsl --shutdown
   wsl --manage Ubuntu --set-sparse true --allow-unsafe
 
   # https://github.com/kangyu-california/PersistentWindows
@@ -74,9 +75,6 @@ gsudo {
   # https://bytejams.com/help/hvci.html
   # https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=security
   bcdedit /set hypervisorlaunchtype off
-
-  # https://bitwarden.com/help/ssh-agent/#configure-bitwarden-ssh-agent
-  #Set-Service ssh-agent -StartupType Disabled
 }
 
 # Dotfiles preparations
@@ -93,6 +91,9 @@ gsudo {
 
   # Run `Temp` task every week, https://github.com/M2Team/NanaZip/issues/297 https://github.com/M2Team/NanaZip/issues/473 https://github.com/M2Team/NanaZip/issues/676
   Set-ScheduledTask -TaskName "Sophia\Temp" -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9:00AM)
+
+  # https://github.com/kangyu-california/PersistentWindows/issues/388
+  Set-ScheduledTask -TaskName "StartPersistentWindows$env:USERNAME" -Action (New-ScheduledTaskAction -Execute (Get-ScheduledTask -TaskName "StartPersistentWindows$env:USERNAME").Actions[0].Execute -Argument ((Get-ScheduledTask -TaskName "StartPersistentWindows$env:USERNAME").Actions[0].Arguments + " -auto_restore_new_window_to_last_capture=0"))
 }
 
 
@@ -103,3 +104,12 @@ curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu
 
 # Misc
 trakts autostart enable
+
+# Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
+# https://github.com/qbittorrent/qBittorrent/issues/21709
+# This also disables the network card's LED while the PC is in sleep, which I want
+gsudo {
+  $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
+  $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
+  powercfg /devicedisablewake $CurrentNetworkAdapterName
+}
