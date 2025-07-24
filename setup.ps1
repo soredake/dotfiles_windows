@@ -28,12 +28,6 @@ gsudo {
   # https://github.com/mpv-player/mpv/pull/15912
   choco install -y mpvio.install
 
-  # WSL2 installation
-  # NOTE: admin rights only needed to enable VMP feature, if VMP is enabled already (which is the case when you have compatible CPU) admin rights are not needed
-  wsl --install --no-launch
-  wsl --shutdown
-  wsl --manage Ubuntu --set-sparse true --allow-unsafe
-
   # https://github.com/kangyu-california/PersistentWindows
   ~\scoop\apps\persistent-windows\current\auto_start_pw_aux.ps1
 }
@@ -42,7 +36,7 @@ gsudo {
 oh-my-posh font install hack
 
 # Installing software
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden Mega.MEGASync 9n8g7tscl18r xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp 9nk4t08dhq80 xp89dcgq3k6vld 9p4clt2rj1rs 9mz1snwt0n5d
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv Telegram.TelegramDesktop lycheeverse.lychee yt-dlp-nightly w4po.ExplorerTabUtility itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden 9n8g7tscl18r xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9mz1snwt0n5d
 
 # Add uv bin dir to PATH
 uv tool update-shell

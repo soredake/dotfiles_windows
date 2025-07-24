@@ -1,29 +1,28 @@
 // I use translation addon
-// TODO: request simple button to disable built-in translator in desktop/android versions https://bugzilla.mozilla.org/buglist.cgi?classification=Client%20Software&classification=Developer%20Infrastructure&classification=Components&classification=Server%20Software&classification=Other&query_format=advanced&list_id=17617662&resolution=---&component=Translations
-// TODO: also report it for Component: Settings UI 
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978368
 user_pref("browser.translations.enable", false);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
-// TODO: also report it for Component: Settings UI 
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978371
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1746396
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1783225
-// TODO: also report it for Component: Settings UI 
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978372
 user_pref("network.predictor.enable-prefetch", true);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
-// TODO: also report it for Component: Settings UI 
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978374
 // user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // Fonts on windows are looking better with this
-// TODO: also report it for Component: Settings UI 
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
-///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
+// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978502
 // user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
 user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512
 user_pref("gfx.content.skia-font-cache-size", 20); // default=5; Chrome=20
@@ -40,7 +39,8 @@ user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS
 user_pref("browser.cache.memory.max_entry_size", 20480); // (20 MB); default=5120 (5 MB)
 // user_pref("browser.sessionhistory.max_total_viewers", 4);
 
-///////////////////////// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+// https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978376
 user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 12);
 user_pref("general.smoothScroll.msdPhysics.enabled", true);
 user_pref("general.smoothScroll.msdPhysics.motionBeginSpringConstant", 600);
