@@ -21,7 +21,7 @@ rm topgrade*.tar.gz
 pipx ensurepath
 pipx install internetarchive
 
-# https://unix.stackexchange.com/a/740124
+# fish & fisher installation
 fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; fisher install jorgebucaran/fisher pure-fish/pure"
 
 # No cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823
@@ -32,7 +32,6 @@ alias iauploadcheckderive 'ia upload --checksum --verify --retries 50 --no-backu
 alias iauploadfastderive 'ia upload --verify --retries 50 --no-backup'
 alias iauploadcheck 'ia upload --checksum --verify --retries 50 --no-backup --no-derive'
 alias iauploadfast 'ia upload --verify --retries 50 --no-backup --no-derive'
-alias iauploadveryfast 'ia upload --retries 50 --no-backup --no-derive'
 echo -en "\e[6 q"
 EOF
 

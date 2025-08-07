@@ -123,7 +123,6 @@ function iauploadcheckderive { ia upload --checksum --verify --retries 50 --no-b
 function iauploadfastderive { ia upload --verify --retries 50 --no-backup $args }
 function iauploadcheck { ia upload --checksum --verify --retries 50 --no-backup --no-derive $args }
 function iauploadfast { ia upload --verify --retries 50 --no-backup --no-derive $args }
-function iauploadveryfast { ia upload --retries 50 --no-backup --no-derive $args }
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
 # https://superuser.com/a/1830291/1506333
