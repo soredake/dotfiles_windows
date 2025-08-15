@@ -11,7 +11,7 @@ if (Test-Path $env:repository\setup.ps1) {
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
 
 # Git, PowerShellCore and SophiaScript installation
-winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d TeamSophia.SophiaScript Git.Git
+winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d sophiascript Git.Git gsudo
 
 # Refresh env so git will be present in PATH
 . "$HOME/refrenv.ps1"

@@ -7,7 +7,7 @@ if (-not (gcm scoop -ea 0)) { iex (iwr get.scoop.sh -UseBasicParsing).Content }
 
 # Installing my scoop packages
 'extras' | % { scoop bucket add $_ }
-scoop install onthespot gsudo
+scoop install onthespot
 
 # Running Sophia Script
 # gsudo powershell {
