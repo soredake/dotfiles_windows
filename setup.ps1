@@ -35,7 +35,7 @@ gsudo {
 oh-my-posh font install hack
 
 # Installing software
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp-nightly expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp-nightly expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden xp8k0hkjfrxgck 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs
 
 # Add uv bin dir to PATH
 uv tool update-shell
@@ -53,9 +53,6 @@ winget install --no-upgrade --interactive --accept-package-agreements --accept-s
 # https://github.com/microsoft/winget-pkgs/issues/106091 https://github.com/microsoft/vscode/issues/134470
 # https://github.com/microsoft/vscode/blob/9d43b0751c91c909eee74ea96f765b1765487d7f/build/win32/code.iss#L81-L88
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
-
-# https://github.com/tom-james-watson/breaktimer-app/issues/185
-winget install --no-upgrade -h -e --id TomWatson.BreakTimer -v 1.1.0
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
@@ -90,3 +87,21 @@ curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu
 
 # Misc
 trakts autostart enable
+
+# Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
+# https://github.com/qbittorrent/qBittorrent/issues/21709
+# This also disables the network card's LED while the PC is in sleep, which I want
+gsudo {
+  $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
+  $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
+  powercfg /devicedisablewake $CurrentNetworkAdapterName
+}
+
+# https://remontka.pro/wake-timers-windows/
+powercfg /SETDCVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+
+# Allow repairing Windows through Windows Update
+# https://gist.github.com/asheroto/5087d2a38b311b0c92be2a4f23f92d3e
+# https://gist.github.com/huysentruitw/9b77582f66229d3cef4caaa08f52aec4
+gsudo reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1
