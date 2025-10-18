@@ -107,3 +107,6 @@ powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd
 # https://gist.github.com/asheroto/5087d2a38b311b0c92be2a4f23f92d3e
 # https://gist.github.com/huysentruitw/9b77582f66229d3cef4caaa08f52aec4
 gsudo reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1
+
+# https://superuser.com/a/1094953/1506333
+gsudo { reg delete "HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" /f }
