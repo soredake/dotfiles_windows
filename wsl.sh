@@ -13,6 +13,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt install -y pipx fish tmux jq htop
 mkdir -p ~/.local/bin
 
 # Installing topgrade
+# TODO: use pacstall/deb-get/pipx? https://github.com/topgrade-rs/topgrade?tab=readme-ov-file#installation
 curl -s https://api.github.com/repos/topgrade-rs/topgrade/releases/latest | jq -r ".assets[] | select(.name | test(\"x86_64-unknown-linux-gnu.tar.gz\")) | .browser_download_url" | xargs wget
 tar -xzf topgrade*.tar.gz -C ~/.local/bin/
 rm topgrade*.tar.gz
