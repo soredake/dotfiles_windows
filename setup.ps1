@@ -37,8 +37,7 @@ gsudo {
 oh-my-posh font install hack
 
 # Installing software
-# yt-dlp-nightly
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact StefanSundin.Superf4 ente-auth openhashtab JanDeDobbeleer.OhMyPosh ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab JanDeDobbeleer.OhMyPosh ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
 
 # Add uv bin dir to PATH
 uv tool update-shell
@@ -48,10 +47,6 @@ uv tool update-shell
 
 # Installing python tools packages
 'git+https://github.com/iamkroot/trakt-scrobbler.git', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
-# uv tool install --with yt-dlp-getpot-wpc "yt-dlp[default,curl-cffi] @ https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz"
-uv tool install --with yt-dlp-getpot-wpc "git+https://github.com/yt-dlp/yt-dlp.git[default,curl-cffi]"
-# pipx install "git+https://github.com/yt-dlp/yt-dlp.git#egg=yt-dlp[default,curl-cffi]"
-# pipx inject yt-dlp yt-dlp-getpot-wpc
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
