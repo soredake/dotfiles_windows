@@ -21,6 +21,10 @@ user_pref("network.predictor.enable-prefetch", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
+// https://www.ghacks.net/2025/11/24/these-two-tweaks-should-improve-firefoxs-performance-on-youtube-significantly/
+user_pref("gfx.webrender.layer-compositor", true);
+user_pref("media.wmf.zero-copy-nv12-textures-force-enabled", true);
+
 // https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1978502
 user_pref("gfx.content.skia-font-cache-size", 32); // 32 MB; default=5; Chrome=20

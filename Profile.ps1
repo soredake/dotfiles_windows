@@ -63,6 +63,49 @@ function hypervisorboot_toggle {
   }
 }
 
+function Toggle-TelegramLaunch {
+    param(
+        [string]$Path = "$env:APPDATA\Telegram Desktop\Telegram.exe"
+    )
+
+    if (-not (Test-Path $Path)) {
+        Write-Host "Telegram.exe not found at: $Path"
+        return
+    }
+
+    $acl = Get-Acl $Path
+    $user = "$env:USERDOMAIN\$env:USERNAME"
+
+    # detect any Deny containing ExecuteFile or ReadAndExecute
+    $denyRule = $acl.Access | Where-Object {
+        $_.IdentityReference -eq $user -and
+        $_.AccessControlType -eq "Deny" -and
+        ($_.FileSystemRights.ToString() -match "Execute" -or $_.FileSystemRights.ToString() -match "ReadAndExecute")
+    }
+
+    if ($denyRule) {
+        Write-Host "Currently: DISALLOWED. Removing Deny rule(s)..."
+        foreach ($rule in $denyRule) {
+            $acl.RemoveAccessRule($rule) | Out-Null
+        }
+        Set-Acl -Path $Path -AclObject $acl
+        Write-Host "Telegram LAUNCHING is now ALLOWED."
+    }
+    else {
+        Write-Host "Currently: ALLOWED. Adding Deny for ReadAndExecute..."
+        $newRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+            $user,
+            "ReadAndExecute",
+            "Deny"
+        )
+        $acl.AddAccessRule($newRule) | Out-Null
+        Set-Acl -Path $Path -AclObject $acl
+        Write-Host "Telegram LAUNCHING is now BLOCKED."
+    }
+}
+
+
+
 # Clean all git branches except main|master
 function Remove-GitBranch {
   [CmdletBinding(SupportsShouldProcess)] # Enables ShouldProcess and WhatIf/Confirm

@@ -26,7 +26,7 @@ gsudo {
   # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
   # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn nodejs msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g
+  winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn nodejs msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk qBittorrent.qBittorrent HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g
 
   # Chocolatey stuff
   # https://github.com/mpv-player/mpv/pull/15912
@@ -86,6 +86,7 @@ gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
 curl -L --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
+# TODO: no 7z now after migration to peazip
 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
 
 # Misc
@@ -113,3 +114,6 @@ gsudo reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCP
 # https://learn.microsoft.com/en-us/answers/questions/3749393/how-to-resolve-multiple-english-languages-in-windo?forum=windows-all
 # https://superuser.com/a/1094953/1506333
 gsudo { reg delete "HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" /f }
+
+# https://github.com/SpotX-Official/SpotX
+iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000"
