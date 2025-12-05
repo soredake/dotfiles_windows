@@ -22,6 +22,7 @@ New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType 
 # NOTE: gsudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
 
 # Installing software
+# https://github.com/microsoft/winget-cli/issues/3227
 gsudo {
   # https://github.com/microsoft/winget-cli/issues/549
   winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
@@ -37,7 +38,7 @@ gsudo {
 oh-my-posh font install hack
 
 # Installing software
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab JanDeDobbeleer.OhMyPosh ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab JanDeDobbeleer.OhMyPosh ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
 
 # Add uv bin dir to PATH
 uv tool update-shell
@@ -102,6 +103,7 @@ gsudo {
 }
 
 # https://remontka.pro/wake-timers-windows/
+# https://www.tenforums.com/tutorials/63070-enable-disable-wake-timers-windows-10-a.html
 powercfg /SETDCVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 
@@ -117,3 +119,11 @@ gsudo { reg delete "HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" /f }
 
 # https://github.com/SpotX-Official/SpotX
 iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000"
+
+# Set static ip
+$env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter).InterfaceIndex
+gsudo {
+  # https://stackoverflow.com/a/53991926
+  New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
+  Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
+}
