@@ -1,6 +1,7 @@
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1693007
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1978371
-// TODO: report here https://connect.mozilla.org/t5/ideas/idb-p/ideas
+// https://connect.mozilla.org/t5/ideas/option-to-disable-auto-start-of-pinned-tabs/idi-p/94938
+// https://connect.mozilla.org/t5/ideas/can-i-choose-not-to-auto-load-pinned-tabs/idi-p/101821
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
@@ -12,7 +13,7 @@ user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 // TODO: report to firefox https://github.com/brave/brave-browser/issues/5032
-// chrome/edge have better fonts, report to bugzilla
+// chrome/edge have better fonts, report to bugzilla, test google/google keep
 // TODO: report here https://connect.mozilla.org/t5/ideas/idb-p/ideas
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 

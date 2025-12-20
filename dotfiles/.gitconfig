@@ -8,7 +8,7 @@
 [core]
   editor = code -w
   # fix for https://github.com/microsoft/vscode/issues/121231#issuecomment-819438763
-  sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+  # sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com

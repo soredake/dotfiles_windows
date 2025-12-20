@@ -104,8 +104,6 @@ function Toggle-TelegramLaunch {
     }
 }
 
-
-
 # Clean all git branches except main|master
 function Remove-GitBranch {
   [CmdletBinding(SupportsShouldProcess)] # Enables ShouldProcess and WhatIf/Confirm
