@@ -34,12 +34,16 @@ winget install --no-upgrade --interactive --accept-package-agreements --accept-s
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # https://github.com/SpotX-Official/SpotX
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_uninstall -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000"
+iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_over -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000"
 
 # Chocolatey stuff
-# TODO: generate release windows buils for windows mpv at main repo
 # https://github.com/mpv-player/mpv/pull/15912
+# https://github.com/shinchiro/mpv-winbuild-cmake/issues/317
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/793
+# https://github.com/microsoft/winget-pkgs/issues/110881
+# https://github.com/mpv-player/mpv/blob/master/ci/build-win32.ps1
+# https://github.com/mpv-player/mpv/issues/17121
+# https://github.com/mpv-player/mpv/issues/17107
 gsudo choco install -y mpvio.install
 
 # Installing Hack font
@@ -107,12 +111,8 @@ gsudo {
   # https://github.com/microsoft/WSL/issues/9695
   # https://bytejams.com/help/hvci.html
   # https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=security
+  # https://learn.microsoft.com/en-us/windows/deployment/windows-autopatch/manage/windows-autopatch-hotpatch-updates
   bcdedit /set hypervisorlaunchtype off
-
-  # Allow repairing Windows through Windows Update
-  # https://gist.github.com/asheroto/5087d2a38b311b0c92be2a4f23f92d3e
-  # https://gist.github.com/huysentruitw/9b77582f66229d3cef4caaa08f52aec4
-  reg add "HKLM\SYSTEM\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1
 
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
