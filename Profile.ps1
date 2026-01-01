@@ -16,6 +16,7 @@ function checklinks {
 }
 
 # Rebase revanced-patched-apks repo
+# https://github.com/j-hc/revanced-magisk-module
 function RebaseRevancedPatchedApks {
   # Change dir to repository
   Push-Location "$HOME\git\revanced-patched-apks"
@@ -64,99 +65,43 @@ function hypervisorboot_toggle {
 }
 
 function Toggle-TelegramLaunch {
-    param(
-        [string]$Path = "$env:APPDATA\Telegram Desktop\Telegram.exe"
-    )
-
-    if (-not (Test-Path $Path)) {
-        Write-Host "Telegram.exe not found at: $Path"
-        return
-    }
-
-    $acl = Get-Acl $Path
-    $user = "$env:USERDOMAIN\$env:USERNAME"
-
-    # detect any Deny containing ExecuteFile or ReadAndExecute
-    $denyRule = $acl.Access | Where-Object {
-        $_.IdentityReference -eq $user -and
-        $_.AccessControlType -eq "Deny" -and
-        ($_.FileSystemRights.ToString() -match "Execute" -or $_.FileSystemRights.ToString() -match "ReadAndExecute")
-    }
-
-    if ($denyRule) {
-        Write-Host "Currently: DISALLOWED. Removing Deny rule(s)..."
-        foreach ($rule in $denyRule) {
-            $acl.RemoveAccessRule($rule) | Out-Null
-        }
-        Set-Acl -Path $Path -AclObject $acl
-        Write-Host "Telegram LAUNCHING is now ALLOWED."
-    }
-    else {
-        Write-Host "Currently: ALLOWED. Adding Deny for ReadAndExecute..."
-        $newRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-            $user,
-            "ReadAndExecute",
-            "Deny"
-        )
-        $acl.AddAccessRule($newRule) | Out-Null
-        Set-Acl -Path $Path -AclObject $acl
-        Write-Host "Telegram LAUNCHING is now BLOCKED."
-    }
-}
-
-# Clean all git branches except main|master
-function Remove-GitBranch {
-  [CmdletBinding(SupportsShouldProcess)] # Enables ShouldProcess and WhatIf/Confirm
-  param (
-    [string[]]$KeepBranches = @("main", "master") # List of branches to preserve
+  param(
+    [string]$Path = "$env:APPDATA\Telegram Desktop\Telegram.exe"
   )
 
-  # Check if the current directory is a Git repository
-  if (-not (Test-Path ".git")) {
-    Write-Error "Not a Git repository."
+  if (-not (Test-Path $Path)) {
+    Write-Host "Telegram.exe not found at: $Path"
     return
   }
 
-  # Fetch the latest changes and clean up remote tracking references
-  git fetch --all --prune
+  $acl = Get-Acl $Path
+  $user = "$env:USERDOMAIN\$env:USERNAME"
 
-  # Find the target branch to switch to (prefer "main" over "master")
-  $targetBranch = ($KeepBranches | Where-Object { git branch --list $_ })[0]
-  if (-not $targetBranch) {
-    Write-Error "No 'main' or 'master' branch found."
-    return
+  # detect any Deny containing ExecuteFile or ReadAndExecute
+  $denyRule = $acl.Access | Where-Object {
+    $_.IdentityReference -eq $user -and
+    $_.AccessControlType -eq "Deny" -and
+    ($_.FileSystemRights.ToString() -match "Execute" -or $_.FileSystemRights.ToString() -match "ReadAndExecute")
   }
 
-  # Switch to the target branch if not already on it
-  if ((git rev-parse --abbrev-ref HEAD) -ne $targetBranch) {
-    if ($PSCmdlet.ShouldProcess("Switch to branch '$targetBranch'")) {
-      git checkout $targetBranch
-      Write-Verbose "Checked out to branch '$targetBranch'."
+  if ($denyRule) {
+    Write-Host "Currently: DISALLOWED. Removing Deny rule(s)..."
+    foreach ($rule in $denyRule) {
+      $acl.RemoveAccessRule($rule) | Out-Null
     }
+    Set-Acl -Path $Path -AclObject $acl
+    Write-Host "Telegram LAUNCHING is now ALLOWED."
   }
-
-  # Get the list of all local branches
-  $localBranches = git branch --format "%(refname:short)"
-
-  # Iterate over all local branches and delete those not in the keep list
-  foreach ($branch in $localBranches) {
-    if ($KeepBranches -notcontains $branch) {
-      if ($PSCmdlet.ShouldProcess("Delete branch '$branch'")) {
-        Write-Verbose "Deleting branch: $branch"
-        git branch -D $branch
-      }
-    }
-  }
-
-  # Clean up remote-tracking branches that are fully merged
-  git branch -r --merged origin/$targetBranch | ForEach-Object {
-    $remoteBranch = ($_ -replace "origin/", "").Trim()
-    if ($KeepBranches -notcontains $remoteBranch) {
-      if ($PSCmdlet.ShouldProcess("Delete remote-tracking branch '$remoteBranch'")) {
-        Write-Verbose "Deleting remote-tracking branch: $remoteBranch"
-        git push origin --delete $remoteBranch
-      }
-    }
+  else {
+    Write-Host "Currently: ALLOWED. Adding Deny for ReadAndExecute..."
+    $newRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+      $user,
+      "ReadAndExecute",
+      "Deny"
+    )
+    $acl.AddAccessRule($newRule) | Out-Null
+    Set-Acl -Path $Path -AclObject $acl
+    Write-Host "Telegram LAUNCHING is now BLOCKED."
   }
 }
 
