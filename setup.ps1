@@ -4,8 +4,8 @@
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git
 
-# scoop installation, https://github.com/ScoopInstaller/Install/issues/70
-gcm scoop -ea 0 >$null || irm get.scoop.sh | iex
+# scoop installation
+irm get.scoop.sh | iex
 
 # Installing my scoop packages
 'extras' | % { scoop bucket add $_ }
@@ -18,12 +18,10 @@ scoop install 7zip #ffmpeg
 #   Sophia -Functions "TempTask -Register", "ReservedStorage -Enable"
 # }
 
-# NOTE: gsudo script-blocks can take only 3008 characters https://github.com/gerardog/gsudo/issues/364
-
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements WingetPathUpdater
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-driveGOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk qBittorrent.qBittorrent PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-driveGOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -93,11 +91,11 @@ gsudo {
 # Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
 # https://github.com/qbittorrent/qBittorrent/issues/21709
 # This also disables the network card's LED while the PC is in sleep, which I want
-gsudo {
-  $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
-  $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
-  powercfg /devicedisablewake $CurrentNetworkAdapterName
-}
+# gsudo {
+#   $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
+#   $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
+#   powercfg /devicedisablewake $CurrentNetworkAdapterName
+# }
 
 # https://remontka.pro/wake-timers-windows/
 # https://www.elevenforum.com/t/enable-or-disable-to-allow-wake-timers-in-windows-11.7010/
