@@ -42,6 +42,7 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/ref
 # https://github.com/mpv-player/mpv/blob/master/ci/build-win32.ps1
 # https://github.com/mpv-player/mpv/issues/17121
 # https://github.com/mpv-player/mpv/issues/17107
+# https://github.com/mpv-player/mpv/discussions/17193
 gsudo choco install -y mpvio.install
 
 # Installing Hack font
