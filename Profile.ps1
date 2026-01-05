@@ -1,6 +1,7 @@
 # Documents folder are moved to OneDrive
 $documentsPath = [Environment]::GetFolderPath('MyDocuments')
 
+# https://github.com/PowerShell/PowerShell/issues/15552
 Import-Module -Name (Get-ChildItem $documentsPath\PowerShell\Modules)
 Import-Module -Name gsudoModule
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Expression
@@ -12,42 +13,6 @@ function checklinks {
   # https://github.com/lycheeverse/lychee/issues/972
   Push-Location "$HOME\Мій диск"
   lychee --max-concurrency 5 archive-org.txt
-  Pop-Location
-}
-
-# Rebase revanced-patched-apks repo
-# https://github.com/j-hc/revanced-magisk-module
-function RebaseRevancedPatchedApks {
-  # Change dir to repository
-  Push-Location "$HOME\git\revanced-patched-apks"
-
-  # 1. Copy `config.toml` to $TEMP
-  $sourceFiles = @("config.toml")
-  $tempDir = [System.IO.Path]::GetTempPath()
-
-  foreach ($file in $sourceFiles) {
-    Copy-Item -Path $file -Destination $tempDir -Force
-  }
-
-  # 2. Hard reset the current repository to the remote `upstream` branch `main`
-  git fetch upstream
-  git reset --hard upstream/main
-
-  # 3. Copy `config.toml` back from $TEMP to the current directory
-  foreach ($file in $sourceFiles) {
-    Copy-Item -Path (Join-Path -Path $tempDir -ChildPath $file) -Destination . -Force
-  }
-
-  # 4. Create a commit with the name "Adding my config"
-  git add config.toml
-  git commit -m "Adding my config"
-
-  # 5. Push with --force
-  git push --force
-
-  # 6. Prevent `error: src refspec main matches more than one` error when pushing from vscode
-  git tag -d main
-
   Pop-Location
 }
 

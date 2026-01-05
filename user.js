@@ -4,11 +4,6 @@
 // https://connect.mozilla.org/t5/ideas/can-i-choose-not-to-auto-load-pinned-tabs/idi-p/101821
 user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
-// https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1978374
-// user_pref("general.smoothScroll.msdPhysics.enabled", true);
-
 // Fonts on windows are looking better with this
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
@@ -43,6 +38,11 @@ user_pref("network.http.request.max-start-delay", 5); // default=10
 user_pref("network.dnsCacheEntries", 10000); // default=800
 user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour; default=60
 user_pref("network.ssl_tokens_cache_capacity", 10240); // default=2048; more TLS token caching (fast reconnects)
+
+// https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1978374
+// user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1978376
