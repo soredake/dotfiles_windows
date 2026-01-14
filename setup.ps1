@@ -4,10 +4,8 @@
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Module -Name posh-git
 
-# scoop installation
+# Installing my scoop and packages from it
 irm get.scoop.sh | iex
-
-# Installing my scoop packages
 'extras' | % { scoop bucket add $_ }
 # ffmpeg: workaround for https://github.com/microsoft/winget-pkgs/issues/302721 https://github.com/microsoft/winget-pkgs/issues/301665 UPD: https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10 https://github.com/microsoft/winget-cli/issues/5951
 scoop install 7zip #ffmpeg
@@ -42,14 +40,11 @@ gsudo choco install -y mpvio.install
 # https://github.com/microsoft/winget-pkgs/issues/17547
 oh-my-posh font install hack
 
-# Add uv bin dir to PATH
-uv tool update-shell
-
-# Refreshing PATH env
-. "$HOME/refrenv.ps1"
-
 # Installing python tools packages
 'git+https://github.com/iamkroot/trakt-scrobbler.git', 'git+https://github.com/arecarn/dploy.git' | % { uv tool install $_ }
+
+# Add uv bin dir to PATH
+uv tool update-shell
 
 # Refreshing PATH env
 . "$HOME/refrenv.ps1"
@@ -81,15 +76,6 @@ gsudo {
   New-NetIPAddress -InterfaceIndex $env:currentNetworkInterfaceIndex -IPAddress 192.168.0.145 -AddressFamily IPv4 -PrefixLength 24 -DefaultGateway 192.168.0.1
   Get-NetAdapter -Physical | Get-NetIPInterface -AddressFamily IPv4 | Set-DnsClientServerAddress -ServerAddresses 1.1.1.1, 1.0.0.1
 }
-
-# Stop ethernet/qbittorrent from waking my pc https://superuser.com/a/1629820/1506333
-# https://github.com/qbittorrent/qBittorrent/issues/21709
-# This also disables the network card's LED while the PC is in sleep, which I want
-# gsudo {
-#   $ifIndexes = (Get-NetRoute | Where-Object -Property DestinationPrefix -EQ "0.0.0.0/0").ifIndex
-#   $CurrentNetworkAdapterName = (Get-NetAdapter | Where-Object { $ifIndexes -contains $_.ifIndex -and $_.Name -like "Ethernet*" } | Select-Object -ExpandProperty InterfaceDescription)
-#   powercfg /devicedisablewake $CurrentNetworkAdapterName
-# }
 
 # https://remontka.pro/wake-timers-windows/
 # https://www.elevenforum.com/t/enable-or-disable-to-allow-wake-timers-in-windows-11.7010/
