@@ -1,23 +1,26 @@
-# Get the default Firefox profile folder name from profiles.ini
+# Path to profiles.ini
 $profileIniPath = Join-Path $env:APPDATA 'Mozilla\Firefox\profiles.ini'
 
-# Find the profile marked as Default=1, then retrieve the preceding line which contains the profile folder name
-$defaultProfileLine = Get-Content $profileIniPath |
-    Select-String -Pattern 'Default=1' -Context 1 |
-    ForEach-Object { $_.Context.PreContext[0] } |
-    Select-String '(Profiles).*'
+# Extract the Default= path from the [Install*] section
+$defaultProfileRelativePath = Get-Content $profileIniPath |
+    Where-Object { $_ -match '^Default=Profiles/' } |
+    ForEach-Object { ($_ -split '=', 2)[1] } |
+    Select-Object -First 1
 
-# Extract the profile folder name (e.g., "Profiles/xxxxx.default-release")
-$env:FirefoxDefaultProfile = $defaultProfileLine.Matches.Value
+if (-not $defaultProfileRelativePath) {
+    throw "Could not find Default=Profiles/... entry in profiles.ini"
+}
 
-# Construct the full path to the Firefox default profile directory
-$env:FirefoxDefaultProfilePath = Join-Path $env:APPDATA "Mozilla\Firefox\$env:FirefoxDefaultProfile"
+# Store relative path in env var (optional)
+$env:FirefoxDefaultProfile = $defaultProfileRelativePath
 
-# Remove the existing user.js file from the Firefox profile, if it exists
+# Construct full path to the Firefox default profile directory
+$env:FirefoxDefaultProfilePath = Join-Path $env:APPDATA "Mozilla\Firefox\$defaultProfileRelativePath"
+
+# Remove existing user.js if it exists
 Remove-Item -Path "$env:FirefoxDefaultProfilePath\user.js" -ErrorAction SilentlyContinue
 
-# Create a symbolic link to your custom user.js file stored in your dotfiles repo
-# `gsudo` is used to elevate privileges if necessary
+# Create symbolic link to custom user.js
 gsudo {
     New-Item -ItemType SymbolicLink `
              -Path "$env:FirefoxDefaultProfilePath\user.js" `
