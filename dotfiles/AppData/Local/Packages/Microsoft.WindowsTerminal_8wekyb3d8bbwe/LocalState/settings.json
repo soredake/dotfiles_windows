@@ -29,11 +29,8 @@
             "id": "User.find"
         }
     ],
-    "alwaysShowNotificationIcon": false,
-    "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-    "firstWindowPreference": "defaultProfile",
     "keybindings": 
     [
         {
@@ -74,25 +71,25 @@
         "list": 
         [
             {
-                "colorScheme": "Tango+Solarized dark",
                 "commandline": "pwsh.exe -NoLogo",
+                "elevate": false,
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
                 "name": "PowerShell",
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "closeOnExit": "never",
-                "commandline": "pwsh.exe -WorkingDirectory ~ -NoLogo -Command gsudo",
-                "cursorShape": "bar",
-                "guid": "{7f74bd31-a1bb-4d3e-9f0a-a8b84b6f07d1}",
+                "commandline": "pwsh.exe -NoLogo",
+                "elevate": true,
+                "guid": "{3a44aa8f-50d4-45ca-9286-3bd95ffd0044}",
+                "hidden": false,
                 "icon": "ms-appx:///ProfileIcons/pwsh.png",
-                "name": "PowerShell (Admin)"
+                "name": "PowerShell (Admin)",
+                "startingDirectory": "%USERPROFILE%"
             },
             {
                 "closeOnExit": "never",
                 "commandline": "pwsh.exe -NoLogo -NoProfile -c ssh -t oracle 'ta'; Clear-Host",
-                "cursorShape": "bar",
                 "guid": "{d5726e6a-7454-4b27-953c-6e3f3b7f3c5a}",
                 "icon": "ms-appx:///ProfileIcons/{9acb9455-ca41-5af7-950f-6bca1bc9722f}.png",
                 "name": "Oracle server"
@@ -136,7 +133,7 @@
             "yellow": "#C4A000"
         }
     ],
-    "theme": "light",
+    "theme": "system",
     "themes": [],
     "useAcrylicInTabRow": false,
     "windowingBehavior": "useExisting"
