@@ -7,7 +7,7 @@ user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 // Fonts on windows are looking better with this
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
-// TODO: chrome/edge have better fonts, report to bugzilla/connect https://bugzilla.mozilla.org/show_bug.cgi?id=1802692#c15 https://connect.mozilla.org/t5/ideas/idb-p/ideas https://github.com/brave/brave-browser/issues/5032
+// https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#font-improvement
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
