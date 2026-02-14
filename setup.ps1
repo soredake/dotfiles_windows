@@ -12,7 +12,7 @@ scoop install 7zip #ffmpeg
 
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension volumelock Syncplay.Syncplay advaith.CurrencyConverterPowerToys warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -82,6 +82,16 @@ gsudo {
 # https://www.elevenforum.com/t/enable-or-disable-to-allow-wake-timers-in-windows-11.7010/
 powercfg /SETDCVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+
+# monitor sleep 5 min, sleep never, hibernation 30 min
+# https://github.com/microsoft/WSL/issues/9695
+# https://gist.github.com/jhx0/7433e74ff9926bba6b35015ddf8ad824
+powercfg.exe /change monitor-timeout-ac 5
+powercfg.exe /change monitor-timeout-dc 5
+powercfg.exe /change standby-timeout-ac 0
+powercfg.exe /change standby-timeout-dc 0
+powercfg.exe /change hibernate-timeout-ac 30
+powercfg.exe /change hibernate-timeout-dc 30
 
 # Various settings & tasks
 gsudo {
