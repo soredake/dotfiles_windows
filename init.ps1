@@ -8,11 +8,14 @@ if (Test-Path $env:repository\setup.ps1) {
 }
 
 # Git and PowerShellCore installation
+# https://github.com/microsoft/terminal/pull/18639
+# https://github.com/PowerShell/PowerShell-RFC/blob/master/Draft-Accepted/RFC0065-Install-PowerShell.md
 winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d Git.Git
 
 # Refresh env so git will be present in PATH
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
-. "$HOME/refrenv.ps1"
+# Invoke-WebRequest -Uri "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" -OutFile "$HOME/refrenv.ps1"
+# . "$HOME/refrenv.ps1"
+iwr "https://raw.githubusercontent.com/badrelmers/RefrEnv/main/refrenv.ps1" | iex
 
 git clone "https://github.com/soredake/dotfiles_windows" $env:repository
 pwsh -NoProfile $env:repository\setup.ps1
