@@ -22,8 +22,6 @@ function hypervisorboot_toggle {
 }
 
 function YoutubeMarkWatched { yt-dlp --skip-download --mark-watched --cookies-from-browser=firefox $args }
-# https://superuser.com/a/1830291/1506333
-function YoutubeExtractAllUrlsFromPlaylist { yt-dlp $args --skip-download --no-warning --print webpage_url 2>$null }
 
 function mkd {
   $newDir = $args[0]
