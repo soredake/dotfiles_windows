@@ -8,7 +8,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\pure.omp.json" | Invoke-Exp
 # No more cursor blinking https://github.com/microsoft/terminal/issues/1379#issuecomment-821825557 https://github.com/fish-shell/fish-shell/issues/3741#issuecomment-273209823 https://github.com/microsoft/terminal/issues/1379
 Write-Output "`e[6 q"
 
-# Toogle for hypervisor boot
+# Toggle for hypervisor boot
 function hypervisorboot_toggle {
   $currentState = (gsudo bcdedit /enum) -match 'hypervisorlaunchtype' -replace 'hypervisorlaunchtype\s+'
   if ($currentState -eq 'Off') {

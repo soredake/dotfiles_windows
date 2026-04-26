@@ -45,7 +45,7 @@
       "en?",
       "und"
     ],
-    "condition": "sub.codec == 'ass'",
+    "condition": "sub.codec == 'ass' and not sub.forced",
     "blacklist": [
       "songs",
       "signs",
@@ -63,7 +63,7 @@
       "en?",
       "und"
     ],
-    "condition": "sub.codec == 'subrip'",
+    "condition": "sub.codec == 'subrip' and not sub.forced",
     "blacklist": [
       "songs",
       "signs",
@@ -81,7 +81,7 @@
       "en?",
       "und"
     ],
-    "condition": "sub.codec == 'hdmv_pgs_subtitle'",
+    "condition": "sub.codec == 'hdmv_pgs_subtitle' and not sub.forced",
     "blacklist": [
       "songs",
       "signs",

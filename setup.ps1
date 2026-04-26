@@ -1,4 +1,4 @@
-# Install powershell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
+# Install PowerShell modules early to avoid https://github.com/badrelmers/RefrEnv/issues/9
 # https://github.com/ralish/PSDotFiles
 # https://github.com/RaphGL/tuckr
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
@@ -9,13 +9,13 @@ irm get.scoop.sh | iex
 'extras', 'games' | % { scoop bucket add $_ }
 scoop bucket add scillidan_scoop-bucket "https://github.com/scillidan/scoop-bucket"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
-# ffmpeg: workaround for https://github.com/microsoft/winget-pkgs/issues/302721 https://github.com/microsoft/winget-pkgs/issues/301665 UPD: https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10 https://github.com/microsoft/winget-cli/issues/5951
+# FFmpeg: workaround for https://github.com/microsoft/winget-pkgs/issues/302721 https://github.com/microsoft/winget-pkgs/issues/301665 UPD: https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10 https://github.com/microsoft/winget-cli/issues/5951
 # NOTE: 7zip will not be needed after next mpv release
 scoop install 7zip refrenv spotiflac #ffmpeg
 
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -32,7 +32,6 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/ref
 # https://github.com/mpv-player/mpv/pull/15912
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/317
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/793
-# https://github.com/microsoft/winget-pkgs/issues/110881
 # https://github.com/mpv-player/mpv/blob/master/ci/build-win32.ps1
 # https://github.com/mpv-player/mpv/issues/17121
 # https://github.com/mpv-player/mpv/issues/17107
@@ -47,7 +46,7 @@ oh-my-posh font install hack
 # 'git+https://github.com/arecarn/dploy.git'
 # 'git+https://github.com/iamkroot/trakt-scrobbler.git'
 # 'trakt-scrobbler', 'dploy' | % { uv tool install $_ }
-'dploy' | % { uv tool install $_ }
+'dploy', 'shiradl' | % { uv tool install $_ }
 # https://github.com/iamkroot/trakt-scrobbler/issues/354
 uv tool install --prerelease allow trakt-scrobbler
 
@@ -57,9 +56,6 @@ uv tool update-shell
 # Refreshing PATH env
 # . "$HOME/refrenv.ps1"
 refrenv.ps1
-
-# Enable gsudo cache
-gsudo config CacheMode Auto
 
 # Dotfiles preparations
 # https://github.com/arecarn/dploy/issues/8
