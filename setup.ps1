@@ -2,6 +2,7 @@
 # https://github.com/ralish/PSDotFiles
 # https://github.com/RaphGL/tuckr
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+# https://github.com/dahlbyk/posh-git/issues/891
 Install-Module -Name posh-git
 
 # Installing my scoop and packages from it
@@ -9,13 +10,18 @@ irm get.scoop.sh | iex
 'extras', 'games' | % { scoop bucket add $_ }
 scoop bucket add scillidan_scoop-bucket "https://github.com/scillidan/scoop-bucket"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
-# FFmpeg: workaround for https://github.com/microsoft/winget-pkgs/issues/302721 https://github.com/microsoft/winget-pkgs/issues/301665 UPD: https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10 https://github.com/microsoft/winget-cli/issues/5951
+# FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601
+# https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10 https://github.com/microsoft/winget-cli/issues/5951
 # NOTE: 7zip will not be needed after next mpv release
 scoop install 7zip refrenv spotiflac #ffmpeg
 
+# Developer Mode is needed to create symlinks without admin rights
+# NOTE: https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
+gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
+
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox Rem0o.FanControl NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 Google.QuickShare astral-sh.uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip EclipseAdoptium.Temurin.25.JDK openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound xp8k0hkjfrxgck 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -67,6 +73,7 @@ gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
 
 # mpv plugins installation
 # sub-select.lua: https://github.com/mpv-player/mpv/issues/13215
+# sponsorblock_minimal.lua: https://github.com/mpv-player/mpv/pull/17841
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
 # NOTE: will not be needed after next mpv release
@@ -76,7 +83,7 @@ curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu
 # Misc
 trakts autostart enable
 
-# Set static ip
+# Set static IP
 $env:currentNetworkInterfaceIndex = (Get-NetRoute | Where-Object { $_.DestinationPrefix -eq "0.0.0.0/0" -and $_.NextHop -like "192.168*" } | Get-NetAdapter | Where-Object { $_.Status -eq "Up" }).InterfaceIndex
 gsudo {
   # https://stackoverflow.com/a/53991926
@@ -106,9 +113,4 @@ gsudo {
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe /R "$env:LOCALAPPDATA\Microsoft\WindowsApps" pwsh.exe)[0] -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
-
-  # https://www.reddit.com/r/Windows10/comments/15p1psl/these_keyboard_layouts_got_added_to_my_pc_along/
-  # https://learn.microsoft.com/en-us/answers/questions/3749393/how-to-resolve-multiple-english-languages-in-windo?forum=windows-all
-  # https://superuser.com/a/1094953/1506333
-  #reg delete "HKEY_USERS\.DEFAULT\Keyboard Layout\Preload" /f
 }

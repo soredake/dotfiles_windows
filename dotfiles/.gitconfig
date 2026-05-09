@@ -5,21 +5,26 @@
 [diff]
   algorithm = histogram
   renames = copies
-[core]
-  editor = code -w
-  # fix for https://github.com/microsoft/vscode/issues/121231#issuecomment-819438763
-  # sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 [user]
   name = soredake
   email = 5204968+soredake@users.noreply.github.com
-# https://github.com/microsoft/vscode/issues/5770#issuecomment-1188658476
-[merge]
-  tool = code
-[mergetool "code"]
-  cmd = code --wait -m $REMOTE $LOCAL $BASE $MERGED
 [push]
   autoSetupRemote = true
 [pull]
   rebase = true
 [advice]
   statusUoption = false
+# https://runestone.academy/ns/books/published/opensource/sec_git_getting_started.html
+# https://docs.github.com/en/get-started/git-basics/associating-text-editors-with-git#using-visual-studio-code-as-your-editor
+[core]
+  editor = code --new-window --wait
+# https://code.visualstudio.com/docs/sourcecontrol/merge-conflicts#_configure-vs-code-as-default-merge-tool
+# https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_set-vs-code-as-default-merge-tool
+[merge]
+  tool = vscode
+[mergetool "vscode"]
+  cmd = code --wait $MERGED
+[diff]
+  tool = vscode
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE

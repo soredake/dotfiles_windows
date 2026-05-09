@@ -1,4 +1,4 @@
--- Created as soft of workaround for https://github.com/iamkroot/trakt-scrobbler/issues/202
+-- Created as sort of workaround for https://github.com/iamkroot/trakt-scrobbler/issues/202
 -- Define your custom callback function
 function syncplay_switch_to_next_playlist_item()
   mp.command('print-text "<chat>/qn</chat>"')

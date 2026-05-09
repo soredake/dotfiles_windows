@@ -1,13 +1,8 @@
 #!/bin/bash
-# I need newer version https://unix.stackexchange.com/a/740124
-# https://github.com/fish-shell/fish-shell/blob/bfb32cdbd94644f29a8e4dd156a50e32e4f4c7c2/CHANGELOG.rst#notable-backwards-incompatible-changes
-# https://repology.org/project/fish/versions
-# TODO: remove this after upgrade to 26.04
-sudo add-apt-repository -y ppa:fish-shell/release-4
-
 # Installing software
 sudo apt update
 sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y
+# TODO: uv https://github.com/astral-sh/uv/issues/13640
 sudo DEBIAN_FRONTEND=noninteractive apt install -y pipx fish tmux jq htop
 
 # Creating bin dir for user binaries
