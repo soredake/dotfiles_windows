@@ -8,11 +8,11 @@ user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1802692
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1829313
 // https://github.com/yokoffing/Betterfox/wiki/Common-Overrides#font-improvement
+// https://github.com/yokoffing/Betterfox/blob/152.0/Peskyfox.js#L169-L179
 user_pref("gfx.font_rendering.cleartype_params.enhanced_contrast", 0);
 
 // https://www.reddit.com/r/firefox/comments/9ub5fg/rant_awful_scrolling_in_firefox/e93d5pc
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1720146
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1978374
 // user_pref("general.smoothScroll.msdPhysics.enabled", true);
 
 // https://github.com/yokoffing/Betterfox/blob/main/Smoothfox.js

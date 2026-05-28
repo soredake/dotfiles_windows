@@ -9,7 +9,6 @@ if (Test-Path $env:repository\setup.ps1) {
 
 # Git and PowerShellCore installation
 # https://github.com/microsoft/terminal/pull/18639
-# https://github.com/PowerShell/PowerShell-RFC/blob/master/Draft-Accepted/RFC0065-Install-PowerShell.md
 # NOTE: git - https://github.com/git-for-windows/build-extra/pull/665
 winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d Git.Git
 
