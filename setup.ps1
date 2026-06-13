@@ -20,7 +20,7 @@ gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t
 
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram TomWatson.BreakTimer BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 quickshare PowerSoftware.AnyBurn HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound Stretchly.Stretchly xp8k0hkjfrxgck 9n8g7tscl18r 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk XPDCCPPSK2XPQW xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound Stretchly.Stretchly xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -37,8 +37,6 @@ iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/ref
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/317
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/793
 # https://github.com/mpv-player/mpv/issues/17121
-# https://github.com/mpv-player/mpv/issues/17107
-# https://github.com/mpv-player/mpv/discussions/17193
 gsudo choco install -y mpvio.install
 
 # Installing Hack font
@@ -65,6 +63,8 @@ refrenv.ps1
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+# https://github.com/microsoft/intelligent-terminal
+Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.IntelligentTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.IntelligentTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
 gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
 

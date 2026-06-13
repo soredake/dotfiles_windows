@@ -32,7 +32,7 @@ function mkd {
 }
 
 # Mirroring linux shells bindings and completion menu
-# TODO: set this as default? https://github.com/PowerShell/PSReadLine
+# TODO: try upstreaming to psreadline repo
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
 # https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
