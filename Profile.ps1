@@ -36,6 +36,7 @@ function mkd {
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine
 Set-PSReadlineKeyHandler -Key Ctrl+e -Function EndOfLine
 # https://dev.to/ofhouse/add-a-bash-like-autocomplete-to-your-powershell-4257
+# https://github.com/PowerShell/PSReadLine/issues/1839
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadLineKeyHandler -Key UpArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchBackward()
