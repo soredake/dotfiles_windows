@@ -8,11 +8,11 @@ Install-Module -Name posh-git
 # Installing my scoop and packages from it
 irm get.scoop.sh | iex
 'extras', 'games' | % { scoop bucket add $_ }
-scoop bucket add scillidan_scoop-bucket "https://github.com/scillidan/scoop-bucket"
+scoop bucket add scillidan_scoop-shovel "https://github.com/scillidan/scoop-shovel"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
 # FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601 https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10
 # NOTE: 7zip will not be needed after next mpv release
-scoop install 7zip refrenv spotiflac #ffmpeg
+scoop install refrenv spotiflac #ffmpeg 7zip
 
 # Developer Mode is needed to create symlinks without admin rights
 # NOTE: https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
@@ -20,7 +20,9 @@ gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t
 
 # Installing software
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 uv telegram lycheeverse.lychee yt-dlp.FFmpeg expltab itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything-alpha shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop qBittorrent.qBittorrent.lt2 quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp FxSound.FxSound Stretchly.Stretchly xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp Stretchly.Stretchly xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+# NOTE: Pinned to 5.1.4 due to https://github.com/qbittorrent/qBittorrent/issues/24397
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact qBittorrent.qBittorrent.lt2 --version "5.1.4"
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -52,6 +54,7 @@ oh-my-posh font install hack
 uv tool install --prerelease allow trakt-scrobbler
 
 # Add uv bin dir to PATH
+# TODO: request env refresh in powershell
 uv tool update-shell
 
 # Refreshing PATH env
@@ -69,13 +72,14 @@ Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.IntelligentTerminal_8weky
 gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
 
 # mpv plugins installation
-# sub-select.lua: https://github.com/mpv-player/mpv/issues/13215
-# sponsorblock_minimal.lua: https://github.com/mpv-player/mpv/pull/17841
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
 # NOTE: will not be needed after next mpv release
 curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
-7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
+# 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
+Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$env:APPDATA\mpv\scripts"
+Move-Item -Force "$env:APPDATA\mpv\scripts\menu\*" "$env:APPDATA\mpv\scripts"
+Remove-Item -Recurse -Path "$env:APPDATA\mpv\scripts\menu"
 
 # Misc
 trakts autostart enable

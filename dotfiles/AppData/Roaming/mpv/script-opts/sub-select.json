@@ -2,6 +2,36 @@
   {
     "alang": "*",
     "slang": [
+      "uk",
+      "ukr",
+      "uk-ua",
+      "uk-uk"
+    ],
+    "condition": "sub.codec == 'ass'"
+  },
+  {
+    "alang": "*",
+    "slang": [
+      "uk",
+      "ukr",
+      "uk-ua",
+      "uk-uk"
+    ],
+    "condition": "sub.codec == 'subrip'"
+  },
+  {
+    "alang": "*",
+    "slang": [
+      "uk",
+      "ukr",
+      "uk-ua",
+      "uk-uk"
+    ],
+    "condition": "sub.codec == 'hdmv_pgs_subtitle'"
+  },
+  {
+    "alang": "*",
+    "slang": [
       "eng?",
       "en?",
       "und"
