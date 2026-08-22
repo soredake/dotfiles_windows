@@ -11,17 +11,20 @@ irm get.scoop.sh | iex
 scoop bucket add scillidan_scoop-shovel "https://github.com/scillidan/scoop-shovel"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
 # FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601 https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10
-# NOTE: 7zip will not be needed after next mpv release
-scoop install refrenv spotiflac #ffmpeg 7zip
+scoop install refrenv
 
 # Developer Mode is needed to create symlinks without admin rights
 # NOTE: https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
 gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 
 # Installing software
+# TODO: winget is not installing fonts to $env:LOCALAPPDATA\Microsoft\Windows\Fonts, report
+#winget source add --name winget-extras --type Microsoft.PreIndexed.Package --arg "https://winget.tplant.com.au/cache"
+#winget install --force -h hack-nerd-font
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade python3.12 uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io erengy.Taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive GOG.Galaxy wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-io.photos-desktop quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock Syncplay.Syncplay warp Stretchly.Stretchly xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9ncbcszsjrsb 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9ngjdf77b98p 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive gog wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-photos quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock syncplay warp Stretchly.Stretchly PSerban93.Achievements xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9pc2t04g3v9c
 # NOTE: Pinned to 5.1.4 due to https://github.com/qbittorrent/qBittorrent/issues/24397
+# TODO: switch to plain non lt2 package when bug is fixed, https://github.com/qbittorrent/qBittorrent/issues/24689
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact qBittorrent.qBittorrent.lt2 --version "5.1.4"
 
 # Interactive tor browser installation
@@ -49,9 +52,9 @@ oh-my-posh font install hack
 # 'git+https://github.com/arecarn/dploy.git'
 # 'git+https://github.com/iamkroot/trakt-scrobbler.git'
 # 'trakt-scrobbler', 'dploy' | % { uv tool install $_ }
-'dploy', 'shiradl' | % { uv tool install $_ }
+'dploy', 'shiradl' | % { uv tool install --managed-python $_ }
 # https://github.com/iamkroot/trakt-scrobbler/issues/354
-uv tool install --prerelease allow trakt-scrobbler
+uv tool install --managed-python --prerelease allow trakt-scrobbler
 
 # Add uv bin dir to PATH
 # TODO: request env refresh in powershell
@@ -114,4 +117,16 @@ gsudo {
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe /R "$env:LOCALAPPDATA\Microsoft\WindowsApps" pwsh.exe)[0] -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
+}
+
+# Battling wifi adapter problems
+# https://www.reddit.com/r/techsupport/comments/1citkz6/comment/mcu02xr/
+# Disable USB Selective Suspend on current power profile
+powercfg /SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
+powercfg /SETDCVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
+# Disable "Allow the computer to turn off this device to save power" only for TP-Link Wireless USB Adapter
+gsudo {
+  $adapter = Get-NetAdapter -InterfaceDescription "TP-Link Wireless USB Adapter*" | Get-NetAdapterPowerManagement
+  $adapter.AllowComputerToTurnOffDevice = 'Disabled'
+  $adapter | Set-NetAdapterPowerManagement
 }

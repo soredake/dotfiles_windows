@@ -8,7 +8,6 @@ if (Test-Path $env:repository\setup.ps1 -PathType Leaf -and (Get-Command git -Er
 }
 
 # Git and PowerShellCore installation
-# https://github.com/microsoft/terminal/pull/18639
 # NOTE: git - https://github.com/git-for-windows/build-extra/pull/665
 # pwsh will be included in future windows releases https://github.com/PowerShell/PowerShell/issues/27565
 winget install -h --accept-package-agreements --accept-source-agreements 9mz1snwt0n5d Git.Git
