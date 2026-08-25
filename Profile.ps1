@@ -31,6 +31,11 @@ function mkd {
   Set-Location (Join-Path $PWD $newDir)
 }
 
+# https://github.com/Jorman/Scripts/blob/master/AddqBittorrentTrackers/AddqBittorrentTrackers.py
+function AddqBittorrentTrackers {
+  uv run --with requests "$env:USERPROFILE\.local\bin\AddqBittorrentTrackers.py" -a
+}
+
 # Mirroring linux shells bindings and completion menu
 # TODO: try upstreaming to psreadline repo
 Set-PSReadlineKeyHandler -Key Ctrl+a -Function BeginningOfLine

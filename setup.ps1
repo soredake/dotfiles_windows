@@ -8,10 +8,11 @@ Install-Module -Name posh-git
 # Installing my scoop and packages from it
 irm get.scoop.sh | iex
 'extras', 'games' | % { scoop bucket add $_ }
-scoop bucket add scillidan_scoop-shovel "https://github.com/scillidan/scoop-shovel"
+scoop bucket add bash "https://github.com/scillidan/scoop-bash"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
+scoop bucket add torokoshka-scoop "https://github.com/soredake/torokoshka-scoop"
 # FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601 https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10
-scoop install refrenv
+scoop install refrenv bray-terminal
 
 # Developer Mode is needed to create symlinks without admin rights
 # NOTE: https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
@@ -130,3 +131,13 @@ gsudo {
   $adapter.AllowComputerToTurnOffDevice = 'Disabled'
   $adapter | Set-NetAdapterPowerManagement
 }
+
+# https://github.com/Jorman/Scripts?tab=readme-ov-file#addqbittorrenttrackerssh
+# https://github.com/Jorman/Scripts/blob/master/AddqBittorrentTrackers/AddqBittorrentTrackers.sh.readme.md
+git clone "https://github.com/Jorman/Scripts" "$HOME/git/Jorman-Scripts"
+New-Item -ItemType Directory -Force -Path "$HOME/.local/bin" | Out-Null
+(Get-Content "$HOME/git/Jorman-Scripts/AddqBittorrentTrackers/AddqBittorrentTrackers.py" -Raw) `
+  -replace 'qbt_host\s*=.*', 'qbt_host = "http://127.0.0.1"' `
+  -replace 'qbt_port\s*=.*', 'qbt_port = "8080"' `
+  -replace 'qbt_username\s*=.*', 'qbt_username = "admin"' `
+  -replace 'qbt_password\s*=.*', 'qbt_password = "adminadmin"' | Set-Content "$HOME/.local/bin/AddqBittorrentTrackers.py"
