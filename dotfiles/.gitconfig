@@ -18,6 +18,7 @@
 # https://docs.github.com/en/get-started/git-basics/associating-text-editors-with-git#using-visual-studio-code-as-your-editor
 [core]
   editor = code --new-window --wait
+  symlinks = true
 # https://code.visualstudio.com/docs/sourcecontrol/merge-conflicts#_configure-vs-code-as-default-merge-tool
 # https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_set-vs-code-as-default-merge-tool
 [merge]

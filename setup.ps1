@@ -12,7 +12,8 @@ scoop bucket add bash "https://github.com/scillidan/scoop-bash"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
 scoop bucket add torokoshka-scoop "https://github.com/soredake/torokoshka-scoop"
 # FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601 https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10
-scoop install refrenv bray-terminal
+scoop install refrenv bray-terminal syncthingtray
+scoop hold syncthingtray
 
 # Developer Mode is needed to create symlinks without admin rights
 # NOTE: https://github.com/microsoft/winget-cli/issues/3601 https://github.com/microsoft/winget-cli/issues/361
@@ -23,7 +24,7 @@ gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t
 #winget source add --name winget-extras --type Microsoft.PreIndexed.Package --arg "https://winget.tplant.com.au/cache"
 #winget install --force -h hack-nerd-font
 # Sandboxie + Office >=2019 compatibility https://www.reddit.com/r/Office365/comments/1krbgmw/comment/myc40tu/ https://github.com/sandboxie-plus/Sandboxie/issues/4593 https://github.com/sandboxie-plus/Sandboxie/issues/4606
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive gog wiztree eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-photos quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock syncplay warp Stretchly.Stretchly PSerban93.Achievements xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xp9cdqw6ml4nqn xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9pc2t04g3v9c
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter peazip temurin-jdk-25 openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive gog wiztree mikf.gallery-dl eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-photos quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec volumelock syncplay warp Stretchly.Stretchly PSerban93.Achievements xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f xpfftq032ptphf xp99vr1bpsbqj2 xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9pc2t04g3v9c 9P78L5ZXH06D
 # NOTE: Pinned to 5.1.4 due to https://github.com/qbittorrent/qBittorrent/issues/24397
 # TODO: switch to plain non lt2 package when bug is fixed, https://github.com/qbittorrent/qBittorrent/issues/24689
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact qBittorrent.qBittorrent.lt2 --version "5.1.4"
@@ -67,6 +68,7 @@ refrenv.ps1
 
 # Dotfiles preparations
 # https://github.com/arecarn/dploy/issues/8
+# TODO: test https://github.com/arecarn/dploy/pull/42
 New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
@@ -103,10 +105,6 @@ powercfg /SETACVALUEINDEX SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd
 
 # Various settings & tasks
 gsudo {
-  # Needed only on IoT Enterprise
-  # https://www.elevenforum.com/t/enable-or-disable-reserved-storage-in-windows-11.21389/
-  dism /Online /Set-ReservedStorageState /State:Enabled
-
   # Disable hypervisor boot
   # https://stackoverflow.com/a/35812945
   # https://github.com/microsoft/WSL/issues/9695
@@ -118,18 +116,6 @@ gsudo {
   # Upgrade everything with topgrade task
   Unregister-ScheduledTask -TaskName "Upgrade everything" -Confirm:$false
   Register-ScheduledTask -Principal (New-ScheduledTaskPrincipal -UserID "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest) -Action (New-ScheduledTaskAction -Execute (where.exe /R "$env:LOCALAPPDATA\Microsoft\WindowsApps" pwsh.exe)[0] -Argument "-WindowStyle Minimized $HOME\git\dotfiles_windows\scripts\upgrade-all.ps1") -TaskName "Upgrade everything" -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable) -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At 12:00)
-}
-
-# Battling wifi adapter problems
-# https://www.reddit.com/r/techsupport/comments/1citkz6/comment/mcu02xr/
-# Disable USB Selective Suspend on current power profile
-powercfg /SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
-powercfg /SETDCVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
-# Disable "Allow the computer to turn off this device to save power" only for TP-Link Wireless USB Adapter
-gsudo {
-  $adapter = Get-NetAdapter -InterfaceDescription "TP-Link Wireless USB Adapter*" | Get-NetAdapterPowerManagement
-  $adapter.AllowComputerToTurnOffDevice = 'Disabled'
-  $adapter | Set-NetAdapterPowerManagement
 }
 
 # https://github.com/Jorman/Scripts?tab=readme-ov-file#addqbittorrenttrackerssh
