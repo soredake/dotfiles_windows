@@ -54,9 +54,11 @@ oh-my-posh font install hack
 # 'git+https://github.com/arecarn/dploy.git'
 # 'git+https://github.com/iamkroot/trakt-scrobbler.git'
 # 'trakt-scrobbler', 'dploy' | % { uv tool install $_ }
-'dploy', 'shiradl' | % { uv tool install --managed-python $_ }
+'shiradl' | % { uv tool install --managed-python $_ }
 # https://github.com/iamkroot/trakt-scrobbler/issues/354
 uv tool install --managed-python --prerelease allow trakt-scrobbler
+# https://github.com/arecarn/dploy/pull/42
+uv tool install --managed-python 'git+https://github.com/arecarn/dploy.git'
 
 # Add uv bin dir to PATH
 # TODO: request env refresh in powershell
@@ -68,14 +70,14 @@ refrenv.ps1
 
 # Dotfiles preparations
 # https://github.com/arecarn/dploy/issues/8
-# TODO: test https://github.com/arecarn/dploy/pull/42
-New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
+# NOTE: not needed after https://github.com/arecarn/dploy/pull/42
+#New-Item -Path $env:APPDATA\trakt-scrobbler, $env:APPDATA\mpv\scripts -ItemType Directory -Force | Out-Null
 # https://github.com/microsoft/terminal/issues/2933 https://github.com/microsoft/terminal/issues/14730 https://github.com/microsoft/terminal/issues/17455
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # https://github.com/microsoft/intelligent-terminal
 Remove-Item -Path $env:LOCALAPPDATA\Packages\Microsoft.IntelligentTerminal_8wekyb3d8bbwe\LocalState\settings.json; New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\Packages\Microsoft.IntelligentTerminal_8wekyb3d8bbwe\LocalState\settings.json -Target $HOME\git\dotfiles_windows\dotfiles\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 # Linking dotfiles
-gsudo dploy stow $HOME\git\dotfiles_windows\dotfiles $HOME
+gsudo dploy stow --no-folding $HOME\git\dotfiles_windows\dotfiles $HOME
 
 # mpv plugins installation
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
