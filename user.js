@@ -29,3 +29,18 @@ user_pref("general.smoothScroll.msdPhysics.slowdownSpringConstant", 250);
 user_pref("general.smoothScroll.currentVelocityWeighting", "1");
 user_pref("general.smoothScroll.stopDecelerationWeighting", "1");
 user_pref("mousewheel.default.delta_multiplier_y", 300); // 250-400; adjust this number to your liking
+
+// https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
+user_pref("gfx.content.skia-font-cache-size", 20); // 20 MB; default=5; Chrome=20
+user_pref("content.notify.interval", 100000); // (.10s); default=120000 (.12s)
+user_pref("gfx.canvas.accelerated.cache-size", 512); // default=256; Chrome=512; max=2048 [4]
+user_pref("media.cache_readahead_limit", 3600); // 60 min; default=60 sec; stop reading ahead when our buffered data is this many seconds ahead of the current playback
+user_pref("media.cache_resume_threshold", 1800); // 30 min; default=30 sec; when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold
+user_pref("image.mem.decode_bytes_at_a_time", 32768); // default=16384; chunk size for calls to the image decoders
+user_pref("network.buffer.cache.size", 65535); // default=32768 (32 kb); 262144 too large
+user_pref("network.buffer.cache.count", 48); // default=24; 128 too large
+user_pref("network.http.max-connections", 1800); // default=900
+user_pref("network.http.max-persistent-connections-per-server", 10); // default=6; download connections; anything above 10 is excessive
+user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // default=3
+user_pref("network.http.request.max-start-delay", 5); // default=10
+user_pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour; default=60
