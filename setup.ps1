@@ -12,7 +12,7 @@ scoop bucket add bash "https://github.com/scillidan/scoop-bash"
 scoop bucket add TXG0Fk3_Asterism "https://github.com/TXG0Fk3/Asterism"
 scoop bucket add torokoshka-scoop "https://github.com/soredake/torokoshka-scoop"
 # FFmpeg: workaround for https://github.com/microsoft/winget-cli/issues/3601 https://stackoverflow.com/questions/34491244/environment-variable-is-too-large-on-windows-10
-scoop install refrenv bray-terminal syncthingtray
+scoop install refrenv bray-terminal syncthingtray windows-maintenance-tool
 scoop hold syncthingtray
 
 # Developer Mode is needed to create symlinks without admin rights
@@ -24,10 +24,7 @@ gsudo reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t
 # https://github.com/microsoft/winget-cli/pull/6619
 #winget source add --name winget-extras --type Microsoft.PreIndexed.Package --arg "https://winget.tplant.com.au/cache"
 #winget install --force -h hack-nerd-font
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive gog Ollama.Ollama ggml.llamacpp wiztree mikf.gallery-dl eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg RamenSoftware.Windhawk ente-photos quickshare PowerSoftware.AnyBurn Xanashi.Icaros HermannSchinagl.LinkShellExtension parsec codex volumelock syncplay warp Stretchly.Stretchly PSerban93.Achievements xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f xpfftq032ptphf 9p6k58ths811 xp99vr1bpsbqj2 xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9plm9xgg6vks 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9pc2t04g3v9c 9p78l5zxh06d
-# NOTE: Pinned to 5.1.4 due to https://github.com/qbittorrent/qBittorrent/issues/24397
-# TODO: switch to plain non lt2 package when bug is fixed, https://github.com/qbittorrent/qBittorrent/issues/24689
-winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact qBittorrent.qBittorrent.lt2 --version "5.1.4"
+winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements --exact office WingetPathUpdater gsudo Stacher.Stacher yt-dlp-nightly Microsoft.Coreutils StefanSundin.Superf4 ente-auth openhashtab ayugram BillStewart.SyncthingWindowsSetup LocalSend.LocalSend topgrade-rs.topgrade uv telegram lycheeverse.lychee yt-dlp.FFmpeg itch.io taiga nomacs.nomacs dupeguru Bitwarden.Bitwarden file-converter openrgb google-play-games unifiedremote sandboxie-classic Mozilla.Firefox NTKERNEL.WireSockVPNClient Chocolatey.Chocolatey steam Ryochan7.DS4Windows AppWork.JDownloader google-drive gog Ollama.Ollama ggml.llamacpp wiztree mikf.gallery-dl eaapp protonvpn msedgeredirect afterburner rivatuner bcuninstaller everything shixinhuang99.Czkawka.Tauri.FFmpeg MoonshotAI.Kimi MiniMax.MiniMaxCode RamenSoftware.Windhawk ente-photos quickshare PowerSoftware.AnyBurn shinchiro.mpv Xanashi.Icaros ZhipuAI.ZCode HermannSchinagl.LinkShellExtension parsec codex volumelock syncplay warp Stretchly.Stretchly PSerban93.Achievements xp8k0hkjfrxgck 9nmqc2ssjx24 9n8g7tscl18r 9pm9dfqrdh3f xpfftq032ptphf 9p6k58ths811 xp99vr1bpsbqj2 xpfm11z0w10r7g xp8jrf5sxv03zm xpdp2qw12dfsfk xpdccppsk2xpqw xpdnx7g06blh2g 9nvjqjbdkn97 9nc73mjwhsww xpdc2rh70k22mn 9p8ltpgcbzxd 9plm9xgg6vks 9pmz94127m4g xpfm5p5kdwf0jp xp89dcgq3k6vld 9p4clt2rj1rs 9pc2t04g3v9c 9p78l5zxh06d qBittorrent.qBittorrent
 
 # Interactive tor browser installation
 # NOTE: install silently when https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/issues/41138 is implemented
@@ -38,13 +35,19 @@ winget install --no-upgrade --interactive --accept-package-agreements --accept-s
 winget install --no-upgrade -h --accept-package-agreements --accept-source-agreements vscode --custom "/mergetasks='!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'"
 
 # https://github.com/SpotX-Official/SpotX
-iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_over -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000"
+iex "& { $(iwr -useb 'https://raw.githubusercontent.com/SpotX-Official/SpotX/refs/heads/main/run.ps1') } -confirm_spoti_recomended_over -confirm_uninstall_ms_spoti -new_theme -topsearchbar -newFullscreenMode -podcasts_on -block_update_on -cache_limit 5000 -defender_exclusions_off"
 
 # Chocolatey stuff
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/317
 # https://github.com/shinchiro/mpv-winbuild-cmake/issues/793
 # https://github.com/mpv-player/mpv/issues/17121
-gsudo choco install -y mpvio.install
+# Moved to winget's shinchiro.mpv
+# gsudo choco install -y mpvio.install
+
+# Local models
+ollama pull nomic-embed-text
+ollama pull gemma4:31b-cloud
+ollama pull nemotron-3-ultra:cloud
 
 # Installing Hack font
 # https://github.com/microsoft/winget-pkgs/issues/17547
@@ -56,7 +59,9 @@ oh-my-posh font install hack
 # 'trakt-scrobbler', 'dploy' | % { uv tool install $_ }
 'shiradl' | % { uv tool install --managed-python $_ }
 # https://github.com/iamkroot/trakt-scrobbler/issues/354
-uv tool install --managed-python --prerelease allow trakt-scrobbler
+# uv tool install --managed-python --prerelease allow trakt-scrobbler
+# uv tool install --managed-python 'git+https://github.com/iamkroot/trakt-scrobbler'
+uv tool install --managed-python 'git+https://github.com/soredake/trakt-scrobbler@master'
 # https://github.com/arecarn/dploy/pull/42
 uv tool install --managed-python 'git+https://github.com/arecarn/dploy.git'
 
@@ -83,12 +88,6 @@ gsudo dploy stow --no-folding $HOME\git\dotfiles_windows\dotfiles $HOME
 curl -L --create-dirs --remote-name-all --output-dir $env:APPDATA\mpv\scripts "https://codeberg.org/jouni/mpv_sponsorblock_minimal/raw/branch/master/sponsorblock_minimal.lua" "https://raw.githubusercontent.com/zenwarr/mpv-config/master/scripts/russian-layout-bindings.lua" "https://github.com/CogentRedTester/mpv-sub-select/raw/master/sub-select.lua" "https://raw.githubusercontent.com/d87/mpv-persist-properties/master/persist-properties.lua"
 # TODO: rename script upstream to reload.lua
 curl -L --create-dirs --remote-name-all --output $env:APPDATA\mpv\scripts\reload.lua "https://raw.githubusercontent.com/4e6/mpv-reload/refs/heads/master/main.lua"
-# NOTE: will not be needed after next mpv release
-curl -L "https://github.com/tsl0922/mpv-menu-plugin/releases/download/2.4.1/menu.zip" -o "$HOME\Downloads\mpv-menu-plugin.zip"
-# 7z e "$HOME\Downloads\mpv-menu-plugin.zip" -o"$env:APPDATA\mpv\scripts" -y
-Expand-Archive -Force "$HOME/Downloads/mpv-menu-plugin.zip" -DestinationPath "$env:APPDATA\mpv\scripts"
-Move-Item -Force "$env:APPDATA\mpv\scripts\menu\*" "$env:APPDATA\mpv\scripts"
-Remove-Item -Recurse -Path "$env:APPDATA\mpv\scripts\menu"
 
 # Misc
 trakts autostart enable

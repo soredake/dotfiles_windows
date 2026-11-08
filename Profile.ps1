@@ -51,3 +51,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -ScriptBlock {
   [Microsoft.PowerShell.PSConsoleReadLine]::HistorySearchForward()
   [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 }
+
+# Direct paste keybinding
+Set-PSReadLineKeyHandler -Key 'Ctrl+V' -Function Paste
+Set-PSReadLineKeyHandler -Key 'Ctrl+М' -Function Paste
